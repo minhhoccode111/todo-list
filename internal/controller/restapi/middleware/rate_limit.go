@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/minhhoccode111/go-clean-template-gin/config"
-	"github.com/minhhoccode111/go-clean-template-gin/internal/controller/restapi/v1/response"
+	"github.com/minhhoccode111/todo-list/config"
+	"github.com/minhhoccode111/todo-list/internal/controller/restapi/v1/response"
 	"golang.org/x/time/rate"
 )
 

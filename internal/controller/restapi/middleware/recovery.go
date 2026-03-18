@@ -5,8 +5,8 @@ import (
 	"runtime/debug"
 
 	"github.com/gin-gonic/gin"
-	"github.com/minhhoccode111/go-clean-template-gin/internal/controller/restapi/v1/response"
-	"github.com/minhhoccode111/go-clean-template-gin/pkg/logger"
+	"github.com/minhhoccode111/todo-list/internal/controller/restapi/v1/response"
+	"github.com/minhhoccode111/todo-list/pkg/logger"
 )
 
 func Recovery(l logger.Interface) gin.HandlerFunc {

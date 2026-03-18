@@ -5,8 +5,8 @@ package cache
 import (
 	"context"
 
-	"github.com/minhhoccode111/go-clean-template-gin/internal/entity"
-	"github.com/minhhoccode111/go-clean-template-gin/pkg/cache"
+	"github.com/minhhoccode111/todo-list/internal/entity"
+	"github.com/minhhoccode111/todo-list/pkg/cache"
 )
 
 const historyKey = "translation:history"

@@ -70,7 +70,7 @@ build: deps sqlc swag-v1 ### build the application
 .PHONY: build
 
 docker-rm-volume: ### remove docker volume
-	docker volume rm go-clean-template-gin_pg-data
+	docker volume rm todo-list_pg-data
 .PHONY: docker-rm-volume
 
 linter-golangci: ### check by golangci linter

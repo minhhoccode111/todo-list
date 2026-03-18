@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/minhhoccode111/go-clean-template-gin/pkg/logger"
+	"github.com/minhhoccode111/todo-list/pkg/logger"
 	"golang.org/x/sync/errgroup"
 )
 

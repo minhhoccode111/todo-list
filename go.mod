@@ -1,4 +1,4 @@
-module github.com/minhhoccode111/go-clean-template-gin
+module github.com/minhhoccode111/todo-list
 
 go 1.26
 

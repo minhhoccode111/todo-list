@@ -4,7 +4,7 @@ package usecase
 import (
 	"context"
 
-	"github.com/minhhoccode111/go-clean-template-gin/internal/entity"
+	"github.com/minhhoccode111/todo-list/internal/entity"
 )
 
 //go:generate mockgen -source=contracts.go -destination=./mocks_usecase_test.go -package=usecase_test

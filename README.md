@@ -8,10 +8,10 @@
 
 Clean Architecture template for Golang services
 
-[![Release](https://img.shields.io/github/v/release/minhhoccode111/go-clean-template-gin.svg)](https://github.com/minhhoccode111/go-clean-template-gin/releases/)
-[![License](https://img.shields.io/badge/License-MIT-success)](https://github.com/minhhoccode111/go-clean-template-gin/blob/master/LICENSE)
-[![Go Report Card](https://goreportcard.com/badge/github.com/minhhoccode111/go-clean-template-gin)](https://goreportcard.com/report/github.com/minhhoccode111/go-clean-template-gin)
-[![codecov](https://codecov.io/gh/minhhoccode111/go-clean-template-gin/branch/master/graph/badge.svg?token=XE3E0X3EVQ)](https://codecov.io/gh/minhhoccode111/go-clean-template-gin)
+[![Release](https://img.shields.io/github/v/release/minhhoccode111/todo-list.svg)](https://github.com/minhhoccode111/todo-list/releases/)
+[![License](https://img.shields.io/badge/License-MIT-success)](https://github.com/minhhoccode111/todo-list/blob/master/LICENSE)
+[![Go Report Card](https://goreportcard.com/badge/github.com/minhhoccode111/todo-list)](https://goreportcard.com/report/github.com/minhhoccode111/todo-list)
+[![codecov](https://codecov.io/gh/minhhoccode111/todo-list/branch/master/graph/badge.svg?token=XE3E0X3EVQ)](https://codecov.io/gh/minhhoccode111/todo-list)
 
 [![Web Framework](https://img.shields.io/badge/Gin-Web%20Framework-blue)](https://github.com/gin-gonic/gin)
 [![API Documentation](https://img.shields.io/badge/Swagger-API%20Documentation-blue)](https://github.com/swaggo/swag)
@@ -42,8 +42,8 @@ The purpose of the template is to show:
 
 Using the principles of Robert Martin (aka Uncle Bob).
 
-[Go-clean-template](https://minhhoccode111.com/go-clean-template-gin?utm_source=github&utm_campaign=go-clean-template-gin) is created &
-supported by [minhhoccode111](https://minhhoccode111.com/?utm_source=github&utm_campaign=go-clean-template-gin).
+[Go-clean-template](https://minhhoccode111.com/todo-list?utm_source=github&utm_campaign=todo-list) is created &
+supported by [minhhoccode111](https://minhhoccode111.com/?utm_source=github&utm_campaign=todo-list).
 
 This template implements three types of servers:
 

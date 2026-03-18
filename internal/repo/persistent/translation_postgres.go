@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/minhhoccode111/go-clean-template-gin/internal/entity"
-	"github.com/minhhoccode111/go-clean-template-gin/internal/repo/persistent/sqlc"
-	"github.com/minhhoccode111/go-clean-template-gin/pkg/postgres"
+	"github.com/minhhoccode111/todo-list/internal/entity"
+	"github.com/minhhoccode111/todo-list/internal/repo/persistent/sqlc"
+	"github.com/minhhoccode111/todo-list/pkg/postgres"
 )
 
 // TranslationRepo -.

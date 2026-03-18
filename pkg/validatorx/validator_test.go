@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/minhhoccode111/go-clean-template-gin/pkg/validatorx"
+	"github.com/minhhoccode111/todo-list/pkg/validatorx"
 )
 
 // ---- no_dups_str ------------------------------------------------------------

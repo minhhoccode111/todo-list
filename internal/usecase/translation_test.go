@@ -5,8 +5,8 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/minhhoccode111/go-clean-template-gin/internal/entity"
-	"github.com/minhhoccode111/go-clean-template-gin/internal/usecase/translation"
+	"github.com/minhhoccode111/todo-list/internal/entity"
+	"github.com/minhhoccode111/todo-list/internal/usecase/translation"
 	"github.com/stretchr/testify/require"
 	"go.uber.org/mock/gomock"
 )

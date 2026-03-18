@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/minhhoccode111/go-clean-template-gin/config"
+	"github.com/minhhoccode111/todo-list/config"
 )
 
 // CORS returns a Gin middleware that sets the appropriate CORS headers.

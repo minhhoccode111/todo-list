@@ -5,12 +5,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"github.com/minhhoccode111/go-clean-template-gin/config"
-	_ "github.com/minhhoccode111/go-clean-template-gin/docs" // Swagger docs.
-	"github.com/minhhoccode111/go-clean-template-gin/internal/controller/restapi/middleware"
-	v1 "github.com/minhhoccode111/go-clean-template-gin/internal/controller/restapi/v1"
-	"github.com/minhhoccode111/go-clean-template-gin/internal/usecase"
-	"github.com/minhhoccode111/go-clean-template-gin/pkg/logger"
+	"github.com/minhhoccode111/todo-list/config"
+	_ "github.com/minhhoccode111/todo-list/docs" // Swagger docs.
+	"github.com/minhhoccode111/todo-list/internal/controller/restapi/middleware"
+	v1 "github.com/minhhoccode111/todo-list/internal/controller/restapi/v1"
+	"github.com/minhhoccode111/todo-list/internal/usecase"
+	"github.com/minhhoccode111/todo-list/pkg/logger"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	ginprometheus "github.com/zsais/go-gin-prometheus"
@@ -38,7 +38,7 @@ func NewRouter(
 
 	// Prometheus metrics
 	if cfg.Metrics.Enabled {
-		p := ginprometheus.NewPrometheus("go-clean-template-gin-gin")
+		p := ginprometheus.NewPrometheus("todo-list-gin")
 		p.Use(handler)
 	}
 

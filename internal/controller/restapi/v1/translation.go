@@ -5,9 +5,9 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/minhhoccode111/go-clean-template-gin/internal/controller/restapi/v1/request"
-	"github.com/minhhoccode111/go-clean-template-gin/internal/entity"
-	"github.com/minhhoccode111/go-clean-template-gin/pkg/validatorx"
+	"github.com/minhhoccode111/todo-list/internal/controller/restapi/v1/request"
+	"github.com/minhhoccode111/todo-list/internal/entity"
+	"github.com/minhhoccode111/todo-list/pkg/validatorx"
 )
 
 // @Summary     Show history

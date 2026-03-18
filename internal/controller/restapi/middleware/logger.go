@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/minhhoccode111/go-clean-template-gin/pkg/logger"
+	"github.com/minhhoccode111/todo-list/pkg/logger"
 )
 
 func Logger(l logger.Interface) gin.HandlerFunc {

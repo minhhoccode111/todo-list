@@ -13,7 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
-	entity "github.com/minhhoccode111/go-clean-template-gin/internal/entity"
+	entity "github.com/minhhoccode111/todo-list/internal/entity"
 	gomock "go.uber.org/mock/gomock"
 )
 

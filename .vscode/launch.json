@@ -9,7 +9,7 @@
       "program": "${workspaceFolder}/cmd/app",
       "args": ["-tags", "migrate"],
       "env": {
-        "APP_NAME": "go-clean-template-gin",
+        "APP_NAME": "todo-list",
         "APP_VERSION": "1.0.0",
         "CACHE_MAX_COST": "10000",
         "CACHE_TTL": "5m",
