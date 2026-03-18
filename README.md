@@ -2,10 +2,6 @@
 
 # Go Clean template
 
-[🇨🇳 中文](README_CN.md)
-[🇷🇺 RU](README_RU.md)
-[🇻🇳 VI](README_VI.md)
-
 Clean Architecture template for Golang services
 
 [![Release](https://img.shields.io/github/v/release/minhhoccode111/todo-list.svg)](https://github.com/minhhoccode111/todo-list/releases/)
