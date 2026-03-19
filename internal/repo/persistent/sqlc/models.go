@@ -4,10 +4,81 @@
 
 package sqlc
 
+import (
+	"database/sql/driver"
+	"fmt"
+	"time"
+)
+
+type PriorityLevel string
+
+const (
+	PriorityLevelLow  PriorityLevel = "low"
+	PriorityLevelMed  PriorityLevel = "med"
+	PriorityLevelHigh PriorityLevel = "high"
+)
+
+func (e *PriorityLevel) Scan(src interface{}) error {
+	switch s := src.(type) {
+	case []byte:
+		*e = PriorityLevel(s)
+	case string:
+		*e = PriorityLevel(s)
+	default:
+		return fmt.Errorf("unsupported scan type for PriorityLevel: %T", src)
+	}
+	return nil
+}
+
+type NullPriorityLevel struct {
+	PriorityLevel PriorityLevel
+	Valid         bool // Valid is true if PriorityLevel is not NULL
+}
+
+// Scan implements the Scanner interface.
+func (ns *NullPriorityLevel) Scan(value interface{}) error {
+	if value == nil {
+		ns.PriorityLevel, ns.Valid = "", false
+		return nil
+	}
+	ns.Valid = true
+	return ns.PriorityLevel.Scan(value)
+}
+
+// Value implements the driver Valuer interface.
+func (ns NullPriorityLevel) Value() (driver.Value, error) {
+	if !ns.Valid {
+		return nil, nil
+	}
+	return string(ns.PriorityLevel), nil
+}
+
 type History struct {
 	ID          int32
 	Source      string
 	Destination string
 	Original    string
 	Translation string
+}
+
+type Task struct {
+	ID          int32
+	UserID      int32
+	Title       string
+	Description string
+	Completed   bool
+	Priority    NullPriorityLevel
+	DueDate     time.Time
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	DeletedAt   time.Time
+}
+
+type User struct {
+	ID           int32
+	Email        string
+	Username     string
+	PasswordHash string
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
 }
