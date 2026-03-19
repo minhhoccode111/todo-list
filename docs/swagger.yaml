@@ -22,6 +22,22 @@ definitions:
           $ref: '#/definitions/entity.Translation'
         type: array
     type: object
+  request.Login:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  request.Register:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        type: string
+    type: object
   request.Translate:
     properties:
       destination:
@@ -38,6 +54,11 @@ definitions:
     - original
     - source
     type: object
+  response.Auth:
+    properties:
+      token:
+        type: string
+    type: object
   response.Error:
     properties:
       error:
@@ -51,6 +72,72 @@ info:
   title: Go Clean Template API
   version: "1.0"
 paths:
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Login a user with email and password
+      operationId: login
+      parameters:
+      - description: comment
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.Auth'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Error'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Login
+      tags:
+      - Auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register a user with name, email and password
+      operationId: register
+      parameters:
+      - description: comment
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/request.Register'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/response.Auth'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Error'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Error'
+      summary: Register
+      tags:
+      - Auth
   /translation/do-translate:
     post:
       consumes:

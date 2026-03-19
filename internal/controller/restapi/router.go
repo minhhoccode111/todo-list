@@ -55,8 +55,10 @@ func NewRouter(
 	// Routers
 	apiV1Group := handler.Group("/api/v1")
 	{
-		v1.NewTranslationRoutes(apiV1Group, tr, l, v)
-		v1.NewUserRoutes(apiV1Group, u, l, v)
-		v1.NewTodoRoutes(apiV1Group, to, l, v)
+		v1.NewV1Routes(apiV1Group, tr, u, to, l, v)
 	}
+
+	// apiV2Group := handler.Group("/api/v2")
+	// {
+	// }
 }

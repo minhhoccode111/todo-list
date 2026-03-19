@@ -7,51 +7,33 @@ import (
 	"github.com/minhhoccode111/todo-list/pkg/logger"
 )
 
-// NewTranslationRoutes -.
-func NewTranslationRoutes(
+// NewV1Routes -.
+func NewV1Routes(
 	apiV1Group *gin.RouterGroup,
 	tr usecase.Translation,
-	l logger.Interface,
-	v *validator.Validate,
-) {
-	r := &V1{tr: tr, l: l, v: v}
-
-	translationGroup := apiV1Group.Group("/translation")
-
-	{
-		translationGroup.GET("/history", r.history)
-		translationGroup.POST("/do-translate", r.doTranslate)
-	}
-}
-
-// NewUserRoutes -.
-func NewUserRoutes(
-	apiV1Group *gin.RouterGroup,
 	u usecase.User,
-	l logger.Interface,
-	v *validator.Validate,
-) {
-	r := &V1{u: u, l: l, v: v}
-
-	userGroup := apiV1Group.Group("/")
-	{
-	}
-	_ = r
-	_ = userGroup
-}
-
-// NewTodoRoutes -.
-func NewTodoRoutes(
-	apiV1Group *gin.RouterGroup,
 	to usecase.Todo,
 	l logger.Interface,
 	v *validator.Validate,
 ) {
-	r := &V1{to: to, l: l, v: v}
+	r := &V1{tr: tr, u: u, to: to, l: l, v: v}
+
+	translationGroup := apiV1Group.Group("/translation")
+	{
+		translationGroup.GET("/history", r.history)
+		translationGroup.POST("/do-translate", r.doTranslate)
+	}
+
+	userGroup := apiV1Group.Group("/")
+	{
+		userGroup.POST("/register", r.register)
+		userGroup.POST("/login", r.login)
+		// TODO:
+	}
 
 	todoGroup := apiV1Group.Group("/")
 	{
+		// TODO:
+		_ = todoGroup
 	}
-	_ = r
-	_ = todoGroup
 }
