@@ -26,12 +26,12 @@ func New(r repo.TranslationRepo, w repo.TranslationWebAPI, c repo.TranslationCac
 
 // History - getting translate history from store.
 // Uses cache-aside: returns cached results when available, falls back to DB otherwise.
-func (uc *UseCase) History(ctx context.Context) (entity.TranslationHistory, error) {
+func (uc *UseCase) ReadHistory(ctx context.Context) (entity.TranslationHistory, error) {
 	if cached, ok := uc.cache.GetHistory(ctx); ok {
 		return entity.TranslationHistory{History: cached}, nil
 	}
 
-	translations, err := uc.repo.GetHistory(ctx)
+	translations, err := uc.repo.ReadHistory(ctx)
 	if err != nil {
 		return entity.TranslationHistory{}, fmt.Errorf(
 			"TranslationUseCase - History - s.repo.GetHistory: %w",
@@ -57,7 +57,7 @@ func (uc *UseCase) Translate(
 		)
 	}
 
-	err = uc.repo.Store(ctx, translation)
+	err = uc.repo.CreateHistory(ctx, translation)
 	if err != nil {
 		return entity.Translation{}, fmt.Errorf(
 			"TranslationUseCase - Translate - s.repo.Store: %w",

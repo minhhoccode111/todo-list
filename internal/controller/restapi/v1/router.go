@@ -23,3 +23,19 @@ func NewTranslationRoutes(
 		translationGroup.POST("/do-translate", r.doTranslate)
 	}
 }
+
+// NewTodoRoutes -.
+func NewTodoRoutes(
+	apiV1Group *gin.RouterGroup,
+	t usecase.Translation,
+	l logger.Interface,
+	v *validator.Validate,
+) {
+	r := &V1{t: t, l: l, v: v}
+
+	todoGroup := apiV1Group.Group("/")
+	{
+		todoGroup.GET("/history", r.history)
+		todoGroup.POST("/do-translate", r.doTranslate)
+	}
+}

@@ -9,26 +9,48 @@ import (
 	"context"
 )
 
-const getHistory = `-- name: GetHistory :many
-SELECT source, destination, original, translation FROM history
+const createHistory = `-- name: CreateHistory :exec
+INSERT INTO history (source, destination, original, translation)
+VALUES ($1, $2, $3, $4)
 `
 
-type GetHistoryRow struct {
+type CreateHistoryParams struct {
 	Source      string
 	Destination string
 	Original    string
 	Translation string
 }
 
-func (q *Queries) GetHistory(ctx context.Context) ([]GetHistoryRow, error) {
-	rows, err := q.db.Query(ctx, getHistory)
+func (q *Queries) CreateHistory(ctx context.Context, arg CreateHistoryParams) error {
+	_, err := q.db.Exec(ctx, createHistory,
+		arg.Source,
+		arg.Destination,
+		arg.Original,
+		arg.Translation,
+	)
+	return err
+}
+
+const readHistory = `-- name: ReadHistory :many
+SELECT source, destination, original, translation FROM history
+`
+
+type ReadHistoryRow struct {
+	Source      string
+	Destination string
+	Original    string
+	Translation string
+}
+
+func (q *Queries) ReadHistory(ctx context.Context) ([]ReadHistoryRow, error) {
+	rows, err := q.db.Query(ctx, readHistory)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []GetHistoryRow
+	var items []ReadHistoryRow
 	for rows.Next() {
-		var i GetHistoryRow
+		var i ReadHistoryRow
 		if err := rows.Scan(
 			&i.Source,
 			&i.Destination,
@@ -43,26 +65,4 @@ func (q *Queries) GetHistory(ctx context.Context) ([]GetHistoryRow, error) {
 		return nil, err
 	}
 	return items, nil
-}
-
-const store = `-- name: Store :exec
-INSERT INTO history (source, destination, original, translation)
-VALUES ($1, $2, $3, $4)
-`
-
-type StoreParams struct {
-	Source      string
-	Destination string
-	Original    string
-	Translation string
-}
-
-func (q *Queries) Store(ctx context.Context, arg StoreParams) error {
-	_, err := q.db.Exec(ctx, store,
-		arg.Source,
-		arg.Destination,
-		arg.Original,
-		arg.Translation,
-	)
-	return err
 }

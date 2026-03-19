@@ -17,8 +17,8 @@ type TranslationRepo struct {
 	queries *sqlc.Queries
 }
 
-// New -.
-func New(pg *postgres.Postgres) *TranslationRepo {
+// NewTranslationRepo -.
+func NewTranslationRepo(pg *postgres.Postgres) *TranslationRepo {
 	return &TranslationRepo{
 		Postgres: pg,
 		queries:  sqlc.New(pg.Pool),
@@ -26,8 +26,8 @@ func New(pg *postgres.Postgres) *TranslationRepo {
 }
 
 // GetHistory -.
-func (r *TranslationRepo) GetHistory(ctx context.Context) ([]entity.Translation, error) {
-	rows, err := r.queries.GetHistory(ctx)
+func (r *TranslationRepo) ReadHistory(ctx context.Context) ([]entity.Translation, error) {
+	rows, err := r.queries.ReadHistory(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("TranslationRepo - GetHistory - r.queries.GetHistory: %w", err)
 	}
@@ -48,7 +48,7 @@ func (r *TranslationRepo) GetHistory(ctx context.Context) ([]entity.Translation,
 
 // Store -.
 // An example of a transactional store with sqlc.
-func (r *TranslationRepo) Store(ctx context.Context, t entity.Translation) error {
+func (r *TranslationRepo) CreateHistory(ctx context.Context, t entity.Translation) error {
 	tx, err := r.Pool.Begin(ctx)
 	if err != nil {
 		return fmt.Errorf("TranslationRepo - Store - r.Pool.Begin: %w", err)
@@ -58,7 +58,7 @@ func (r *TranslationRepo) Store(ctx context.Context, t entity.Translation) error
 
 	queriesTx := r.queries.WithTx(tx)
 
-	err = queriesTx.Store(ctx, sqlc.StoreParams{
+	err = queriesTx.CreateHistory(ctx, sqlc.CreateHistoryParams{
 		Source:      t.Source,
 		Destination: t.Destination,
 		Original:    t.Original,

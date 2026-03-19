@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users(
 
 CREATE TYPE priority_level AS ENUM ('low', 'med', 'high');
 
-CREATE TABLE IF NOT EXISTS tasks(
+CREATE TABLE IF NOT EXISTS todos(
     id serial PRIMARY KEY,
     user_id int NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     title VARCHAR(255) NOT NULL,
@@ -22,8 +22,8 @@ CREATE TABLE IF NOT EXISTS tasks(
     deleted_at TIMESTAMPTZ
 );
 
-CREATE INDEX IF NOT EXISTS idx_tasks_user_id ON tasks(user_id);
-CREATE INDEX IF NOT EXISTS idx_tasks_completed ON tasks(completed);
-CREATE INDEX IF NOT EXISTS idx_tasks_due_date ON tasks(due_date);
-CREATE INDEX IF NOT EXISTS idx_tasks_deleted_at ON tasks(deleted_at);
-CREATE INDEX IF NOT EXISTS idx_tasks_priority ON tasks(priority);
+CREATE INDEX IF NOT EXISTS idx_todos_user_id ON todos(user_id);
+CREATE INDEX IF NOT EXISTS idx_todos_completed ON todos(completed);
+CREATE INDEX IF NOT EXISTS idx_todos_due_date ON todos(due_date);
+CREATE INDEX IF NOT EXISTS idx_todos_deleted_at ON todos(deleted_at);
+CREATE INDEX IF NOT EXISTS idx_todos_priority ON todos(priority);

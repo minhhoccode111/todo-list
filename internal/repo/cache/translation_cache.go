@@ -16,9 +16,9 @@ type TranslationCache struct {
 	c *cache.Cache[string, []entity.Translation]
 }
 
-// New creates a new TranslationCache.
+// NewTranslationCache creates a new TranslationCache.
 // The TTL and max-cost are configured on the ottercache.Cache itself via ottercache.TTL / ottercache.MaxCost.
-func New(c *cache.Cache[string, []entity.Translation]) *TranslationCache {
+func NewTranslationCache(c *cache.Cache[string, []entity.Translation]) *TranslationCache {
 	return &TranslationCache{c: c}
 }
 

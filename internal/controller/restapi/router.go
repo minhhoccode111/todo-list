@@ -51,8 +51,9 @@ func NewRouter(
 	handler.GET("/healthz", func(c *gin.Context) { c.Status(http.StatusOK) })
 
 	// Routers
-	apiV1Group := handler.Group("/v1")
+	apiV1Group := handler.Group("/api/v1")
 	{
 		v1.NewTranslationRoutes(apiV1Group, t, l, v)
+		v1.NewTodoRoutes(apiV1Group, t, l, v)
 	}
 }

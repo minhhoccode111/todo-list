@@ -44,9 +44,9 @@ func Run(cfg *config.Config) { //nolint: gocyclo,cyclop,funlen,gocritic,nolintli
 
 	// Use-Case
 	translationUseCase := translation.New(
-		persistent.New(pg),
+		persistent.NewTranslationRepo(pg),
 		webapi.New(),
-		repocache.New(otterCache),
+		repocache.NewTranslationCache(otterCache),
 	)
 
 	// HTTP Server

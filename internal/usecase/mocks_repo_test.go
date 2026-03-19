@@ -41,33 +41,33 @@ func (m *MockTranslationRepo) EXPECT() *MockTranslationRepoMockRecorder {
 	return m.recorder
 }
 
-// GetHistory mocks base method.
-func (m *MockTranslationRepo) GetHistory(arg0 context.Context) ([]entity.Translation, error) {
+// CreateHistory mocks base method.
+func (m *MockTranslationRepo) CreateHistory(arg0 context.Context, arg1 entity.Translation) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetHistory", arg0)
+	ret := m.ctrl.Call(m, "CreateHistory", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateHistory indicates an expected call of CreateHistory.
+func (mr *MockTranslationRepoMockRecorder) CreateHistory(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateHistory", reflect.TypeOf((*MockTranslationRepo)(nil).CreateHistory), arg0, arg1)
+}
+
+// ReadHistory mocks base method.
+func (m *MockTranslationRepo) ReadHistory(arg0 context.Context) ([]entity.Translation, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReadHistory", arg0)
 	ret0, _ := ret[0].([]entity.Translation)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetHistory indicates an expected call of GetHistory.
-func (mr *MockTranslationRepoMockRecorder) GetHistory(arg0 any) *gomock.Call {
+// ReadHistory indicates an expected call of ReadHistory.
+func (mr *MockTranslationRepoMockRecorder) ReadHistory(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetHistory", reflect.TypeOf((*MockTranslationRepo)(nil).GetHistory), arg0)
-}
-
-// Store mocks base method.
-func (m *MockTranslationRepo) Store(arg0 context.Context, arg1 entity.Translation) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Store", arg0, arg1)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Store indicates an expected call of Store.
-func (mr *MockTranslationRepoMockRecorder) Store(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Store", reflect.TypeOf((*MockTranslationRepo)(nil).Store), arg0, arg1)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadHistory", reflect.TypeOf((*MockTranslationRepo)(nil).ReadHistory), arg0)
 }
 
 // MockTranslationWebAPI is a mock of TranslationWebAPI interface.
@@ -172,4 +172,100 @@ func (m *MockTranslationCache) SetHistory(ctx context.Context, history []entity.
 func (mr *MockTranslationCacheMockRecorder) SetHistory(ctx, history any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetHistory", reflect.TypeOf((*MockTranslationCache)(nil).SetHistory), ctx, history)
+}
+
+// MockTodoRepo is a mock of TodoRepo interface.
+type MockTodoRepo struct {
+	ctrl     *gomock.Controller
+	recorder *MockTodoRepoMockRecorder
+	isgomock struct{}
+}
+
+// MockTodoRepoMockRecorder is the mock recorder for MockTodoRepo.
+type MockTodoRepoMockRecorder struct {
+	mock *MockTodoRepo
+}
+
+// NewMockTodoRepo creates a new mock instance.
+func NewMockTodoRepo(ctrl *gomock.Controller) *MockTodoRepo {
+	mock := &MockTodoRepo{ctrl: ctrl}
+	mock.recorder = &MockTodoRepoMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockTodoRepo) EXPECT() *MockTodoRepoMockRecorder {
+	return m.recorder
+}
+
+// MockTodoCache is a mock of TodoCache interface.
+type MockTodoCache struct {
+	ctrl     *gomock.Controller
+	recorder *MockTodoCacheMockRecorder
+	isgomock struct{}
+}
+
+// MockTodoCacheMockRecorder is the mock recorder for MockTodoCache.
+type MockTodoCacheMockRecorder struct {
+	mock *MockTodoCache
+}
+
+// NewMockTodoCache creates a new mock instance.
+func NewMockTodoCache(ctrl *gomock.Controller) *MockTodoCache {
+	mock := &MockTodoCache{ctrl: ctrl}
+	mock.recorder = &MockTodoCacheMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockTodoCache) EXPECT() *MockTodoCacheMockRecorder {
+	return m.recorder
+}
+
+// MockUserRepo is a mock of UserRepo interface.
+type MockUserRepo struct {
+	ctrl     *gomock.Controller
+	recorder *MockUserRepoMockRecorder
+	isgomock struct{}
+}
+
+// MockUserRepoMockRecorder is the mock recorder for MockUserRepo.
+type MockUserRepoMockRecorder struct {
+	mock *MockUserRepo
+}
+
+// NewMockUserRepo creates a new mock instance.
+func NewMockUserRepo(ctrl *gomock.Controller) *MockUserRepo {
+	mock := &MockUserRepo{ctrl: ctrl}
+	mock.recorder = &MockUserRepoMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockUserRepo) EXPECT() *MockUserRepoMockRecorder {
+	return m.recorder
+}
+
+// MockUserCache is a mock of UserCache interface.
+type MockUserCache struct {
+	ctrl     *gomock.Controller
+	recorder *MockUserCacheMockRecorder
+	isgomock struct{}
+}
+
+// MockUserCacheMockRecorder is the mock recorder for MockUserCache.
+type MockUserCacheMockRecorder struct {
+	mock *MockUserCache
+}
+
+// NewMockUserCache creates a new mock instance.
+func NewMockUserCache(ctrl *gomock.Controller) *MockUserCache {
+	mock := &MockUserCache{ctrl: ctrl}
+	mock.recorder = &MockUserCacheMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockUserCache) EXPECT() *MockUserCacheMockRecorder {
+	return m.recorder
 }

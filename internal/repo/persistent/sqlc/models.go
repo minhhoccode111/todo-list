@@ -61,7 +61,7 @@ type History struct {
 	Translation string
 }
 
-type Task struct {
+type Todo struct {
 	ID          int32
 	UserID      int32
 	Title       string

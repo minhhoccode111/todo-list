@@ -41,6 +41,10 @@ sqlc: ### generate source files from sql
 	sqlc generate
 .PHONY: sqlc
 
+hurl: ### execute hurl
+	hurl --test docs/hurl
+.PHONY: sqlc
+
 deps: ### deps tidy + verify
 	go mod tidy && go mod verify
 .PHONY: deps
@@ -125,6 +129,10 @@ migrate-status: ### show migration version
 
 migrate-list: ### list migrations, order by modified date
 	ls -l migrations/*.up.sql
+.PHONY: migrate-list
+
+migrate-force: ### force migration at a specific version
+	migrate -path migrations -database '$(PG_URL)?sslmode=disable' force "$(version)"
 .PHONY: migrate-list
 
 bin-deps: ### install tools

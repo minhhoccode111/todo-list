@@ -41,19 +41,19 @@ func (m *MockTranslation) EXPECT() *MockTranslationMockRecorder {
 	return m.recorder
 }
 
-// History mocks base method.
-func (m *MockTranslation) History(arg0 context.Context) (entity.TranslationHistory, error) {
+// ReadHistory mocks base method.
+func (m *MockTranslation) ReadHistory(arg0 context.Context) (entity.TranslationHistory, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "History", arg0)
+	ret := m.ctrl.Call(m, "ReadHistory", arg0)
 	ret0, _ := ret[0].(entity.TranslationHistory)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// History indicates an expected call of History.
-func (mr *MockTranslationMockRecorder) History(arg0 any) *gomock.Call {
+// ReadHistory indicates an expected call of ReadHistory.
+func (mr *MockTranslationMockRecorder) ReadHistory(arg0 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "History", reflect.TypeOf((*MockTranslation)(nil).History), arg0)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadHistory", reflect.TypeOf((*MockTranslation)(nil).ReadHistory), arg0)
 }
 
 // Translate mocks base method.

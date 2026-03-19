@@ -12,8 +12,8 @@ import (
 type (
 	// TranslationRepo -.
 	TranslationRepo interface {
-		Store(context.Context, entity.Translation) error
-		GetHistory(context.Context) ([]entity.Translation, error)
+		CreateHistory(context.Context, entity.Translation) error
+		ReadHistory(context.Context) ([]entity.Translation, error)
 	}
 
 	// TranslationWebAPI -.
@@ -32,4 +32,16 @@ type (
 		// InvalidateHistory removes the cached history so the next read hits the DB.
 		InvalidateHistory(ctx context.Context)
 	}
+
+	// TodoRepo -.
+	TodoRepo interface{}
+
+	// TodoCache -.
+	TodoCache interface{}
+
+	// UserRepo -.
+	UserRepo interface{}
+
+	// UserCache -.
+	UserCache interface{}
 )
