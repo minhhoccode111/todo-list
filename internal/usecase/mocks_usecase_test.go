@@ -70,3 +70,51 @@ func (mr *MockTranslationMockRecorder) Translate(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Translate", reflect.TypeOf((*MockTranslation)(nil).Translate), arg0, arg1)
 }
+
+// MockUser is a mock of User interface.
+type MockUser struct {
+	ctrl     *gomock.Controller
+	recorder *MockUserMockRecorder
+	isgomock struct{}
+}
+
+// MockUserMockRecorder is the mock recorder for MockUser.
+type MockUserMockRecorder struct {
+	mock *MockUser
+}
+
+// NewMockUser creates a new mock instance.
+func NewMockUser(ctrl *gomock.Controller) *MockUser {
+	mock := &MockUser{ctrl: ctrl}
+	mock.recorder = &MockUserMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockUser) EXPECT() *MockUserMockRecorder {
+	return m.recorder
+}
+
+// MockTodo is a mock of Todo interface.
+type MockTodo struct {
+	ctrl     *gomock.Controller
+	recorder *MockTodoMockRecorder
+	isgomock struct{}
+}
+
+// MockTodoMockRecorder is the mock recorder for MockTodo.
+type MockTodoMockRecorder struct {
+	mock *MockTodo
+}
+
+// NewMockTodo creates a new mock instance.
+func NewMockTodo(ctrl *gomock.Controller) *MockTodo {
+	mock := &MockTodo{ctrl: ctrl}
+	mock.recorder = &MockTodoMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockTodo) EXPECT() *MockTodoMockRecorder {
+	return m.recorder
+}

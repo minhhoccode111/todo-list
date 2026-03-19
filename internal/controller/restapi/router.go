@@ -26,7 +26,9 @@ import (
 func NewRouter(
 	handler *gin.Engine,
 	cfg *config.Config,
-	t usecase.Translation,
+	tr usecase.Translation,
+	u usecase.User,
+	to usecase.Todo,
 	l logger.Interface,
 	v *validator.Validate,
 ) {
@@ -53,7 +55,8 @@ func NewRouter(
 	// Routers
 	apiV1Group := handler.Group("/api/v1")
 	{
-		v1.NewTranslationRoutes(apiV1Group, t, l, v)
-		v1.NewTodoRoutes(apiV1Group, t, l, v)
+		v1.NewTranslationRoutes(apiV1Group, tr, l, v)
+		v1.NewUserRoutes(apiV1Group, u, l, v)
+		v1.NewTodoRoutes(apiV1Group, to, l, v)
 	}
 }

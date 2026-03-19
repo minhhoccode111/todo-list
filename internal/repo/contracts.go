@@ -33,15 +33,15 @@ type (
 		InvalidateHistory(ctx context.Context)
 	}
 
-	// TodoRepo -.
-	TodoRepo interface{}
-
-	// TodoCache -.
-	TodoCache interface{}
-
 	// UserRepo -.
 	UserRepo interface{}
 
 	// UserCache -.
 	UserCache interface{}
+
+	// TodoRepo -.
+	TodoRepo interface{}
+
+	// TodoCache -.
+	TodoCache interface{}
 )

@@ -13,7 +13,9 @@ import (
 	repocache "github.com/minhhoccode111/todo-list/internal/repo/cache"
 	"github.com/minhhoccode111/todo-list/internal/repo/persistent"
 	"github.com/minhhoccode111/todo-list/internal/repo/webapi"
+	"github.com/minhhoccode111/todo-list/internal/usecase/todo"
 	"github.com/minhhoccode111/todo-list/internal/usecase/translation"
+	"github.com/minhhoccode111/todo-list/internal/usecase/user"
 	"github.com/minhhoccode111/todo-list/pkg/cache"
 	"github.com/minhhoccode111/todo-list/pkg/httpserver"
 	"github.com/minhhoccode111/todo-list/pkg/logger"
@@ -34,24 +36,46 @@ func Run(cfg *config.Config) { //nolint: gocyclo,cyclop,funlen,gocritic,nolintli
 	defer pg.Close()
 
 	// Cache
-	otterCache, err := cache.New[string, []entity.Translation](
+	translationCache, err := cache.New[string, []entity.Translation](
 		cache.MaxCost(cfg.Cache.MaxCost),
 		cache.TTL(cfg.Cache.TTL),
 	)
 	if err != nil {
-		l.Fatal(fmt.Errorf("app - Run - ottercache.New: %w", err))
+		l.Fatal(fmt.Errorf("app - Run - cache.New: %w", err))
+	}
+	userCache, err := cache.New[string, entity.User](
+		cache.MaxCost(cfg.Cache.MaxCost),
+		cache.TTL(cfg.Cache.TTL),
+	)
+	if err != nil {
+		l.Fatal(fmt.Errorf("app - Run - cache.New: %w", err))
+	}
+	todoCache, err := cache.New[string, []entity.Todo](
+		cache.MaxCost(cfg.Cache.MaxCost),
+		cache.TTL(cfg.Cache.TTL),
+	)
+	if err != nil {
+		l.Fatal(fmt.Errorf("app - Run - cache.New: %w", err))
 	}
 
 	// Use-Case
 	translationUseCase := translation.New(
 		persistent.NewTranslationRepo(pg),
 		webapi.New(),
-		repocache.NewTranslationCache(otterCache),
+		repocache.NewTranslationCache(translationCache),
+	)
+	userUseCase := user.New(
+		persistent.NewUserRepo(pg),
+		repocache.NewUserCache(userCache),
+	)
+	todoUseCase := todo.New(
+		persistent.NewTodoRepo(pg),
+		repocache.NewTodoCache(todoCache),
 	)
 
 	// HTTP Server
 	httpServer := httpserver.New(l, httpserver.Port(cfg.HTTP.Port))
-	restapi.NewRouter(httpServer.Engine, cfg, translationUseCase, l, v)
+	restapi.NewRouter(httpServer.Engine, cfg, translationUseCase, userUseCase, todoUseCase, l, v)
 
 	// Start servers
 	httpServer.Start()

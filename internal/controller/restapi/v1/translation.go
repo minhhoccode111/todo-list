@@ -20,7 +20,7 @@ import (
 // @Failure     500 {object} response.Error
 // @Router      /translation/history [get]
 func (r *V1) history(c *gin.Context) {
-	translationHistory, err := r.t.ReadHistory(c.Request.Context())
+	translationHistory, err := r.tr.ReadHistory(c.Request.Context())
 	if err != nil {
 		r.l.Error(err, "restapi - v1 - history")
 
@@ -64,7 +64,7 @@ func (r *V1) doTranslate(c *gin.Context) {
 		return
 	}
 
-	translation, err := r.t.Translate(
+	translation, err := r.tr.Translate(
 		c.Request.Context(),
 		entity.Translation{
 			Source:      body.Source,

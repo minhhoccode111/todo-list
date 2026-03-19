@@ -174,54 +174,6 @@ func (mr *MockTranslationCacheMockRecorder) SetHistory(ctx, history any) *gomock
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetHistory", reflect.TypeOf((*MockTranslationCache)(nil).SetHistory), ctx, history)
 }
 
-// MockTodoRepo is a mock of TodoRepo interface.
-type MockTodoRepo struct {
-	ctrl     *gomock.Controller
-	recorder *MockTodoRepoMockRecorder
-	isgomock struct{}
-}
-
-// MockTodoRepoMockRecorder is the mock recorder for MockTodoRepo.
-type MockTodoRepoMockRecorder struct {
-	mock *MockTodoRepo
-}
-
-// NewMockTodoRepo creates a new mock instance.
-func NewMockTodoRepo(ctrl *gomock.Controller) *MockTodoRepo {
-	mock := &MockTodoRepo{ctrl: ctrl}
-	mock.recorder = &MockTodoRepoMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockTodoRepo) EXPECT() *MockTodoRepoMockRecorder {
-	return m.recorder
-}
-
-// MockTodoCache is a mock of TodoCache interface.
-type MockTodoCache struct {
-	ctrl     *gomock.Controller
-	recorder *MockTodoCacheMockRecorder
-	isgomock struct{}
-}
-
-// MockTodoCacheMockRecorder is the mock recorder for MockTodoCache.
-type MockTodoCacheMockRecorder struct {
-	mock *MockTodoCache
-}
-
-// NewMockTodoCache creates a new mock instance.
-func NewMockTodoCache(ctrl *gomock.Controller) *MockTodoCache {
-	mock := &MockTodoCache{ctrl: ctrl}
-	mock.recorder = &MockTodoCacheMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockTodoCache) EXPECT() *MockTodoCacheMockRecorder {
-	return m.recorder
-}
-
 // MockUserRepo is a mock of UserRepo interface.
 type MockUserRepo struct {
 	ctrl     *gomock.Controller
@@ -267,5 +219,53 @@ func NewMockUserCache(ctrl *gomock.Controller) *MockUserCache {
 
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockUserCache) EXPECT() *MockUserCacheMockRecorder {
+	return m.recorder
+}
+
+// MockTodoRepo is a mock of TodoRepo interface.
+type MockTodoRepo struct {
+	ctrl     *gomock.Controller
+	recorder *MockTodoRepoMockRecorder
+	isgomock struct{}
+}
+
+// MockTodoRepoMockRecorder is the mock recorder for MockTodoRepo.
+type MockTodoRepoMockRecorder struct {
+	mock *MockTodoRepo
+}
+
+// NewMockTodoRepo creates a new mock instance.
+func NewMockTodoRepo(ctrl *gomock.Controller) *MockTodoRepo {
+	mock := &MockTodoRepo{ctrl: ctrl}
+	mock.recorder = &MockTodoRepoMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockTodoRepo) EXPECT() *MockTodoRepoMockRecorder {
+	return m.recorder
+}
+
+// MockTodoCache is a mock of TodoCache interface.
+type MockTodoCache struct {
+	ctrl     *gomock.Controller
+	recorder *MockTodoCacheMockRecorder
+	isgomock struct{}
+}
+
+// MockTodoCacheMockRecorder is the mock recorder for MockTodoCache.
+type MockTodoCacheMockRecorder struct {
+	mock *MockTodoCache
+}
+
+// NewMockTodoCache creates a new mock instance.
+func NewMockTodoCache(ctrl *gomock.Controller) *MockTodoCache {
+	mock := &MockTodoCache{ctrl: ctrl}
+	mock.recorder = &MockTodoCacheMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockTodoCache) EXPECT() *MockTodoCacheMockRecorder {
 	return m.recorder
 }

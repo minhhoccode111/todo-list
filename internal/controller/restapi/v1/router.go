@@ -10,11 +10,11 @@ import (
 // NewTranslationRoutes -.
 func NewTranslationRoutes(
 	apiV1Group *gin.RouterGroup,
-	t usecase.Translation,
+	tr usecase.Translation,
 	l logger.Interface,
 	v *validator.Validate,
 ) {
-	r := &V1{t: t, l: l, v: v}
+	r := &V1{tr: tr, l: l, v: v}
 
 	translationGroup := apiV1Group.Group("/translation")
 
@@ -24,18 +24,34 @@ func NewTranslationRoutes(
 	}
 }
 
-// NewTodoRoutes -.
-func NewTodoRoutes(
+// NewUserRoutes -.
+func NewUserRoutes(
 	apiV1Group *gin.RouterGroup,
-	t usecase.Translation,
+	u usecase.User,
 	l logger.Interface,
 	v *validator.Validate,
 ) {
-	r := &V1{t: t, l: l, v: v}
+	r := &V1{u: u, l: l, v: v}
+
+	userGroup := apiV1Group.Group("/")
+	{
+	}
+	_ = r
+	_ = userGroup
+}
+
+// NewTodoRoutes -.
+func NewTodoRoutes(
+	apiV1Group *gin.RouterGroup,
+	to usecase.Todo,
+	l logger.Interface,
+	v *validator.Validate,
+) {
+	r := &V1{to: to, l: l, v: v}
 
 	todoGroup := apiV1Group.Group("/")
 	{
-		todoGroup.GET("/history", r.history)
-		todoGroup.POST("/do-translate", r.doTranslate)
 	}
+	_ = r
+	_ = todoGroup
 }

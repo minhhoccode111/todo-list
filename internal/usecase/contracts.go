@@ -15,4 +15,10 @@ type (
 		Translate(context.Context, entity.Translation) (entity.Translation, error)
 		ReadHistory(context.Context) (entity.TranslationHistory, error)
 	}
+
+	// User -.
+	User interface{}
+
+	// Todo -.
+	Todo interface{}
 )
