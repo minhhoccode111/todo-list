@@ -18,11 +18,11 @@ import (
 
 // NewRouter -.
 // Swagger spec:
-// @title       Go Clean Template API
-// @description Using a translation service as an example
+// @title       Todo-List API
+// @description A Todo-List API with Gin and Clean Architecture
 // @version     1.0
 // @host        localhost:8080
-// @BasePath    /v1
+// @BasePath    /api/v1
 func NewRouter(
 	handler *gin.Engine,
 	cfg *config.Config,
