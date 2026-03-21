@@ -10,23 +10,23 @@ import (
 )
 
 const createUser = `-- name: CreateUser :exec
-INSERT INTO users (email, username, password_hash)
+INSERT INTO users (email, name, password_hash)
 VALUES ($1, $2, $3)
 `
 
 type CreateUserParams struct {
 	Email        string
-	Username     string
+	Name         string
 	PasswordHash string
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) error {
-	_, err := q.db.Exec(ctx, createUser, arg.Email, arg.Username, arg.PasswordHash)
+	_, err := q.db.Exec(ctx, createUser, arg.Email, arg.Name, arg.PasswordHash)
 	return err
 }
 
 const readUser = `-- name: ReadUser :one
-SELECT id, email, username, password_hash, created_at, updated_at
+SELECT id, email, name, password_hash, created_at, updated_at
 FROM users
 `
 
@@ -36,7 +36,7 @@ func (q *Queries) ReadUser(ctx context.Context) (User, error) {
 	err := row.Scan(
 		&i.ID,
 		&i.Email,
-		&i.Username,
+		&i.Name,
 		&i.PasswordHash,
 		&i.CreatedAt,
 		&i.UpdatedAt,

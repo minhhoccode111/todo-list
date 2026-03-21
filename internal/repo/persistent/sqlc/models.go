@@ -77,7 +77,7 @@ type Todo struct {
 type User struct {
 	ID           int32
 	Email        string
-	Username     string
+	Name         string
 	PasswordHash string
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
