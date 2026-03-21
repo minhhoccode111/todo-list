@@ -32,11 +32,13 @@ func NewRouter(
 	l logger.Interface,
 	v *validator.Validate,
 ) {
-	// Options
-	handler.Use(middleware.Logger(l))
-	handler.Use(middleware.Recovery(l))
-	handler.Use(middleware.CORS(cfg.CORS))
-	handler.Use(middleware.RateLimit(cfg.RateLimit))
+	// Global-level (engine-wide) middlewares
+	handler.Use(
+		middleware.Logger(l),
+		middleware.Recovery(l),
+		middleware.CORS(cfg.CORS),
+		middleware.RateLimit(cfg.RateLimit),
+	)
 
 	// Prometheus metrics
 	if cfg.Metrics.Enabled {
@@ -55,10 +57,14 @@ func NewRouter(
 	// Routers
 	apiV1Group := handler.Group("/api/v1")
 	{
-		v1.NewV1Routes(apiV1Group, tr, u, to, l, v)
+		v1.NewV1Routes(
+			apiV1Group,
+			l,
+			v,
+			cfg,
+			tr,
+			u,
+			to,
+		)
 	}
-
-	// apiV2Group := handler.Group("/api/v2")
-	// {
-	// }
 }

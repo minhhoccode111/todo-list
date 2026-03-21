@@ -34,14 +34,21 @@ type (
 	}
 
 	// UserRepo -.
-	UserRepo interface{}
+	UserRepo interface {
+		CreateUser(context.Context, *entity.User) (*entity.User, error)
+		ReadUserByID(context.Context, string) (entity.User, error)
+	}
 
 	// UserCache -.
-	UserCache interface{}
+	UserCache interface {
+		GetUser(context.Context, string) (*entity.User, bool)
+		SetUser(context.Context, string, *entity.User) bool
+		InvalidateUser(context.Context, string)
+	}
 
 	// TodoRepo -.
-	TodoRepo interface{}
+	TodoRepo any
 
 	// TodoCache -.
-	TodoCache interface{}
+	TodoCache any
 )

@@ -1,0 +1,21 @@
+@url = http://localhost:8080
+@api = {{url}}/api/v1
+
+@name = minhhoccode111
+@email = minhhoccode111@gmail.com
+@password = P@55w0rd
+
+###
+GET {{url}}/healthz
+
+###
+POST {{api}}/register
+
+{
+    "name": "{{name}}",
+    "email": "{{email}}",
+    "password": "{{password}}"
+}
+
+###
+GET {{url}}/healthz

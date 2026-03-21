@@ -11,14 +11,9 @@ import (
 //
 //nolint:gochecknoglobals // package-level regex vars are intentional: compiled once, read-only after init.
 var (
-	// reTag: letters (any language), digits, underscores, hyphens, and internal spaces.
-	// Must start and end with a letter, digit, underscore, or hyphen — no leading/trailing spaces.
-	// Example matches: "sci-fi", "golang 101", "my_tag".
-	reTag = regexp.MustCompile(`^[\p{L}0-9_-]([\p{L}0-9_ -]*[\p{L}0-9_-])?$`)
-
-	// reUsername: letters (any language) and digits only. No spaces or special characters.
+	// reName: letters (any language) and digits only. No spaces or special characters.
 	// Example matches: "minhhoccode111", "Ψuser42".
-	reUsername = regexp.MustCompile(`^[\p{L}0-9]+$`)
+	reName = regexp.MustCompile(`^[\p{L}0-9]+$`)
 
 	// rePassword: Go's regexp uses RE2, which does not support lookaheads, so each
 	// character-class rule is expressed as a separate sub-regex and checked individually.
@@ -57,12 +52,8 @@ func New() *validator.Validate {
 		return true
 	})
 
-	mustRegister(v, "tag", func(fl validator.FieldLevel) bool {
-		return reTag.MatchString(fl.Field().String())
-	})
-
-	mustRegister(v, "username", func(fl validator.FieldLevel) bool {
-		return reUsername.MatchString(fl.Field().String())
+	mustRegister(v, "name", func(fl validator.FieldLevel) bool {
+		return reName.MatchString(fl.Field().String())
 	})
 
 	mustRegister(v, "password", func(fl validator.FieldLevel) bool {

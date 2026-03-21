@@ -60,7 +60,7 @@ func (uc *UseCase) Translate(
 	err = uc.repo.CreateHistory(ctx, translation)
 	if err != nil {
 		return entity.Translation{}, fmt.Errorf(
-			"TranslationUseCase - Translate - s.repo.Store: %w",
+			"TranslationUseCase - Translate - uc.repo.CreateHistory: %w",
 			err,
 		)
 	}

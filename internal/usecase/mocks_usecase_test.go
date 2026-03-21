@@ -13,6 +13,7 @@ import (
 	context "context"
 	reflect "reflect"
 
+	config "github.com/minhhoccode111/todo-list/config"
 	entity "github.com/minhhoccode111/todo-list/internal/entity"
 	gomock "go.uber.org/mock/gomock"
 )
@@ -95,26 +96,17 @@ func (m *MockUser) EXPECT() *MockUserMockRecorder {
 	return m.recorder
 }
 
-// MockTodo is a mock of Todo interface.
-type MockTodo struct {
-	ctrl     *gomock.Controller
-	recorder *MockTodoMockRecorder
-	isgomock struct{}
+// Register mocks base method.
+func (m *MockUser) Register(arg0 context.Context, arg1 *entity.User, arg2 *config.JWT) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Register", arg0, arg1, arg2)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
-// MockTodoMockRecorder is the mock recorder for MockTodo.
-type MockTodoMockRecorder struct {
-	mock *MockTodo
-}
-
-// NewMockTodo creates a new mock instance.
-func NewMockTodo(ctrl *gomock.Controller) *MockTodo {
-	mock := &MockTodo{ctrl: ctrl}
-	mock.recorder = &MockTodoMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockTodo) EXPECT() *MockTodoMockRecorder {
-	return m.recorder
+// Register indicates an expected call of Register.
+func (mr *MockUserMockRecorder) Register(arg0, arg1, arg2 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockUser)(nil).Register), arg0, arg1, arg2)
 }

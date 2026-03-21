@@ -198,6 +198,36 @@ func (m *MockUserRepo) EXPECT() *MockUserRepoMockRecorder {
 	return m.recorder
 }
 
+// CreateUser mocks base method.
+func (m *MockUserRepo) CreateUser(arg0 context.Context, arg1 *entity.User) (*entity.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateUser", arg0, arg1)
+	ret0, _ := ret[0].(*entity.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateUser indicates an expected call of CreateUser.
+func (mr *MockUserRepoMockRecorder) CreateUser(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockUserRepo)(nil).CreateUser), arg0, arg1)
+}
+
+// ReadUserByID mocks base method.
+func (m *MockUserRepo) ReadUserByID(arg0 context.Context, arg1 string) (entity.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReadUserByID", arg0, arg1)
+	ret0, _ := ret[0].(entity.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReadUserByID indicates an expected call of ReadUserByID.
+func (mr *MockUserRepoMockRecorder) ReadUserByID(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadUserByID", reflect.TypeOf((*MockUserRepo)(nil).ReadUserByID), arg0, arg1)
+}
+
 // MockUserCache is a mock of UserCache interface.
 type MockUserCache struct {
 	ctrl     *gomock.Controller
@@ -222,50 +252,43 @@ func (m *MockUserCache) EXPECT() *MockUserCacheMockRecorder {
 	return m.recorder
 }
 
-// MockTodoRepo is a mock of TodoRepo interface.
-type MockTodoRepo struct {
-	ctrl     *gomock.Controller
-	recorder *MockTodoRepoMockRecorder
-	isgomock struct{}
+// GetUser mocks base method.
+func (m *MockUserCache) GetUser(arg0 context.Context, arg1 string) (*entity.User, bool) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetUser", arg0, arg1)
+	ret0, _ := ret[0].(*entity.User)
+	ret1, _ := ret[1].(bool)
+	return ret0, ret1
 }
 
-// MockTodoRepoMockRecorder is the mock recorder for MockTodoRepo.
-type MockTodoRepoMockRecorder struct {
-	mock *MockTodoRepo
+// GetUser indicates an expected call of GetUser.
+func (mr *MockUserCacheMockRecorder) GetUser(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUser", reflect.TypeOf((*MockUserCache)(nil).GetUser), arg0, arg1)
 }
 
-// NewMockTodoRepo creates a new mock instance.
-func NewMockTodoRepo(ctrl *gomock.Controller) *MockTodoRepo {
-	mock := &MockTodoRepo{ctrl: ctrl}
-	mock.recorder = &MockTodoRepoMockRecorder{mock}
-	return mock
+// InvalidateUser mocks base method.
+func (m *MockUserCache) InvalidateUser(arg0 context.Context, arg1 string) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "InvalidateUser", arg0, arg1)
 }
 
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockTodoRepo) EXPECT() *MockTodoRepoMockRecorder {
-	return m.recorder
+// InvalidateUser indicates an expected call of InvalidateUser.
+func (mr *MockUserCacheMockRecorder) InvalidateUser(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InvalidateUser", reflect.TypeOf((*MockUserCache)(nil).InvalidateUser), arg0, arg1)
 }
 
-// MockTodoCache is a mock of TodoCache interface.
-type MockTodoCache struct {
-	ctrl     *gomock.Controller
-	recorder *MockTodoCacheMockRecorder
-	isgomock struct{}
+// SetUser mocks base method.
+func (m *MockUserCache) SetUser(arg0 context.Context, arg1 string, arg2 *entity.User) bool {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SetUser", arg0, arg1, arg2)
+	ret0, _ := ret[0].(bool)
+	return ret0
 }
 
-// MockTodoCacheMockRecorder is the mock recorder for MockTodoCache.
-type MockTodoCacheMockRecorder struct {
-	mock *MockTodoCache
-}
-
-// NewMockTodoCache creates a new mock instance.
-func NewMockTodoCache(ctrl *gomock.Controller) *MockTodoCache {
-	mock := &MockTodoCache{ctrl: ctrl}
-	mock.recorder = &MockTodoCacheMockRecorder{mock}
-	return mock
-}
-
-// EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockTodoCache) EXPECT() *MockTodoCacheMockRecorder {
-	return m.recorder
+// SetUser indicates an expected call of SetUser.
+func (mr *MockUserCacheMockRecorder) SetUser(arg0, arg1, arg2 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetUser", reflect.TypeOf((*MockUserCache)(nil).SetUser), arg0, arg1, arg2)
 }

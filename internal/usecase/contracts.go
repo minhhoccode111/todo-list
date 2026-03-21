@@ -4,6 +4,7 @@ package usecase
 import (
 	"context"
 
+	"github.com/minhhoccode111/todo-list/config"
 	"github.com/minhhoccode111/todo-list/internal/entity"
 )
 
@@ -17,8 +18,10 @@ type (
 	}
 
 	// User -.
-	User interface{}
+	User interface {
+		Register(context.Context, *entity.User, *config.JWT) (string, error)
+	}
 
-	// Todo -.
-	Todo interface{}
+	// ITodo -.
+	Todo any
 )

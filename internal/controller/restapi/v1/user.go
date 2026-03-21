@@ -1,11 +1,14 @@
 package v1
 
 import (
+	"errors"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/minhhoccode111/todo-list/internal/controller/restapi/v1/request"
+	"github.com/minhhoccode111/todo-list/internal/controller/restapi/v1/response"
+	"github.com/minhhoccode111/todo-list/internal/entity"
 	"github.com/minhhoccode111/todo-list/pkg/validatorx"
 )
 
@@ -40,6 +43,30 @@ func (r *V1) register(c *gin.Context) {
 
 		return
 	}
+
+	token, err := r.u.Register(
+		c.Request.Context(),
+		&entity.User{
+			Email:        body.Email,
+			Name:         body.Name,
+			PasswordHash: body.Password,
+		},
+		&r.cfg.JWT,
+	)
+	if err != nil {
+		r.l.Error(err, "restapi - v1 - register - r.u.Register")
+
+		switch {
+		case errors.Is(err, entity.ErrDuplicateEntry):
+			errorResponse(c, http.StatusConflict, "email already existed")
+		default:
+			errorResponse(c, http.StatusInternalServerError, "internal server error")
+		}
+
+		return
+	}
+
+	c.JSON(http.StatusOK, response.Auth{Token: token})
 }
 
 // @Summary     Login

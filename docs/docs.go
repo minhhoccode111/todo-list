@@ -194,6 +194,54 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "entity.PriorityLevel": {
+            "type": "string",
+            "enum": [
+                "low",
+                "med",
+                "high"
+            ],
+            "x-enum-varnames": [
+                "PriorityLevelLow",
+                "PriorityLevelMed",
+                "PriorityLevelHigh"
+            ]
+        },
+        "entity.Todo": {
+            "type": "object",
+            "properties": {
+                "completed": {
+                    "type": "boolean"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "due_date": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "priority": {
+                    "$ref": "#/definitions/entity.PriorityLevel"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "entity.Translation": {
             "type": "object",
             "properties": {
@@ -226,6 +274,17 @@ const docTemplate = `{
                 }
             }
         },
+        "request.CreateTodo": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
         "request.Login": {
             "type": "object",
             "properties": {
@@ -239,15 +298,23 @@ const docTemplate = `{
         },
         "request.Register": {
             "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password"
+            ],
             "properties": {
                 "email": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 255
                 },
                 "name": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 255
                 },
                 "password": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 255
                 }
             }
         },
@@ -297,10 +364,10 @@ const docTemplate = `{
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "localhost:8080",
-	BasePath:         "/v1",
+	BasePath:         "/api/v1",
 	Schemes:          []string{},
-	Title:            "Go Clean Template API",
-	Description:      "Using a translation service as an example",
+	Title:            "Todo-List API",
+	Description:      "A Todo-List API with Gin and Clean Architecture",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

@@ -11,46 +11,21 @@ type (
 	// Config -.
 	Config struct {
 		App       App
-		HTTP      HTTP
-		Log       Log
-		PG        PG
-		Metrics   Metrics
-		Swagger   Swagger
 		CORS      CORS
 		Cache     Cache
+		HTTP      HTTP
+		JWT       JWT
+		Log       Log
+		Metrics   Metrics
+		PG        PG
 		RateLimit RateLimit
+		Swagger   Swagger
 	}
 
 	// App -.
 	App struct {
 		Name    string `env:"APP_NAME,required"`
 		Version string `env:"APP_VERSION,required"`
-	}
-
-	// HTTP -.
-	HTTP struct {
-		Port string `env:"HTTP_PORT,required"`
-	}
-
-	// Log -.
-	Log struct {
-		Level string `env:"LOG_LEVEL,required"`
-	}
-
-	// PG -.
-	PG struct {
-		PoolMax int    `env:"PG_POOL_MAX,required"`
-		URL     string `env:"PG_URL,required"`
-	}
-
-	// Metrics -.
-	Metrics struct {
-		Enabled bool `env:"METRICS_ENABLED" envDefault:"true"`
-	}
-
-	// Swagger -.
-	Swagger struct {
-		Enabled bool `env:"SWAGGER_ENABLED" envDefault:"false"`
 	}
 
 	// CORS -.
@@ -67,10 +42,43 @@ type (
 		TTL     time.Duration `env:"CACHE_TTL"      envDefault:"5m"`
 	}
 
+	// HTTP -.
+	HTTP struct {
+		Port string `env:"HTTP_PORT,required"`
+	}
+
+	// JWT -.
+	JWT struct {
+		Issuer     string        `env:"JWT_ISSUER,required"`
+		Secret     string        `env:"JWT_SECRET,required"` //nolint:gosec // intended
+		Expiration time.Duration `env:"JWT_EXPIRATION,required"`
+	}
+
+	// Log -.
+	Log struct {
+		Level string `env:"LOG_LEVEL,required"`
+	}
+
+	// Metrics -.
+	Metrics struct {
+		Enabled bool `env:"METRICS_ENABLED" envDefault:"true"`
+	}
+
+	// PG -.
+	PG struct {
+		PoolMax int    `env:"PG_POOL_MAX,required"`
+		URL     string `env:"PG_URL,required"`
+	}
+
 	// RateLimit -.
 	RateLimit struct {
 		RequestsPerSecond float64 `env:"RATE_LIMIT_RPS"   envDefault:"10"`
 		Burst             int     `env:"RATE_LIMIT_BURST" envDefault:"20"`
+	}
+
+	// Swagger -.
+	Swagger struct {
+		Enabled bool `env:"SWAGGER_ENABLED" envDefault:"false"`
 	}
 )
 

@@ -43,13 +43,15 @@ func Run(cfg *config.Config) { //nolint: gocyclo,cyclop,funlen,gocritic,nolintli
 	if err != nil {
 		l.Fatal(fmt.Errorf("app - Run - cache.New: %w", err))
 	}
-	userCache, err := cache.New[string, entity.User](
+
+	userCache, err := cache.New[string, *entity.User](
 		cache.MaxCost(cfg.Cache.MaxCost),
 		cache.TTL(cfg.Cache.TTL),
 	)
 	if err != nil {
 		l.Fatal(fmt.Errorf("app - Run - cache.New: %w", err))
 	}
+
 	todoCache, err := cache.New[string, []entity.Todo](
 		cache.MaxCost(cfg.Cache.MaxCost),
 		cache.TTL(cfg.Cache.TTL),

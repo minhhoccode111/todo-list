@@ -1,5 +1,38 @@
-basePath: /v1
+basePath: /api/v1
 definitions:
+  entity.PriorityLevel:
+    enum:
+    - low
+    - med
+    - high
+    type: string
+    x-enum-varnames:
+    - PriorityLevelLow
+    - PriorityLevelMed
+    - PriorityLevelHigh
+  entity.Todo:
+    properties:
+      completed:
+        type: boolean
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      due_date:
+        type: string
+      id:
+        type: integer
+      priority:
+        $ref: '#/definitions/entity.PriorityLevel'
+      title:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
   entity.Translation:
     properties:
       destination:
@@ -22,6 +55,13 @@ definitions:
           $ref: '#/definitions/entity.Translation'
         type: array
     type: object
+  request.CreateTodo:
+    properties:
+      description:
+        type: string
+      title:
+        type: string
+    type: object
   request.Login:
     properties:
       email:
@@ -32,11 +72,18 @@ definitions:
   request.Register:
     properties:
       email:
+        maxLength: 255
         type: string
       name:
+        maxLength: 255
         type: string
       password:
+        maxLength: 255
         type: string
+    required:
+    - email
+    - name
+    - password
     type: object
   request.Translate:
     properties:
@@ -68,8 +115,8 @@ definitions:
 host: localhost:8080
 info:
   contact: {}
-  description: Using a translation service as an example
-  title: Go Clean Template API
+  description: A Todo-List API with Gin and Clean Architecture
+  title: Todo-List API
   version: "1.0"
 paths:
   /login:
