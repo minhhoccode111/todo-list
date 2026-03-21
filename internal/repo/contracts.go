@@ -36,7 +36,8 @@ type (
 	// UserRepo -.
 	UserRepo interface {
 		CreateUser(context.Context, *entity.User) (*entity.User, error)
-		ReadUserByID(context.Context, string) (entity.User, error)
+		ReadUserByEmail(context.Context, string) (*entity.User, error)
+		ReadUserByID(context.Context, int32) (*entity.User, error)
 	}
 
 	// UserCache -.

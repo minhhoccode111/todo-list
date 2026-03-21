@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/minhhoccode111/todo-list/internal/entity"
 	"github.com/minhhoccode111/todo-list/internal/repo/persistent/sqlc"
@@ -54,6 +55,28 @@ func (ur *UserRepo) CreateUser(c context.Context, u *entity.User) (*entity.User,
 	return newUserFromDTO(&sqlcUser), nil
 }
 
-func (ur *UserRepo) ReadUserByID(c context.Context, id string) (entity.User, error) {
-	return entity.User{}, nil
+func (ur *UserRepo) ReadUserByEmail(c context.Context, email string) (*entity.User, error) {
+	u, err := ur.queries.ReadUserByEmail(c, email)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, entity.ErrNoRows
+		}
+
+		return nil, fmt.Errorf("UserRepo - ReadUserByEmail - ur.queries.ReadUserByEmail: %w", err)
+	}
+
+	return newUserFromDTO(&u), nil
+}
+
+func (ur *UserRepo) ReadUserByID(c context.Context, id int32) (*entity.User, error) {
+	u, err := ur.queries.ReadUserByID(c, id)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, entity.ErrNoRows
+		}
+
+		return nil, fmt.Errorf("UserRepo - ReadUserByID - ur.queries.ReadUserByID: %w", err)
+	}
+
+	return newUserFromDTO(&u), nil
 }

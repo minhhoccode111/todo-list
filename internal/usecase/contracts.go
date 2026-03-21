@@ -20,6 +20,7 @@ type (
 	// User -.
 	User interface {
 		Register(context.Context, *entity.User, *config.JWT) (string, error)
+		Login(context.Context, *entity.User, *config.JWT) (string, error)
 	}
 
 	// ITodo -.

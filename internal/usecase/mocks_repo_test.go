@@ -213,11 +213,26 @@ func (mr *MockUserRepoMockRecorder) CreateUser(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockUserRepo)(nil).CreateUser), arg0, arg1)
 }
 
+// ReadUserByEmail mocks base method.
+func (m *MockUserRepo) ReadUserByEmail(arg0 context.Context, arg1 string) (*entity.User, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReadUserByEmail", arg0, arg1)
+	ret0, _ := ret[0].(*entity.User)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReadUserByEmail indicates an expected call of ReadUserByEmail.
+func (mr *MockUserRepoMockRecorder) ReadUserByEmail(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadUserByEmail", reflect.TypeOf((*MockUserRepo)(nil).ReadUserByEmail), arg0, arg1)
+}
+
 // ReadUserByID mocks base method.
-func (m *MockUserRepo) ReadUserByID(arg0 context.Context, arg1 string) (entity.User, error) {
+func (m *MockUserRepo) ReadUserByID(arg0 context.Context, arg1 int32) (*entity.User, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ReadUserByID", arg0, arg1)
-	ret0, _ := ret[0].(entity.User)
+	ret0, _ := ret[0].(*entity.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

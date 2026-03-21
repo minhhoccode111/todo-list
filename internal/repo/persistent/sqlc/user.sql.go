@@ -35,13 +35,34 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	return i, err
 }
 
-const readUser = `-- name: ReadUser :one
+const readUserByEmail = `-- name: ReadUserByEmail :one
 SELECT id, email, name, password_hash, created_at, updated_at
 FROM users
+WHERE email = $1
 `
 
-func (q *Queries) ReadUser(ctx context.Context) (User, error) {
-	row := q.db.QueryRow(ctx, readUser)
+func (q *Queries) ReadUserByEmail(ctx context.Context, email string) (User, error) {
+	row := q.db.QueryRow(ctx, readUserByEmail, email)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Email,
+		&i.Name,
+		&i.PasswordHash,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const readUserByID = `-- name: ReadUserByID :one
+SELECT id, email, name, password_hash, created_at, updated_at
+FROM users
+WHERE id = $1
+`
+
+func (q *Queries) ReadUserByID(ctx context.Context, id int32) (User, error) {
+	row := q.db.QueryRow(ctx, readUserByID, id)
 	var i User
 	err := row.Scan(
 		&i.ID,

@@ -70,3 +70,31 @@ func (uc *UseCase) Register(c context.Context, u *entity.User, cfgJWT *config.JW
 
 	return token, nil
 }
+
+func (uc *UseCase) Login(c context.Context, u *entity.User, cfgJWT *config.JWT) (string, error) {
+	user, err := uc.repo.ReadUserByEmail(c, u.Email)
+	if err != nil {
+		return "", fmt.Errorf(
+			"UserUseCase - Login - uc.repo.ReadUserByEmail: %w",
+			err,
+		)
+	}
+
+	if !password.ComparePassword(user.PasswordHash, u.PasswordHash) {
+		return "", entity.ErrUnauthorized
+	}
+
+	userID := strconv.Itoa(int(user.ID))
+
+	token, err := generateToken(userID, cfgJWT)
+	if err != nil {
+		return "", fmt.Errorf(
+			"UserUseCase - Login - generateToken: %w",
+			err,
+		)
+	}
+
+	uc.cache.SetUser(c, userID, user)
+
+	return token, nil
+}

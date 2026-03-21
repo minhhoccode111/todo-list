@@ -1,6 +1,12 @@
--- name: ReadUser :one
+-- name: ReadUserByID :one
 SELECT id, email, name, password_hash, created_at, updated_at
-FROM users;
+FROM users
+WHERE id = $1;
+
+-- name: ReadUserByEmail :one
+SELECT id, email, name, password_hash, created_at, updated_at
+FROM users
+WHERE email = $1;
 
 -- name: CreateUser :one
 INSERT INTO users (email, name, password_hash)

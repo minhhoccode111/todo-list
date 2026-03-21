@@ -21,6 +21,7 @@ import (
 // @Param       request body request.Register true "comment"
 // @Success     201 {object} response.Auth
 // @Failure     400 {object} response.Error
+// @Failure     409 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Router      /register [post]
 func (r *V1) register(c *gin.Context) {
@@ -81,4 +82,49 @@ func (r *V1) register(c *gin.Context) {
 // @Failure     401 {object} response.Error
 // @Failure     500 {object} response.Error
 // @Router      /login [post]
-func (r *V1) login(c *gin.Context) {}
+func (r *V1) login(c *gin.Context) {
+	var body request.Login
+
+	if err := c.ShouldBindJSON(&body); err != nil {
+		r.l.Error(err, "restapi - v1 - login - c.ShouldBindJSON")
+
+		errorResponse(c, http.StatusBadRequest, "invalid request body")
+
+		return
+	}
+
+	if err := r.v.Struct(body); err != nil {
+		r.l.Error(err, "restapi - v1 - login - r.v.Struct")
+
+		errs := validatorx.ExtractErrors(err)
+
+		errorResponse(c, http.StatusBadRequest, strings.Join(errs, "; "))
+
+		return
+	}
+
+	token, err := r.u.Login(
+		c.Request.Context(),
+		&entity.User{
+			Email:        body.Email,
+			PasswordHash: body.Password,
+		},
+		&r.cfg.JWT,
+	)
+	if err != nil {
+		r.l.Error(err, "restapi - v1 - login - r.u.Login")
+
+		switch {
+		case errors.Is(err, entity.ErrNoRows):
+			errorResponse(c, http.StatusUnauthorized, "Unauthorized")
+		case errors.Is(err, entity.ErrUnauthorized):
+			errorResponse(c, http.StatusUnauthorized, "Unauthorized")
+		default:
+			errorResponse(c, http.StatusInternalServerError, "internal server error")
+		}
+
+		return
+	}
+
+	c.JSON(http.StatusOK, response.Auth{Token: token})
+}

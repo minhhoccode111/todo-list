@@ -7,6 +7,6 @@ type Register struct {
 }
 
 type Login struct {
-	Email    string `json:"email"`
-	Password string `json:"password"` //nolint:gosec // intended
+	Email    string `json:"email"    validate:"required,max=255"`
+	Password string `json:"password" validate:"required,max=255"` //nolint:gosec // intended
 }

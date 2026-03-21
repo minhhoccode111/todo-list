@@ -4,6 +4,7 @@
 @name = minhhoccode111
 @email = minhhoccode111@gmail.com
 @password = P@55w0rd
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiIxIiwiaXNzIjoidG9kby1saXN0Iiwic3ViIjoiMSIsImV4cCI6MTc4Mjc0NzY3MSwiaWF0IjoxNzc0MTA3NjcxfQ.J5TN6pQghn66I94YkRYQQvhpslWyUMBvMzJSZiWpfPo
 
 ###
 GET {{url}}/healthz
@@ -18,4 +19,9 @@ POST {{api}}/register
 }
 
 ###
-GET {{url}}/healthz
+POST {{api}}/login
+
+{
+    "email": "{{email}}",
+    "password": "{{password}}"
+}

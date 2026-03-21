@@ -96,6 +96,21 @@ func (m *MockUser) EXPECT() *MockUserMockRecorder {
 	return m.recorder
 }
 
+// Login mocks base method.
+func (m *MockUser) Login(arg0 context.Context, arg1 *entity.User, arg2 *config.JWT) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Login", arg0, arg1, arg2)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Login indicates an expected call of Login.
+func (mr *MockUserMockRecorder) Login(arg0, arg1, arg2 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockUser)(nil).Login), arg0, arg1, arg2)
+}
+
 // Register mocks base method.
 func (m *MockUser) Register(arg0 context.Context, arg1 *entity.User, arg2 *config.JWT) (string, error) {
 	m.ctrl.T.Helper()

@@ -65,9 +65,14 @@ definitions:
   request.Login:
     properties:
       email:
+        maxLength: 255
         type: string
       password:
+        maxLength: 255
         type: string
+    required:
+    - email
+    - password
     type: object
   request.Register:
     properties:
@@ -176,6 +181,10 @@ paths:
             $ref: '#/definitions/response.Auth'
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/response.Error'
+        "409":
+          description: Conflict
           schema:
             $ref: '#/definitions/response.Error'
         "500":
