@@ -44,7 +44,7 @@ func NewV1Routes(
 
 	todoGroup := apiV1Group.Group("/")
 	// RouterGroup-level middlewares
-	todoGroup.Use(middleware.Auth(true))
+	todoGroup.Use(middleware.Auth(cfg.JWT.Secret))
 	{
 		todoGroup.POST("/todos", r.createTodo)
 	}

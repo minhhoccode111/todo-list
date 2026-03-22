@@ -37,7 +37,7 @@ func ValidateToken(tokenStr, secret string) (*ClaimsJWT, error) {
 				return nil, jwt.ErrTokenSignatureInvalid
 			}
 
-			return secret, nil
+			return []byte(secret), nil
 		},
 	)
 	if err != nil {

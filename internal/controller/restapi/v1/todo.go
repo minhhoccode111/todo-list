@@ -1,6 +1,10 @@
 package v1
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+)
 
 // @Summary     Create Todo
 // @Description Create a Todo item with title and description
@@ -13,5 +17,7 @@ import "github.com/gin-gonic/gin"
 // @Failure     400 {object} response.Error
 // @Failure     401 {object} response.Error
 // @Failure     500 {object} response.Error
-// @Router      /login [post]
-func (r *V1) createTodo(c *gin.Context) {}
+// @Router      /todos [post]
+func (r *V1) createTodo(c *gin.Context) {
+	errorResponse(c, http.StatusOK, "ok")
+}
