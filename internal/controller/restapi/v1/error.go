@@ -5,6 +5,6 @@ import (
 	"github.com/minhhoccode111/todo-list/internal/controller/restapi/v1/response"
 )
 
-func errorResponse(c *gin.Context, code int, msg string) {
-	c.AbortWithStatusJSON(code, response.Error{Error: msg})
+func messageResponse(c *gin.Context, code int, msg string) {
+	c.AbortWithStatusJSON(code, response.Message{Message: msg})
 }

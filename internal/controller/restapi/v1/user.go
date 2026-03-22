@@ -30,7 +30,7 @@ func (r *V1) register(c *gin.Context) {
 	if err := c.ShouldBindJSON(&body); err != nil {
 		r.l.Error(err, "restapi - v1 - register - c.ShouldBindJSON")
 
-		errorResponse(c, http.StatusBadRequest, "invalid request body")
+		messageResponse(c, http.StatusBadRequest, "invalid request body")
 
 		return
 	}
@@ -40,7 +40,7 @@ func (r *V1) register(c *gin.Context) {
 
 		errs := validatorx.ExtractErrors(err)
 
-		errorResponse(c, http.StatusBadRequest, strings.Join(errs, "; "))
+		messageResponse(c, http.StatusBadRequest, strings.Join(errs, "; "))
 
 		return
 	}
@@ -59,9 +59,9 @@ func (r *V1) register(c *gin.Context) {
 
 		switch {
 		case errors.Is(err, entity.ErrDuplicateEntry):
-			errorResponse(c, http.StatusConflict, "email already existed")
+			messageResponse(c, http.StatusConflict, "email already existed")
 		default:
-			errorResponse(c, http.StatusInternalServerError, "internal server error")
+			messageResponse(c, http.StatusInternalServerError, "internal server error")
 		}
 
 		return
@@ -88,7 +88,7 @@ func (r *V1) login(c *gin.Context) {
 	if err := c.ShouldBindJSON(&body); err != nil {
 		r.l.Error(err, "restapi - v1 - login - c.ShouldBindJSON")
 
-		errorResponse(c, http.StatusBadRequest, "invalid request body")
+		messageResponse(c, http.StatusBadRequest, "invalid request body")
 
 		return
 	}
@@ -98,7 +98,7 @@ func (r *V1) login(c *gin.Context) {
 
 		errs := validatorx.ExtractErrors(err)
 
-		errorResponse(c, http.StatusBadRequest, strings.Join(errs, "; "))
+		messageResponse(c, http.StatusBadRequest, strings.Join(errs, "; "))
 
 		return
 	}
@@ -116,11 +116,11 @@ func (r *V1) login(c *gin.Context) {
 
 		switch {
 		case errors.Is(err, entity.ErrNoRows):
-			errorResponse(c, http.StatusUnauthorized, "Unauthorized")
+			messageResponse(c, http.StatusUnauthorized, "Unauthorized")
 		case errors.Is(err, entity.ErrUnauthorized):
-			errorResponse(c, http.StatusUnauthorized, "Unauthorized")
+			messageResponse(c, http.StatusUnauthorized, "Unauthorized")
 		default:
-			errorResponse(c, http.StatusInternalServerError, "internal server error")
+			messageResponse(c, http.StatusInternalServerError, "internal server error")
 		}
 
 		return

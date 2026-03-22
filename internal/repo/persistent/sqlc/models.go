@@ -8,6 +8,8 @@ import (
 	"database/sql/driver"
 	"fmt"
 	"time"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type PriorityLevel string
@@ -67,11 +69,11 @@ type Todo struct {
 	Title       string
 	Description string
 	Completed   bool
-	Priority    NullPriorityLevel
-	DueDate     time.Time
+	Priority    PriorityLevel
+	DueDate     pgtype.Timestamptz
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
-	DeletedAt   time.Time
+	DeletedAt   pgtype.Timestamptz
 }
 
 type User struct {

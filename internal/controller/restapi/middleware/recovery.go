@@ -21,8 +21,8 @@ func Recovery(l logger.Interface) gin.HandlerFunc {
 					debug.Stack(),
 				)
 
-				c.AbortWithStatusJSON(http.StatusInternalServerError, response.Error{
-					Error: "Internal Server Error",
+				c.AbortWithStatusJSON(http.StatusInternalServerError, response.Message{
+					Message: "Internal Server Error",
 				})
 			}
 		}()

@@ -1,0 +1,5 @@
+ALTER TABLE todos
+ALTER COLUMN priority DROP NOT NULL;
+
+ALTER TABLE todos
+ALTER COLUMN priority SET DEFAULT 'low';

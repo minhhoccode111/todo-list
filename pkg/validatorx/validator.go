@@ -3,6 +3,7 @@ package validatorx
 import (
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -63,6 +64,14 @@ func New() *validator.Validate {
 			rePassword.lower.MatchString(p) &&
 			rePassword.digit.MatchString(p) &&
 			rePassword.special.MatchString(p)
+	})
+
+	mustRegister(v, "future", func(fl validator.FieldLevel) bool {
+		t, ok := fl.Field().Interface().(time.Time)
+		if !ok {
+			return false
+		}
+		return t.After(time.Now())
 	})
 
 	return v

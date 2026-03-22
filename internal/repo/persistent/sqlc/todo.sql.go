@@ -8,6 +8,8 @@ package sqlc
 import (
 	"context"
 	"time"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createTodo = `-- name: CreateTodo :exec
@@ -19,8 +21,8 @@ type CreateTodoParams struct {
 	UserID      int32
 	Title       string
 	Description string
-	Priority    NullPriorityLevel
-	DueDate     time.Time
+	Priority    PriorityLevel
+	DueDate     pgtype.Timestamptz
 }
 
 func (q *Queries) CreateTodo(ctx context.Context, arg CreateTodoParams) error {
@@ -55,8 +57,8 @@ type ReadTodosRow struct {
 	Title       string
 	Description string
 	Completed   bool
-	Priority    NullPriorityLevel
-	DueDate     time.Time
+	Priority    PriorityLevel
+	DueDate     pgtype.Timestamptz
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }
@@ -67,7 +69,7 @@ func (q *Queries) ReadTodos(ctx context.Context, arg ReadTodosParams) ([]ReadTod
 		return nil, err
 	}
 	defer rows.Close()
-	var items []ReadTodosRow
+	items := []ReadTodosRow{}
 	for rows.Next() {
 		var i ReadTodosRow
 		if err := rows.Scan(

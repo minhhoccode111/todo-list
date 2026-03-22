@@ -12,7 +12,7 @@ type msg struct {
 	Message string `json:"message"`
 }
 
-func errorResponse(c *gin.Context, code int, s string) {
+func messageResponse(c *gin.Context, code int, s string) {
 	c.AbortWithStatusJSON(code, msg{Message: s})
 }
 
@@ -46,21 +46,21 @@ func Auth(secret string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := extractToken(c)
 		if token == "" {
-			errorResponse(c, http.StatusUnauthorized, "Unauthorized")
+			messageResponse(c, http.StatusUnauthorized, "Unauthorized")
 
 			return
 		}
 
 		claims, err := jwt.ValidateToken(token, secret)
 		if err != nil {
-			errorResponse(c, http.StatusUnauthorized, "Unauthorized")
+			messageResponse(c, http.StatusUnauthorized, "Unauthorized")
 
 			return
 		}
 
 		id, err := strconv.ParseInt(claims.UserID, 10, 32)
 		if err != nil {
-			errorResponse(c, http.StatusUnauthorized, "Unauthorized")
+			messageResponse(c, http.StatusUnauthorized, "Unauthorized")
 
 			return
 		}

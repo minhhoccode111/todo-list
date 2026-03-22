@@ -18,8 +18,8 @@ func RateLimit(cfg config.RateLimit) gin.HandlerFunc {
 		// Attempt to take a token from the bucket.
 		if !limiter.Allow() {
 			// If not allowed, abort with 429 Too Many Requests
-			c.AbortWithStatusJSON(http.StatusTooManyRequests, response.Error{
-				Error: "Too many requests. Please try again later.",
+			c.AbortWithStatusJSON(http.StatusTooManyRequests, response.Message{
+				Message: "Too many requests. Please try again later.",
 			})
 
 			return

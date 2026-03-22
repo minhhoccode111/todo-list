@@ -48,7 +48,7 @@ func (q *Queries) ReadHistory(ctx context.Context) ([]ReadHistoryRow, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []ReadHistoryRow
+	items := []ReadHistoryRow{}
 	for rows.Next() {
 		var i ReadHistoryRow
 		if err := rows.Scan(

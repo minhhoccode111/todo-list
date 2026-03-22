@@ -24,7 +24,7 @@ func (r *V1) history(c *gin.Context) {
 	if err != nil {
 		r.l.Error(err, "restapi - v1 - history")
 
-		errorResponse(c, http.StatusInternalServerError, "database problems")
+		messageResponse(c, http.StatusInternalServerError, "database problems")
 
 		return
 	}
@@ -49,7 +49,7 @@ func (r *V1) doTranslate(c *gin.Context) {
 	if err := c.ShouldBindJSON(&body); err != nil {
 		r.l.Error(err, "restapi - v1 - doTranslate")
 
-		errorResponse(c, http.StatusBadRequest, "invalid request body")
+		messageResponse(c, http.StatusBadRequest, "invalid request body")
 
 		return
 	}
@@ -59,7 +59,7 @@ func (r *V1) doTranslate(c *gin.Context) {
 
 		errs := validatorx.ExtractErrors(err)
 
-		errorResponse(c, http.StatusBadRequest, strings.Join(errs, "; "))
+		messageResponse(c, http.StatusBadRequest, strings.Join(errs, "; "))
 
 		return
 	}
@@ -75,7 +75,7 @@ func (r *V1) doTranslate(c *gin.Context) {
 	if err != nil {
 		r.l.Error(err, "restapi - v1 - doTranslate")
 
-		errorResponse(c, http.StatusInternalServerError, "translation service problems")
+		messageResponse(c, http.StatusInternalServerError, "translation service problems")
 
 		return
 	}
