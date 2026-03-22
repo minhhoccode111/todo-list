@@ -46,3 +46,14 @@ func (uc *UseCase) UpdateTodo(c context.Context, t *entity.Todo) (*entity.Todo, 
 
 	return t, nil
 }
+
+func (uc *UseCase) DeleteTodo(c context.Context, todoID, userID int32) error {
+	err := uc.repo.DeleteTodo(c, todoID, userID)
+	if err != nil {
+		return fmt.Errorf("TodoUseCase - DeleteTodo - uc.repo.DeleteTodo: %w", err)
+	}
+
+	uc.cache.InvalidateTodo(c, strconv.Itoa(int(userID)), strconv.Itoa(int(todoID)))
+
+	return nil
+}

@@ -347,6 +347,20 @@ func (mr *MockTodoRepoMockRecorder) CreateTodo(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTodo", reflect.TypeOf((*MockTodoRepo)(nil).CreateTodo), arg0, arg1)
 }
 
+// DeleteTodo mocks base method.
+func (m *MockTodoRepo) DeleteTodo(arg0 context.Context, arg1, arg2 int32) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteTodo", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteTodo indicates an expected call of DeleteTodo.
+func (mr *MockTodoRepoMockRecorder) DeleteTodo(arg0, arg1, arg2 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteTodo", reflect.TypeOf((*MockTodoRepo)(nil).DeleteTodo), arg0, arg1, arg2)
+}
+
 // ReadTodoByID mocks base method.
 func (m *MockTodoRepo) ReadTodoByID(arg0 context.Context, arg1 int32) (*entity.Todo, error) {
 	m.ctrl.T.Helper()

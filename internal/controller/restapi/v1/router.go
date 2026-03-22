@@ -48,5 +48,6 @@ func NewV1Routes(
 	{
 		todoGroup.POST("/todos", r.createTodo)
 		todoGroup.PUT("/todos/:id", r.updateTodo)
+		todoGroup.DELETE("/todos/:id", r.deleteTodo)
 	}
 }

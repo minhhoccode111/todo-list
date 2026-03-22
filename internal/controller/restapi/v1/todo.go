@@ -101,7 +101,7 @@ func (r *V1) createTodo(c *gin.Context) {
 // @Failure     401 {object} response.Message
 // @Failure     500 {object} response.Message
 // @Router      /todos/{id} [put]
-func (r *V1) updateTodo(c *gin.Context) { //nolint:funlen,cyclop // identical pattern to createTodo
+func (r *V1) updateTodo(c *gin.Context) { //nolint:funlen // identical pattern to createTodo
 	var body request.UpdateTodo
 	if err := c.ShouldBindJSON(&body); err != nil {
 		r.l.Error(err, "restapi - v1 - updateTodo - c.ShouldBindJSON")
@@ -170,4 +170,53 @@ func (r *V1) updateTodo(c *gin.Context) { //nolint:funlen,cyclop // identical pa
 	}
 
 	c.JSON(http.StatusOK, t)
+}
+
+// @Summary     Delete Todo
+// @Description Delete a Todo item
+// @ID          delete-todo
+// @Tags        todo
+// @Param       id path int true "Todo ID"
+// @Success     204
+// @Failure     401 {object} response.Message
+// @Failure     403 {object} response.Message
+// @Failure     500 {object} response.Message
+// @Router      /todos/{id} [delete]
+func (r *V1) deleteTodo(c *gin.Context) {
+	userIDRaw, ok := c.Get(middleware.CtxUserIDKey)
+	if !ok {
+		messageResponse(c, http.StatusUnauthorized, "Unauthorized")
+
+		return
+	}
+
+	userID, ok := userIDRaw.(int32)
+	if !ok {
+		messageResponse(c, http.StatusUnauthorized, "Unauthorized")
+
+		return
+	}
+
+	todoID, err := strconv.ParseInt(c.Param("id"), 10, 32)
+	if err != nil {
+		messageResponse(c, http.StatusBadRequest, "invalid todo id")
+
+		return
+	}
+
+	err = r.to.DeleteTodo(c, int32(todoID), userID)
+	if err != nil {
+		r.l.Error(err, "restapi - v1 - deleteTodo - r.u.DeleteTodo")
+
+		switch {
+		case errors.Is(err, entity.ErrForbidden):
+			messageResponse(c, http.StatusForbidden, "Forbidden")
+		default:
+			messageResponse(c, http.StatusInternalServerError, "internal server error")
+		}
+
+		return
+	}
+
+	c.Status(http.StatusNoContent)
 }

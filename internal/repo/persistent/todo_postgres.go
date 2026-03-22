@@ -108,3 +108,19 @@ func (tr *TodoRepo) UpdateTodo(c context.Context, t *entity.Todo) (*entity.Todo,
 
 	return newTodoFromDTO(&sqlcTodo), nil
 }
+
+func (tr *TodoRepo) DeleteTodo(c context.Context, todoID, userID int32) error {
+	err := tr.queries.DeleteTodo(c, sqlc.DeleteTodoParams{
+		ID:     todoID,
+		UserID: userID,
+	})
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return entity.ErrForbidden
+		}
+
+		return fmt.Errorf("TodoRepo - DeleteTodo - tr.queries.DeleteTodo: %w", err)
+	}
+
+	return nil
+}

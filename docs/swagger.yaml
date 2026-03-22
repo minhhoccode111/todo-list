@@ -262,6 +262,33 @@ paths:
       tags:
       - todo
   /todos/{id}:
+    delete:
+      description: Delete a Todo item
+      operationId: delete-todo
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Message'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/response.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Message'
+      summary: Delete Todo
+      tags:
+      - todo
     put:
       consumes:
       - application/json

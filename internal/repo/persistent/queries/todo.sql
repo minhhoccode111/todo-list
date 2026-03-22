@@ -16,3 +16,8 @@ UPDATE todos
 SET title = $2, description = $3, completed = $4, priority = $5, due_date = $6, updated_at = NOW()
 WHERE id = $1 AND user_id = $7 AND deleted_at IS NULL
 RETURNING *;
+
+-- name: DeleteTodo :exec
+UPDATE todos
+SET deleted_at = NOW()
+WHERE id = $1 AND user_id = $2 AND deleted_at IS NULL;
