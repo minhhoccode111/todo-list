@@ -47,5 +47,6 @@ func NewV1Routes(
 	todoGroup.Use(middleware.Auth(cfg.JWT.Secret))
 	{
 		todoGroup.POST("/todos", r.createTodo)
+		todoGroup.PUT("/todos/:id", r.updateTodo)
 	}
 }

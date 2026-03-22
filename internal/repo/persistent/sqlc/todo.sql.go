@@ -106,3 +106,46 @@ func (q *Queries) ReadTodos(ctx context.Context, arg ReadTodosParams) ([]ReadTod
 	}
 	return items, nil
 }
+
+const updateTodo = `-- name: UpdateTodo :one
+UPDATE todos
+SET title = $2, description = $3, completed = $4, priority = $5, due_date = $6, updated_at = NOW()
+WHERE id = $1 AND user_id = $7 AND deleted_at IS NULL
+RETURNING id, user_id, title, description, completed, priority, due_date, created_at, updated_at, deleted_at
+`
+
+type UpdateTodoParams struct {
+	ID          int32
+	Title       string
+	Description string
+	Completed   bool
+	Priority    PriorityLevel
+	DueDate     pgtype.Timestamptz
+	UserID      int32
+}
+
+func (q *Queries) UpdateTodo(ctx context.Context, arg UpdateTodoParams) (Todo, error) {
+	row := q.db.QueryRow(ctx, updateTodo,
+		arg.ID,
+		arg.Title,
+		arg.Description,
+		arg.Completed,
+		arg.Priority,
+		arg.DueDate,
+		arg.UserID,
+	)
+	var i Todo
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Title,
+		&i.Description,
+		&i.Completed,
+		&i.Priority,
+		&i.DueDate,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return i, err
+}

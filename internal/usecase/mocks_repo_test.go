@@ -362,6 +362,21 @@ func (mr *MockTodoRepoMockRecorder) ReadTodoByID(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadTodoByID", reflect.TypeOf((*MockTodoRepo)(nil).ReadTodoByID), arg0, arg1)
 }
 
+// UpdateTodo mocks base method.
+func (m *MockTodoRepo) UpdateTodo(arg0 context.Context, arg1 *entity.Todo) (*entity.Todo, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateTodo", arg0, arg1)
+	ret0, _ := ret[0].(*entity.Todo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateTodo indicates an expected call of UpdateTodo.
+func (mr *MockTodoRepoMockRecorder) UpdateTodo(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateTodo", reflect.TypeOf((*MockTodoRepo)(nil).UpdateTodo), arg0, arg1)
+}
+
 // MockTodoCache is a mock of TodoCache interface.
 type MockTodoCache struct {
 	ctrl     *gomock.Controller

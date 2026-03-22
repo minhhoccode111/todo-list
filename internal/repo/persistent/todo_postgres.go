@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/minhhoccode111/todo-list/internal/entity"
@@ -85,4 +86,25 @@ func (tr *TodoRepo) CreateTodo(
 
 func (tr *TodoRepo) ReadTodoByID(_ context.Context, _ int32) (*entity.Todo, error) {
 	return nil, nil
+}
+
+func (tr *TodoRepo) UpdateTodo(c context.Context, t *entity.Todo) (*entity.Todo, error) {
+	sqlcTodo, err := tr.queries.UpdateTodo(c, sqlc.UpdateTodoParams{
+		ID:          t.ID,
+		Title:       t.Title,
+		Description: t.Description,
+		Completed:   t.Completed,
+		Priority:    sqlc.PriorityLevel(*t.Priority),
+		DueDate:     toPgTimestamptz(t.DueDate),
+		UserID:      t.UserID,
+	})
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return nil, entity.ErrForbidden
+		}
+
+		return nil, fmt.Errorf("TodoRepo - UpdateTodo - tr.queries.UpdateTodo: %w", err)
+	}
+
+	return newTodoFromDTO(&sqlcTodo), nil
 }

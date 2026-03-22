@@ -51,6 +51,7 @@ type (
 	TodoRepo interface {
 		CreateTodo(context.Context, *entity.Todo) (*entity.Todo, error)
 		ReadTodoByID(context.Context, int32) (*entity.Todo, error)
+		UpdateTodo(context.Context, *entity.Todo) (*entity.Todo, error)
 	}
 
 	// TodoCache -.

@@ -13,7 +13,10 @@ type CreateTodo struct {
 	DueDate     *time.Time            `json:"due_date"    validate:"omitempty,future"`
 }
 
-// func (ct *CreateTodo) Trim() {
-// 	ct.Title = strings.TrimSpace(ct.Title)
-// 	ct.Description = strings.TrimSpace(ct.Description)
-// }
+type UpdateTodo struct {
+	Title       string                `json:"title"       validate:"required,max=255"`
+	Description string                `json:"description" validate:"required,max=10000"`
+	Completed   bool                  `json:"completed"`
+	Priority    *entity.PriorityLevel `json:"priority"    validate:"omitempty,oneof=low med high"`
+	DueDate     *time.Time            `json:"due_date"    validate:"omitempty,future"`
+}

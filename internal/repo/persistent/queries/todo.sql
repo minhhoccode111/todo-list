@@ -10,3 +10,9 @@ OFFSET $3;
 INSERT INTO todos (user_id, title, description, priority, due_date)
 VALUES ($1, $2, $3, $4, $5)
 RETURNING *;
+
+-- name: UpdateTodo :one
+UPDATE todos
+SET title = $2, description = $3, completed = $4, priority = $5, due_date = $6, updated_at = NOW()
+WHERE id = $1 AND user_id = $7 AND deleted_at IS NULL
+RETURNING *;

@@ -26,5 +26,6 @@ type (
 	// ITodo -.
 	Todo interface {
 		CreateTodo(context.Context, *entity.Todo) (*entity.Todo, error)
+		UpdateTodo(context.Context, *entity.Todo) (*entity.Todo, error)
 	}
 )
