@@ -22,15 +22,15 @@ func NewUserCache(c *cache.Cache[string, *entity.User]) *UserCache {
 
 // GetUser returns the cached user by userID.
 func (uc *UserCache) GetUser(_ context.Context, userID string) (*entity.User, bool) {
-	return uc.c.Get(userKey + ":" + userID)
+	return uc.c.Get(buildKey(userKey, userID))
 }
 
 // SetUser stores the user in the cache by userID.
 func (uc *UserCache) SetUser(_ context.Context, userID string, u *entity.User) bool {
-	return uc.c.Set(userKey+":"+userID, u)
+	return uc.c.Set(buildKey(userKey, userID), u)
 }
 
 // InvalidateUser removes the cached user entry so the next read hits the DB.
 func (uc *UserCache) InvalidateUser(_ context.Context, userID string) {
-	uc.c.Delete(userKey + ":" + userID)
+	uc.c.Delete(buildKey(userKey, userID))
 }

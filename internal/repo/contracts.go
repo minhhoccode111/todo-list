@@ -42,14 +42,21 @@ type (
 
 	// UserCache -.
 	UserCache interface {
-		GetUser(context.Context, string) (*entity.User, bool)
-		SetUser(context.Context, string, *entity.User) bool
-		InvalidateUser(context.Context, string)
+		GetUser(c context.Context, userID string) (*entity.User, bool)
+		SetUser(c context.Context, userID string, u *entity.User) bool
+		InvalidateUser(c context.Context, userID string)
 	}
 
 	// TodoRepo -.
 	TodoRepo any
 
 	// TodoCache -.
-	TodoCache any
+	TodoCache interface {
+		GetTodo(c context.Context, userID, todoID string) (*entity.Todo, bool)
+		SetTodo(c context.Context, userID, todoID string, t *entity.Todo) bool
+		InvalidateTodo(c context.Context, userID, todoID string)
+		GetTodos(c context.Context, userID, limit, offset string) ([]entity.Todo, bool)
+		SetTodos(c context.Context, userID, limit, offset string, s []entity.Todo) bool
+		InvalidateTodos(c context.Context, userID, limit, offset string)
+	}
 )
