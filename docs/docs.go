@@ -50,19 +50,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.Error"
+                            "$ref": "#/definitions/response.Message"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/response.Error"
+                            "$ref": "#/definitions/response.Message"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.Error"
+                            "$ref": "#/definitions/response.Message"
                         }
                     }
                 }
@@ -103,19 +103,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.Error"
+                            "$ref": "#/definitions/response.Message"
                         }
                     },
                     "409": {
                         "description": "Conflict",
                         "schema": {
-                            "$ref": "#/definitions/response.Error"
+                            "$ref": "#/definitions/response.Message"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.Error"
+                            "$ref": "#/definitions/response.Message"
                         }
                     }
                 }
@@ -156,19 +156,19 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.Error"
+                            "$ref": "#/definitions/response.Message"
                         }
                     },
                     "401": {
                         "description": "Unauthorized",
                         "schema": {
-                            "$ref": "#/definitions/response.Error"
+                            "$ref": "#/definitions/response.Message"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.Error"
+                            "$ref": "#/definitions/response.Message"
                         }
                     }
                 }
@@ -209,13 +209,13 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request",
                         "schema": {
-                            "$ref": "#/definitions/response.Error"
+                            "$ref": "#/definitions/response.Message"
                         }
                     },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.Error"
+                            "$ref": "#/definitions/response.Message"
                         }
                     }
                 }
@@ -245,7 +245,7 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
-                            "$ref": "#/definitions/response.Error"
+                            "$ref": "#/definitions/response.Message"
                         }
                     }
                 }
@@ -275,9 +275,6 @@ const docTemplate = `{
                 "created_at": {
                     "type": "string"
                 },
-                "deleted_at": {
-                    "type": "string"
-                },
                 "description": {
                     "type": "string"
                 },
@@ -295,9 +292,6 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
-                },
-                "user_id": {
-                    "type": "integer"
                 }
             }
         },
@@ -335,12 +329,33 @@ const docTemplate = `{
         },
         "request.CreateTodo": {
             "type": "object",
+            "required": [
+                "description",
+                "title"
+            ],
             "properties": {
                 "description": {
+                    "type": "string",
+                    "maxLength": 10000
+                },
+                "due_date": {
                     "type": "string"
                 },
+                "priority": {
+                    "enum": [
+                        "low",
+                        "med",
+                        "high"
+                    ],
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/entity.PriorityLevel"
+                        }
+                    ]
+                },
                 "title": {
-                    "type": "string"
+                    "type": "string",
+                    "maxLength": 255
                 }
             }
         },
@@ -413,12 +428,11 @@ const docTemplate = `{
                 }
             }
         },
-        "response.Error": {
+        "response.Message": {
             "type": "object",
             "properties": {
-                "error": {
-                    "type": "string",
-                    "example": "message"
+                "message": {
+                    "type": "string"
                 }
             }
         }

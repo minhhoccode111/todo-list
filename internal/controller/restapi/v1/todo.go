@@ -20,9 +20,9 @@ import (
 // @Produce     json
 // @Param       request body request.CreateTodo true "comment"
 // @Success     200 {object} entity.Todo
-// @Failure     400 {object} response.Error
-// @Failure     401 {object} response.Error
-// @Failure     500 {object} response.Error
+// @Failure     400 {object} response.Message
+// @Failure     401 {object} response.Message
+// @Failure     500 {object} response.Message
 // @Router      /todos [post]
 func (r *V1) createTodo(c *gin.Context) {
 	var body request.CreateTodo
@@ -59,11 +59,17 @@ func (r *V1) createTodo(c *gin.Context) {
 		return
 	}
 
-	t, err := r.to.CreateTodo(c, userID, &entity.Todo{
+	if body.Priority == nil {
+		med := entity.PriorityLevelMed
+		body.Priority = &med
+	}
+
+	t, err := r.to.CreateTodo(c, &entity.Todo{
+		UserID:      userID,
 		Title:       body.Title,
 		Description: body.Description,
-		Priority:    *body.Priority,
-		DueDate:     *body.DueDate,
+		Priority:    body.Priority,
+		DueDate:     body.DueDate,
 	})
 	if err != nil {
 		r.l.Error(err, "restapi - v1 - createTodo - r.u.CreateTodo")

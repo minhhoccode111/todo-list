@@ -48,7 +48,10 @@ type (
 	}
 
 	// TodoRepo -.
-	TodoRepo any
+	TodoRepo interface {
+		CreateTodo(context.Context, *entity.Todo) (*entity.Todo, error)
+		ReadTodoByID(context.Context, int32) (*entity.Todo, error)
+	}
 
 	// TodoCache -.
 	TodoCache interface {

@@ -3,6 +3,7 @@ package validatorx
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -35,7 +36,7 @@ func ExtractErrors(err error) []string {
 		case "email":
 			out = append(out, field+" must be a valid email address")
 
-		case "username":
+		case "name":
 			out = append(out, field+" must contain only letters, and numbers")
 
 		case "password":
@@ -44,11 +45,8 @@ func ExtractErrors(err error) []string {
 				field+" must contain at least one uppercase letter, one lowercase letter, one digit, and one special character",
 			)
 
-		case "tag":
-			out = append(
-				out,
-				field+` allowed characters are letters, numbers, spaces, underscores, and hyphens`,
-			)
+		case "oneof":
+			out = append(out, field+" must be one of: "+strings.ReplaceAll(param, " ", ", "))
 
 		case "no_dups_str":
 			out = append(out, field+" contains duplicate values")

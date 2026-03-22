@@ -16,8 +16,6 @@ definitions:
         type: boolean
       created_at:
         type: string
-      deleted_at:
-        type: string
       description:
         type: string
       due_date:
@@ -30,8 +28,6 @@ definitions:
         type: string
       updated_at:
         type: string
-      user_id:
-        type: integer
     type: object
   entity.Translation:
     properties:
@@ -58,9 +54,23 @@ definitions:
   request.CreateTodo:
     properties:
       description:
+        maxLength: 10000
         type: string
+      due_date:
+        type: string
+      priority:
+        allOf:
+        - $ref: '#/definitions/entity.PriorityLevel'
+        enum:
+        - low
+        - med
+        - high
       title:
+        maxLength: 255
         type: string
+    required:
+    - description
+    - title
     type: object
   request.Login:
     properties:
@@ -111,10 +121,9 @@ definitions:
       token:
         type: string
     type: object
-  response.Error:
+  response.Message:
     properties:
-      error:
-        example: message
+      message:
         type: string
     type: object
 host: localhost:8080
@@ -147,15 +156,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/response.Error'
+            $ref: '#/definitions/response.Message'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/response.Error'
+            $ref: '#/definitions/response.Message'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/response.Error'
+            $ref: '#/definitions/response.Message'
       summary: Login
       tags:
       - Auth
@@ -182,15 +191,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/response.Error'
+            $ref: '#/definitions/response.Message'
         "409":
           description: Conflict
           schema:
-            $ref: '#/definitions/response.Error'
+            $ref: '#/definitions/response.Message'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/response.Error'
+            $ref: '#/definitions/response.Message'
       summary: Register
       tags:
       - Auth
@@ -217,15 +226,15 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/response.Error'
+            $ref: '#/definitions/response.Message'
         "401":
           description: Unauthorized
           schema:
-            $ref: '#/definitions/response.Error'
+            $ref: '#/definitions/response.Message'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/response.Error'
+            $ref: '#/definitions/response.Message'
       summary: Create Todo
       tags:
       - todo
@@ -252,11 +261,11 @@ paths:
         "400":
           description: Bad Request
           schema:
-            $ref: '#/definitions/response.Error'
+            $ref: '#/definitions/response.Message'
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/response.Error'
+            $ref: '#/definitions/response.Message'
       summary: Translate
       tags:
       - translation
@@ -276,7 +285,7 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/response.Error'
+            $ref: '#/definitions/response.Message'
       summary: Show history
       tags:
       - translation

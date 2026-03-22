@@ -20,7 +20,7 @@ func NewTodoCache(c *cache.Cache[string, []entity.Todo]) *TodoCache {
 	return &TodoCache{c: c}
 }
 
-func (tc *TodoCache) GetTodo(c context.Context, userID, todoID string) (*entity.Todo, bool) {
+func (tc *TodoCache) GetTodo(_ context.Context, userID, todoID string) (*entity.Todo, bool) {
 	todos, ok := tc.c.Get(buildKey(todoKey, userID, todoID))
 	if !ok || len(todos) == 0 {
 		return nil, false
@@ -29,7 +29,7 @@ func (tc *TodoCache) GetTodo(c context.Context, userID, todoID string) (*entity.
 	return &todos[0], ok
 }
 
-func (tc *TodoCache) SetTodo(c context.Context, userID, todoID string, t *entity.Todo) bool {
+func (tc *TodoCache) SetTodo(_ context.Context, userID, todoID string, t *entity.Todo) bool {
 	if t == nil {
 		return false
 	}
@@ -37,25 +37,25 @@ func (tc *TodoCache) SetTodo(c context.Context, userID, todoID string, t *entity
 	return tc.c.Set(buildKey(todoKey, userID, todoID), []entity.Todo{*t})
 }
 
-func (tc *TodoCache) InvalidateTodo(c context.Context, userID, todoID string) {
+func (tc *TodoCache) InvalidateTodo(_ context.Context, userID, todoID string) {
 	tc.c.Delete(buildKey(todoKey, userID, todoID))
 }
 
 func (tc *TodoCache) GetTodos(
-	c context.Context,
+	_ context.Context,
 	userID, limit, offset string,
 ) ([]entity.Todo, bool) {
 	return tc.c.Get(buildKey(todoKey, userID, limit, offset))
 }
 
 func (tc *TodoCache) SetTodos(
-	c context.Context,
+	_ context.Context,
 	userID, limit, offset string,
 	s []entity.Todo,
 ) bool {
 	return tc.c.Set(buildKey(todoKey, userID, limit, offset), s)
 }
 
-func (tc *TodoCache) InvalidateTodos(c context.Context, userID, limit, offset string) {
+func (tc *TodoCache) InvalidateTodos(_ context.Context, userID, limit, offset string) {
 	tc.c.Delete(buildKey(todoKey, userID, limit, offset))
 }

@@ -6,6 +6,7 @@ AND t.user_id = $1
 LIMIT $2
 OFFSET $3;
 
--- name: CreateTodo :exec
+-- name: CreateTodo :one
 INSERT INTO todos (user_id, title, description, priority, due_date)
-VALUES ($1, $2, $3, $4, $5);
+VALUES ($1, $2, $3, $4, $5)
+RETURNING *;

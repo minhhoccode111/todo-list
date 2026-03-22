@@ -39,6 +39,7 @@ func extractToken(c *gin.Context) string {
 
 	// Check query parameter
 	token = c.Query("access_token")
+
 	return token
 }
 

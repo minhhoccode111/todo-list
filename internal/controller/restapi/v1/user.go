@@ -20,9 +20,9 @@ import (
 // @Produce     json
 // @Param       request body request.Register true "comment"
 // @Success     201 {object} response.Auth
-// @Failure     400 {object} response.Error
-// @Failure     409 {object} response.Error
-// @Failure     500 {object} response.Error
+// @Failure     400 {object} response.Message
+// @Failure     409 {object} response.Message
+// @Failure     500 {object} response.Message
 // @Router      /register [post]
 func (r *V1) register(c *gin.Context) {
 	var body request.Register
@@ -78,9 +78,9 @@ func (r *V1) register(c *gin.Context) {
 // @Produce     json
 // @Param       request body request.Login true "comment"
 // @Success     200 {object} response.Auth
-// @Failure     400 {object} response.Error
-// @Failure     401 {object} response.Error
-// @Failure     500 {object} response.Error
+// @Failure     400 {object} response.Message
+// @Failure     401 {object} response.Message
+// @Failure     500 {object} response.Message
 // @Router      /login [post]
 func (r *V1) login(c *gin.Context) {
 	var body request.Login

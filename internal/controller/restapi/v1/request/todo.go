@@ -9,7 +9,7 @@ import (
 type CreateTodo struct {
 	Title       string                `json:"title"       validate:"required,max=255"`
 	Description string                `json:"description" validate:"required,max=10000"`
-	Priority    *entity.PriorityLevel `json:"priority"    validate:"omitempty"`
+	Priority    *entity.PriorityLevel `json:"priority"    validate:"omitempty,oneof=low med high"`
 	DueDate     *time.Time            `json:"due_date"    validate:"omitempty,future"`
 }
 

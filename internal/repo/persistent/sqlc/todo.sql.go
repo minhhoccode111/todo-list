@@ -12,9 +12,10 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const createTodo = `-- name: CreateTodo :exec
+const createTodo = `-- name: CreateTodo :one
 INSERT INTO todos (user_id, title, description, priority, due_date)
 VALUES ($1, $2, $3, $4, $5)
+RETURNING id, user_id, title, description, completed, priority, due_date, created_at, updated_at, deleted_at
 `
 
 type CreateTodoParams struct {
@@ -25,15 +26,28 @@ type CreateTodoParams struct {
 	DueDate     pgtype.Timestamptz
 }
 
-func (q *Queries) CreateTodo(ctx context.Context, arg CreateTodoParams) error {
-	_, err := q.db.Exec(ctx, createTodo,
+func (q *Queries) CreateTodo(ctx context.Context, arg CreateTodoParams) (Todo, error) {
+	row := q.db.QueryRow(ctx, createTodo,
 		arg.UserID,
 		arg.Title,
 		arg.Description,
 		arg.Priority,
 		arg.DueDate,
 	)
-	return err
+	var i Todo
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.Title,
+		&i.Description,
+		&i.Completed,
+		&i.Priority,
+		&i.DueDate,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.DeletedAt,
+	)
+	return i, err
 }
 
 const readTodos = `-- name: ReadTodos :many

@@ -11,4 +11,4 @@ WHERE email = $1;
 -- name: CreateUser :one
 INSERT INTO users (email, name, password_hash)
 VALUES ($1, $2, $3)
-RETURNING id, email, name, password_hash, created_at, updated_at;
+RETURNING *;

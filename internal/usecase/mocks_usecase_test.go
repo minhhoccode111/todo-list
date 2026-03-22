@@ -125,3 +125,42 @@ func (mr *MockUserMockRecorder) Register(arg0, arg1, arg2 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockUser)(nil).Register), arg0, arg1, arg2)
 }
+
+// MockTodo is a mock of Todo interface.
+type MockTodo struct {
+	ctrl     *gomock.Controller
+	recorder *MockTodoMockRecorder
+	isgomock struct{}
+}
+
+// MockTodoMockRecorder is the mock recorder for MockTodo.
+type MockTodoMockRecorder struct {
+	mock *MockTodo
+}
+
+// NewMockTodo creates a new mock instance.
+func NewMockTodo(ctrl *gomock.Controller) *MockTodo {
+	mock := &MockTodo{ctrl: ctrl}
+	mock.recorder = &MockTodoMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockTodo) EXPECT() *MockTodoMockRecorder {
+	return m.recorder
+}
+
+// CreateTodo mocks base method.
+func (m *MockTodo) CreateTodo(arg0 context.Context, arg1 *entity.Todo) (*entity.Todo, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateTodo", arg0, arg1)
+	ret0, _ := ret[0].(*entity.Todo)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateTodo indicates an expected call of CreateTodo.
+func (mr *MockTodoMockRecorder) CreateTodo(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTodo", reflect.TypeOf((*MockTodo)(nil).CreateTodo), arg0, arg1)
+}

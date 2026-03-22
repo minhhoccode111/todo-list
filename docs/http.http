@@ -4,7 +4,8 @@
 @name = minhhoccode111
 @email = minhhoccode111@gmail.com
 @password = P@55w0rd
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiIxIiwiaXNzIjoidG9kby1saXN0Iiwic3ViIjoiMSIsImV4cCI6MTc4Mjc5NDEwNywiaWF0IjoxNzc0MTU0MTA3fQ.rGSpI6yn_a7Im4UGTyqDvCekxBpEzLmuyU2p2Pw26Eg
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiIxIiwiaXNzIjoidG9kby1saXN0Iiwic3ViIjoiMSIsImV4cCI6MTc4MjgwMzM4MywiaWF0IjoxNzc0MTYzMzgzfQ.vIyS_XcjONL98y7ZjVuZzJUlDR2QJgsc1VHCLtmPHZo
+@token0 = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiIyIiwiaXNzIjoidG9kby1saXN0Iiwic3ViIjoiMiIsImV4cCI6MTc4MjgyMDU0MSwiaWF0IjoxNzc0MTgwNTQxfQ.fNktDo48-nfFJAY7ZCLMYwM5oJ-XVwXnC72p3W1IBW0
 
 ###
 GET {{url}}/healthz
@@ -28,9 +29,11 @@ POST {{api}}/login
 
 ###
 POST {{api}}/todos
-Authorization: Bearer {{token}}
+Authorization: Bearer {{token0}}
 
 {
     "title": "todo-list project",
-    "description": "finish todo-list project with gin-clean-arch and svelte/kit"
+    "description": "finish todo-list project with gin-clean-arch and svelte/kit",
+    "priority": "high",
+    "due_date": "2026-03-23T18:58:15.083517+07:00"
 }

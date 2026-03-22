@@ -17,7 +17,7 @@ import (
 // @Accept      json
 // @Produce     json
 // @Success     200 {object} entity.TranslationHistory
-// @Failure     500 {object} response.Error
+// @Failure     500 {object} response.Message
 // @Router      /translation/history [get]
 func (r *V1) history(c *gin.Context) {
 	translationHistory, err := r.tr.ReadHistory(c.Request.Context())
@@ -40,8 +40,8 @@ func (r *V1) history(c *gin.Context) {
 // @Produce     json
 // @Param       request body request.Translate true "Set up translation"
 // @Success     200 {object} entity.Translation
-// @Failure     400 {object} response.Error
-// @Failure     500 {object} response.Error
+// @Failure     400 {object} response.Message
+// @Failure     500 {object} response.Message
 // @Router      /translation/do-translate [post]
 func (r *V1) doTranslate(c *gin.Context) {
 	var body request.Translate

@@ -41,10 +41,6 @@ sqlc: ### generate source files from sql
 	sqlc generate
 .PHONY: sqlc
 
-hurl: ### execute hurl
-	hurl --test docs/hurl
-.PHONY: sqlc
-
 deps: ### deps tidy + verify
 	go mod tidy && go mod verify
 .PHONY: deps
