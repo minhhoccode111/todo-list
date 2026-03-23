@@ -67,9 +67,10 @@ func (q *Queries) DeleteTodo(ctx context.Context, arg DeleteTodoParams) error {
 }
 
 const readTodos = `-- name: ReadTodos :many
-SELECT id, user_id, title, description, completed, priority, due_date, created_at, updated_at
+SELECT id, user_id, title, description, completed, priority, due_date, created_at, updated_at,
+    COUNT(*) OVER() as total_count
 FROM todos t
-WHERE deleted_at IS NOT NULL
+WHERE deleted_at IS NULL
 AND t.user_id = $1
 LIMIT $2
 OFFSET $3
@@ -91,6 +92,7 @@ type ReadTodosRow struct {
 	DueDate     pgtype.Timestamptz
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
+	TotalCount  int64
 }
 
 func (q *Queries) ReadTodos(ctx context.Context, arg ReadTodosParams) ([]ReadTodosRow, error) {
@@ -112,6 +114,7 @@ func (q *Queries) ReadTodos(ctx context.Context, arg ReadTodosParams) ([]ReadTod
 			&i.DueDate,
 			&i.CreatedAt,
 			&i.UpdatedAt,
+			&i.TotalCount,
 		); err != nil {
 			return nil, err
 		}

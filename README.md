@@ -14,4 +14,8 @@
 - [x] register endpoint
 - [x] login endpoint
 - [x] auth middleware
-- [ ] create todo
+- [x] create todo
+- [x] update todo
+- [x] delete todo
+- [x] read todos paginate
+- [ ] allow subtasks (self reference for `todos` table)

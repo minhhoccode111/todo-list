@@ -53,6 +53,7 @@ type (
 		ReadTodoByID(context.Context, int32) (*entity.Todo, error)
 		UpdateTodo(context.Context, *entity.Todo) (*entity.Todo, error)
 		DeleteTodo(context.Context, int32, int32) error
+		ReadTodos(context.Context, int32, int32, int32) ([]entity.Todo, int32, error)
 	}
 
 	// TodoCache -.

@@ -179,6 +179,21 @@ func (mr *MockTodoMockRecorder) DeleteTodo(arg0, arg1, arg2 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteTodo", reflect.TypeOf((*MockTodo)(nil).DeleteTodo), arg0, arg1, arg2)
 }
 
+// GetTodos mocks base method.
+func (m *MockTodo) GetTodos(arg0 context.Context, arg1, arg2, arg3 int32) (*entity.Todos, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTodos", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].(*entity.Todos)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetTodos indicates an expected call of GetTodos.
+func (mr *MockTodoMockRecorder) GetTodos(arg0, arg1, arg2, arg3 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTodos", reflect.TypeOf((*MockTodo)(nil).GetTodos), arg0, arg1, arg2, arg3)
+}
+
 // UpdateTodo mocks base method.
 func (m *MockTodo) UpdateTodo(arg0 context.Context, arg1 *entity.Todo) (*entity.Todo, error) {
 	m.ctrl.T.Helper()

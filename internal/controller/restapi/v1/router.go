@@ -46,6 +46,7 @@ func NewV1Routes(
 	// RouterGroup-level middlewares
 	todoGroup.Use(middleware.Auth(cfg.JWT.Secret))
 	{
+		todoGroup.GET("/todos", r.getTodos)
 		todoGroup.POST("/todos", r.createTodo)
 		todoGroup.PUT("/todos/:id", r.updateTodo)
 		todoGroup.DELETE("/todos/:id", r.deleteTodo)

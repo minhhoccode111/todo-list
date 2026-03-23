@@ -22,3 +22,10 @@ type Todo struct {
 	UpdatedAt   time.Time      `json:"updated_at"`
 	DeletedAt   *time.Time     `json:"-"`
 }
+
+type Todos struct {
+	Data  []Todo `json:"data"`
+	Page  int32  `json:"page"`
+	Limit int32  `json:"limit"`
+	Total int32  `json:"total"`
+}

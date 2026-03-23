@@ -57,3 +57,19 @@ func (uc *UseCase) DeleteTodo(c context.Context, todoID, userID int32) error {
 
 	return nil
 }
+
+func (uc *UseCase) GetTodos(c context.Context, userID, page, limit int32) (*entity.Todos, error) {
+	offset := (page - 1) * limit
+
+	todos, total, err := uc.repo.ReadTodos(c, userID, limit, offset)
+	if err != nil {
+		return nil, fmt.Errorf("TodoUseCase - GetTodos - uc.repo.ReadTodos: %w", err)
+	}
+
+	return &entity.Todos{
+		Data:  todos,
+		Page:  page,
+		Limit: limit,
+		Total: total,
+	}, nil
+}

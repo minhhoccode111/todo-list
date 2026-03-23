@@ -55,12 +55,11 @@ func (r *V1) register(c *gin.Context) {
 		&r.cfg.JWT,
 	)
 	if err != nil {
-		r.l.Error(err, "restapi - v1 - register - r.u.Register")
-
 		switch {
 		case errors.Is(err, entity.ErrDuplicateEntry):
 			messageResponse(c, http.StatusConflict, "email already existed")
 		default:
+			r.l.Error(err, "restapi - v1 - register - r.u.Register")
 			messageResponse(c, http.StatusInternalServerError, "internal server error")
 		}
 
@@ -112,14 +111,13 @@ func (r *V1) login(c *gin.Context) {
 		&r.cfg.JWT,
 	)
 	if err != nil {
-		r.l.Error(err, "restapi - v1 - login - r.u.Login")
-
 		switch {
 		case errors.Is(err, entity.ErrNoRows):
 			messageResponse(c, http.StatusUnauthorized, "Unauthorized")
 		case errors.Is(err, entity.ErrUnauthorized):
 			messageResponse(c, http.StatusUnauthorized, "Unauthorized")
 		default:
+			r.l.Error(err, "restapi - v1 - login - r.u.Login")
 			messageResponse(c, http.StatusInternalServerError, "internal server error")
 		}
 

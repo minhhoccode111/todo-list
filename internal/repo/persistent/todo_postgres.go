@@ -88,6 +88,42 @@ func (tr *TodoRepo) ReadTodoByID(_ context.Context, _ int32) (*entity.Todo, erro
 	return nil, nil
 }
 
+func (tr *TodoRepo) ReadTodos(
+	c context.Context,
+	userID, limit, offset int32,
+) ([]entity.Todo, int32, error) {
+	sqlcTodos, err := tr.queries.ReadTodos(c, sqlc.ReadTodosParams{
+		UserID: userID,
+		Limit:  limit,
+		Offset: offset,
+	})
+	if err != nil {
+		return nil, 0, fmt.Errorf("TodoRepo - ReadTodos - tr.queries.ReadTodos: %w", err)
+	}
+
+	if len(sqlcTodos) == 0 {
+		return []entity.Todo{}, 0, nil
+	}
+
+	todos := make([]entity.Todo, 0, len(sqlcTodos))
+	for i := range sqlcTodos {
+		t := &sqlcTodos[i]
+		todos = append(todos, entity.Todo{
+			ID:          t.ID,
+			UserID:      t.UserID,
+			Title:       t.Title,
+			Description: t.Description,
+			Completed:   t.Completed,
+			Priority:    (*entity.PriorityLevel)(&t.Priority),
+			DueDate:     fromPgTimestamptz(t.DueDate),
+			CreatedAt:   t.CreatedAt,
+			UpdatedAt:   t.UpdatedAt,
+		})
+	}
+
+	return todos, int32(sqlcTodos[0].TotalCount), nil // #nosec G115
+}
+
 func (tr *TodoRepo) UpdateTodo(c context.Context, t *entity.Todo) (*entity.Todo, error) {
 	sqlcTodo, err := tr.queries.UpdateTodo(c, sqlc.UpdateTodoParams{
 		ID:          t.ID,

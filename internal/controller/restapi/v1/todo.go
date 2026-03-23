@@ -46,14 +46,14 @@ func (r *V1) createTodo(c *gin.Context) {
 		return
 	}
 
-	userIDStr, ok := c.Get(middleware.CtxUserIDKey)
+	userIDRaw, ok := c.Get(middleware.CtxUserIDKey)
 	if !ok {
 		messageResponse(c, http.StatusUnauthorized, "Unauthorized")
 
 		return
 	}
 
-	userID, ok := userIDStr.(int32)
+	userID, ok := userIDRaw.(int32)
 	if !ok {
 		messageResponse(c, http.StatusUnauthorized, "Unauthorized")
 
@@ -73,12 +73,11 @@ func (r *V1) createTodo(c *gin.Context) {
 		DueDate:     body.DueDate,
 	})
 	if err != nil {
-		r.l.Error(err, "restapi - v1 - createTodo - r.u.CreateTodo")
-
 		switch {
 		case errors.Is(err, entity.ErrUnauthorized):
 			messageResponse(c, http.StatusUnauthorized, "Unauthorized")
 		default:
+			r.l.Error(err, "restapi - v1 - createTodo - r.u.CreateTodo")
 			messageResponse(c, http.StatusInternalServerError, "internal server error")
 		}
 
@@ -86,6 +85,53 @@ func (r *V1) createTodo(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, t)
+}
+
+// @Summary     Get Todos
+// @Description Get paginated list of Todo items
+// @ID          get-todos
+// @Tags        todo
+// @Produce     json
+// @Param       page query int false "Page number"
+// @Param       limit query int false "Items per page"
+// @Success     200 {object} entity.Todos
+// @Failure     401 {object} response.Message
+// @Failure     500 {object} response.Message
+// @Router      /todos [get]
+func (r *V1) getTodos(c *gin.Context) {
+	userIDRaw, ok := c.Get(middleware.CtxUserIDKey)
+	if !ok {
+		messageResponse(c, http.StatusUnauthorized, "Unauthorized")
+
+		return
+	}
+
+	userID, ok := userIDRaw.(int32)
+	if !ok {
+		messageResponse(c, http.StatusUnauthorized, "Unauthorized")
+
+		return
+	}
+
+	page, err := strconv.Atoi(c.Query("page"))
+	if err != nil || page < 1 {
+		page = 1
+	}
+
+	limit, err := strconv.Atoi(c.Query("limit"))
+	if err != nil || limit < 1 {
+		limit = 10
+	}
+
+	result, err := r.to.GetTodos(c, userID, int32(page), int32(limit)) //nolint:gosec // intended
+	if err != nil {
+		r.l.Error(err, "restapi - v1 - getTodos - r.to.GetTodos")
+		messageResponse(c, http.StatusInternalServerError, "internal server error")
+
+		return
+	}
+
+	c.JSON(http.StatusOK, result)
 }
 
 // @Summary     Update Todo
@@ -157,12 +203,11 @@ func (r *V1) updateTodo(c *gin.Context) { //nolint:funlen // identical pattern t
 		DueDate:     body.DueDate,
 	})
 	if err != nil {
-		r.l.Error(err, "restapi - v1 - updateTodo - r.u.UpdateTodo")
-
 		switch {
 		case errors.Is(err, entity.ErrForbidden):
 			messageResponse(c, http.StatusForbidden, "Forbidden")
 		default:
+			r.l.Error(err, "restapi - v1 - updateTodo - r.u.UpdateTodo")
 			messageResponse(c, http.StatusInternalServerError, "internal server error")
 		}
 
@@ -206,12 +251,11 @@ func (r *V1) deleteTodo(c *gin.Context) {
 
 	err = r.to.DeleteTodo(c, int32(todoID), userID)
 	if err != nil {
-		r.l.Error(err, "restapi - v1 - deleteTodo - r.u.DeleteTodo")
-
 		switch {
 		case errors.Is(err, entity.ErrForbidden):
 			messageResponse(c, http.StatusForbidden, "Forbidden")
 		default:
+			r.l.Error(err, "restapi - v1 - deleteTodo - r.u.DeleteTodo")
 			messageResponse(c, http.StatusInternalServerError, "internal server error")
 		}
 

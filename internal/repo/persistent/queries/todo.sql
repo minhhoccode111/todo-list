@@ -1,7 +1,8 @@
 -- name: ReadTodos :many
-SELECT id, user_id, title, description, completed, priority, due_date, created_at, updated_at
+SELECT id, user_id, title, description, completed, priority, due_date, created_at, updated_at,
+    COUNT(*) OVER() as total_count
 FROM todos t
-WHERE deleted_at IS NOT NULL
+WHERE deleted_at IS NULL
 AND t.user_id = $1
 LIMIT $2
 OFFSET $3;

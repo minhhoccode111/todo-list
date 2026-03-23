@@ -5,7 +5,7 @@
 @email = minhhoccode111@gmail.com
 @password = P@55w0rd
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiIxIiwiaXNzIjoidG9kby1saXN0Iiwic3ViIjoiMSIsImV4cCI6MTc4MjgzNTg0NiwiaWF0IjoxNzc0MTk1ODQ2fQ.i9vL8YOiHwK3rXREkWpL7OL-sk00jGlxJC10J84C5_s
-@token0 = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiIyIiwiaXNzIjoidG9kby1saXN0Iiwic3ViIjoiMiIsImV4cCI6MTc4MjgyMDU0MSwiaWF0IjoxNzc0MTgwNTQxfQ.fNktDo48-nfFJAY7ZCLMYwM5oJ-XVwXnC72p3W1IBW0
+@token0 = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiIyIiwiaXNzIjoidG9kby1saXN0Iiwic3ViIjoiMiIsImV4cCI6MTc4MjkxMjQwMSwiaWF0IjoxNzc0MjcyNDAxfQ.UspprUCG7p9sB-TQdDuIAMJth3r4ggKH4QMkNIMDLeo
 
 ###
 GET {{url}}/healthz
@@ -28,6 +28,10 @@ POST {{api}}/login
 }
 
 ###
+GET {{api}}/todos?page=1&limit=10
+Authorization: Bearer {{token}}
+
+###
 POST {{api}}/todos
 Authorization: Bearer {{token}}
 
@@ -35,7 +39,7 @@ Authorization: Bearer {{token}}
     "title": "todo-list project",
     "description": "finish todo-list project with gin-clean-arch and svelte/kit",
     "priority": "high",
-    "due_date": "2026-03-23T18:58:15.083517+07:00"
+    "due_date": "2026-03-24T18:58:15.083517+07:00"
 }
 
 ###
@@ -51,3 +55,7 @@ Authorization: Bearer {{token}}
     "priority": "low",
     "due_date": "2026-03-24T18:58:15.083517+07:00"
 }
+
+###
+DELETE {{api}}/todos/{{todo_id}}
+Authorization: Bearer {{token}}
