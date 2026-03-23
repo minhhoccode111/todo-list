@@ -461,6 +461,18 @@ func (mr *MockTodoCacheMockRecorder) GetTodos(c, userID, limit, offset any) *gom
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTodos", reflect.TypeOf((*MockTodoCache)(nil).GetTodos), c, userID, limit, offset)
 }
 
+// InvalidateAllTodos mocks base method.
+func (m *MockTodoCache) InvalidateAllTodos(c context.Context) {
+	m.ctrl.T.Helper()
+	m.ctrl.Call(m, "InvalidateAllTodos", c)
+}
+
+// InvalidateAllTodos indicates an expected call of InvalidateAllTodos.
+func (mr *MockTodoCacheMockRecorder) InvalidateAllTodos(c any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InvalidateAllTodos", reflect.TypeOf((*MockTodoCache)(nil).InvalidateAllTodos), c)
+}
+
 // InvalidateTodo mocks base method.
 func (m *MockTodoCache) InvalidateTodo(c context.Context, userID, todoID string) {
 	m.ctrl.T.Helper()
@@ -471,18 +483,6 @@ func (m *MockTodoCache) InvalidateTodo(c context.Context, userID, todoID string)
 func (mr *MockTodoCacheMockRecorder) InvalidateTodo(c, userID, todoID any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InvalidateTodo", reflect.TypeOf((*MockTodoCache)(nil).InvalidateTodo), c, userID, todoID)
-}
-
-// InvalidateTodos mocks base method.
-func (m *MockTodoCache) InvalidateTodos(c context.Context, userID, limit, offset string) {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "InvalidateTodos", c, userID, limit, offset)
-}
-
-// InvalidateTodos indicates an expected call of InvalidateTodos.
-func (mr *MockTodoCacheMockRecorder) InvalidateTodos(c, userID, limit, offset any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "InvalidateTodos", reflect.TypeOf((*MockTodoCache)(nil).InvalidateTodos), c, userID, limit, offset)
 }
 
 // SetTodo mocks base method.

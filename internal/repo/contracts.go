@@ -64,5 +64,6 @@ type (
 		GetTodos(c context.Context, userID, limit, offset string) (*entity.Todos, bool)
 		SetTodos(c context.Context, userID, limit, offset string, t *entity.Todos) bool
 		InvalidateTodos(c context.Context, userID, limit, offset string)
+		InvalidateAllTodos(c context.Context)
 	}
 )

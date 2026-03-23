@@ -31,7 +31,7 @@ func (uc *UseCase) CreateTodo(c context.Context, t *entity.Todo) (*entity.Todo, 
 
 	userID, todoID := strconv.Itoa(int(t.UserID)), strconv.Itoa(int(t.ID))
 	uc.cache.SetTodo(c, userID, todoID, t)
-	uc.cache.InvalidateTodos(c, userID, "", "")
+	uc.cache.InvalidateAllTodos(c)
 
 	return t, nil
 }
@@ -44,7 +44,7 @@ func (uc *UseCase) UpdateTodo(c context.Context, t *entity.Todo) (*entity.Todo, 
 
 	userID, todoID := strconv.Itoa(int(t.UserID)), strconv.Itoa(int(t.ID))
 	uc.cache.SetTodo(c, userID, todoID, t)
-	uc.cache.InvalidateTodos(c, userID, "", "")
+	uc.cache.InvalidateAllTodos(c)
 
 	return t, nil
 }
@@ -57,7 +57,7 @@ func (uc *UseCase) DeleteTodo(c context.Context, todoID, userID int32) error {
 
 	userIDStr := strconv.Itoa(int(userID))
 	uc.cache.InvalidateTodo(c, userIDStr, strconv.Itoa(int(todoID)))
-	uc.cache.InvalidateTodos(c, userIDStr, "", "")
+	uc.cache.InvalidateAllTodos(c)
 
 	return nil
 }

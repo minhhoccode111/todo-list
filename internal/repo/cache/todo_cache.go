@@ -62,3 +62,7 @@ func (tc *TodoCache) SetTodos(
 func (tc *TodoCache) InvalidateTodos(_ context.Context, userID, limit, offset string) {
 	tc.c.Delete(buildKey(todosKey, userID, limit, offset))
 }
+
+func (tc *TodoCache) InvalidateAllTodos(_ context.Context) {
+	tc.c.InvalidateAll()
+}
