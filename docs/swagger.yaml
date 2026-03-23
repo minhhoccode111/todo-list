@@ -267,6 +267,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Message'
+      security:
+      - BearerAuth: []
       summary: Get Todos
       tags:
       - todo
@@ -301,6 +303,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Message'
+      security:
+      - BearerAuth: []
       summary: Create Todo
       tags:
       - todo
@@ -329,6 +333,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Message'
+      security:
+      - BearerAuth: []
       summary: Delete Todo
       tags:
       - todo
@@ -368,6 +374,8 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/response.Message'
+      security:
+      - BearerAuth: []
       summary: Update Todo
       tags:
       - todo
@@ -422,4 +430,10 @@ paths:
       summary: Show history
       tags:
       - translation
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

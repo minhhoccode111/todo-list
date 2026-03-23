@@ -159,7 +159,12 @@
                             "$ref": "#/definitions/response.Message"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "description": "Create a Todo item with title and description",
@@ -210,7 +215,12 @@
                             "$ref": "#/definitions/response.Message"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             }
         },
         "/todos/{id}": {
@@ -270,7 +280,12 @@
                             "$ref": "#/definitions/response.Message"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "description": "Delete a Todo item",
@@ -310,7 +325,12 @@
                             "$ref": "#/definitions/response.Message"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             }
         },
         "/translation/do-translate": {
@@ -629,6 +649,14 @@
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "Type \"Bearer\" followed by a space and JWT token.",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

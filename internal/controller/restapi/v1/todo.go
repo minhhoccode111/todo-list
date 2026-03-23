@@ -25,6 +25,7 @@ import (
 // @Failure     401 {object} response.Message
 // @Failure     500 {object} response.Message
 // @Router      /todos [post]
+// @Security    BearerAuth
 func (r *V1) createTodo(c *gin.Context) {
 	var body request.CreateTodo
 
@@ -98,6 +99,7 @@ func (r *V1) createTodo(c *gin.Context) {
 // @Failure     401 {object} response.Message
 // @Failure     500 {object} response.Message
 // @Router      /todos [get]
+// @Security    BearerAuth
 func (r *V1) getTodos(c *gin.Context) {
 	userIDRaw, ok := c.Get(middleware.CtxUserIDKey)
 	if !ok {
@@ -147,6 +149,7 @@ func (r *V1) getTodos(c *gin.Context) {
 // @Failure     401 {object} response.Message
 // @Failure     500 {object} response.Message
 // @Router      /todos/{id} [put]
+// @Security    BearerAuth
 func (r *V1) updateTodo(c *gin.Context) { //nolint:funlen // identical pattern to createTodo
 	var body request.UpdateTodo
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -227,6 +230,7 @@ func (r *V1) updateTodo(c *gin.Context) { //nolint:funlen // identical pattern t
 // @Failure     403 {object} response.Message
 // @Failure     500 {object} response.Message
 // @Router      /todos/{id} [delete]
+// @Security    BearerAuth
 func (r *V1) deleteTodo(c *gin.Context) {
 	userIDRaw, ok := c.Get(middleware.CtxUserIDKey)
 	if !ok {

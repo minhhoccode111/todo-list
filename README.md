@@ -19,5 +19,5 @@
 - [x] delete todo
 - [x] read todos paginate
   - [x] add cache (`~8.00 ms` → `500.00 µs`)
-- [ ] bearer auth for swagger
+- [x] bearer auth for swagger
 - [ ] allow subtasks (self reference for `todos` table)

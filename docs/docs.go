@@ -165,7 +165,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/response.Message"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             },
             "post": {
                 "description": "Create a Todo item with title and description",
@@ -216,7 +221,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/response.Message"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             }
         },
         "/todos/{id}": {
@@ -276,7 +286,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/response.Message"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             },
             "delete": {
                 "description": "Delete a Todo item",
@@ -316,7 +331,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/response.Message"
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ]
             }
         },
         "/translation/do-translate": {
@@ -635,6 +655,14 @@ const docTemplate = `{
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "BearerAuth": {
+            "description": "Type \"Bearer\" followed by a space and JWT token.",
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }`
