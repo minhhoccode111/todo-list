@@ -447,10 +447,10 @@ func (mr *MockTodoCacheMockRecorder) GetTodo(c, userID, todoID any) *gomock.Call
 }
 
 // GetTodos mocks base method.
-func (m *MockTodoCache) GetTodos(c context.Context, userID, limit, offset string) ([]entity.Todo, bool) {
+func (m *MockTodoCache) GetTodos(c context.Context, userID, limit, offset string) (*entity.Todos, bool) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetTodos", c, userID, limit, offset)
-	ret0, _ := ret[0].([]entity.Todo)
+	ret0, _ := ret[0].(*entity.Todos)
 	ret1, _ := ret[1].(bool)
 	return ret0, ret1
 }
@@ -500,15 +500,15 @@ func (mr *MockTodoCacheMockRecorder) SetTodo(c, userID, todoID, t any) *gomock.C
 }
 
 // SetTodos mocks base method.
-func (m *MockTodoCache) SetTodos(c context.Context, userID, limit, offset string, s []entity.Todo) bool {
+func (m *MockTodoCache) SetTodos(c context.Context, userID, limit, offset string, t *entity.Todos) bool {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SetTodos", c, userID, limit, offset, s)
+	ret := m.ctrl.Call(m, "SetTodos", c, userID, limit, offset, t)
 	ret0, _ := ret[0].(bool)
 	return ret0
 }
 
 // SetTodos indicates an expected call of SetTodos.
-func (mr *MockTodoCacheMockRecorder) SetTodos(c, userID, limit, offset, s any) *gomock.Call {
+func (mr *MockTodoCacheMockRecorder) SetTodos(c, userID, limit, offset, t any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTodos", reflect.TypeOf((*MockTodoCache)(nil).SetTodos), c, userID, limit, offset, s)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SetTodos", reflect.TypeOf((*MockTodoCache)(nil).SetTodos), c, userID, limit, offset, t)
 }

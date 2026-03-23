@@ -31,6 +31,7 @@ func (uc *UseCase) CreateTodo(c context.Context, t *entity.Todo) (*entity.Todo, 
 
 	userID, todoID := strconv.Itoa(int(t.UserID)), strconv.Itoa(int(t.ID))
 	uc.cache.SetTodo(c, userID, todoID, t)
+	uc.cache.InvalidateTodos(c, userID, "", "")
 
 	return t, nil
 }
@@ -43,6 +44,7 @@ func (uc *UseCase) UpdateTodo(c context.Context, t *entity.Todo) (*entity.Todo, 
 
 	userID, todoID := strconv.Itoa(int(t.UserID)), strconv.Itoa(int(t.ID))
 	uc.cache.SetTodo(c, userID, todoID, t)
+	uc.cache.InvalidateTodos(c, userID, "", "")
 
 	return t, nil
 }
@@ -53,23 +55,34 @@ func (uc *UseCase) DeleteTodo(c context.Context, todoID, userID int32) error {
 		return fmt.Errorf("TodoUseCase - DeleteTodo - uc.repo.DeleteTodo: %w", err)
 	}
 
-	uc.cache.InvalidateTodo(c, strconv.Itoa(int(userID)), strconv.Itoa(int(todoID)))
+	userIDStr := strconv.Itoa(int(userID))
+	uc.cache.InvalidateTodo(c, userIDStr, strconv.Itoa(int(todoID)))
+	uc.cache.InvalidateTodos(c, userIDStr, "", "")
 
 	return nil
 }
 
 func (uc *UseCase) GetTodos(c context.Context, userID, page, limit int32) (*entity.Todos, error) {
 	offset := (page - 1) * limit
+	userIDStr, limitStr, offsetStr := strconv.Itoa(int(userID)), strconv.Itoa(int(limit)), strconv.Itoa(int(offset))
+
+	if result, ok := uc.cache.GetTodos(c, userIDStr, limitStr, offsetStr); ok {
+		return result, nil
+	}
 
 	todos, total, err := uc.repo.ReadTodos(c, userID, limit, offset)
 	if err != nil {
 		return nil, fmt.Errorf("TodoUseCase - GetTodos - uc.repo.ReadTodos: %w", err)
 	}
 
-	return &entity.Todos{
+	result := &entity.Todos{
 		Data:  todos,
 		Page:  page,
 		Limit: limit,
 		Total: total,
-	}, nil
+	}
+
+	uc.cache.SetTodos(c, userIDStr, limitStr, offsetStr, result)
+
+	return result, nil
 }

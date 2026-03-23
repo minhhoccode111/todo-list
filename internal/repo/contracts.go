@@ -61,8 +61,8 @@ type (
 		GetTodo(c context.Context, userID, todoID string) (*entity.Todo, bool)
 		SetTodo(c context.Context, userID, todoID string, t *entity.Todo) bool
 		InvalidateTodo(c context.Context, userID, todoID string)
-		GetTodos(c context.Context, userID, limit, offset string) ([]entity.Todo, bool)
-		SetTodos(c context.Context, userID, limit, offset string, s []entity.Todo) bool
+		GetTodos(c context.Context, userID, limit, offset string) (*entity.Todos, bool)
+		SetTodos(c context.Context, userID, limit, offset string, t *entity.Todos) bool
 		InvalidateTodos(c context.Context, userID, limit, offset string)
 	}
 )
