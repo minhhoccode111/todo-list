@@ -2,7 +2,7 @@
 
 - **Language**: TypeScript
 - **Package Manager**: pnpm
-- **Add-ons**: prettier, eslint, tailwindcss, sveltekit-adapter, devtools-json, mcp
+- **Add-ons**: prettier, eslint, tailwindcss, sveltekit-adapter, devtools-json, mdsvex, mcp
 
 ---
 
