@@ -1,16 +1,18 @@
 import { env } from '$env/dynamic/public';
 
-const getAuthToken = () => (typeof window !== 'undefined' ? localStorage.getItem('token') : null);
+const TOKEN = 'token';
+
+const getAuthToken = () => (typeof window !== 'undefined' ? localStorage.getItem(TOKEN) : null);
 
 const setAuthToken = (token: string) => {
 	if (typeof window !== 'undefined') {
-		localStorage.setItem('token', token);
+		localStorage.setItem(TOKEN, token);
 	}
 };
 
 const clearAuthToken = () => {
 	if (typeof window !== 'undefined') {
-		localStorage.removeItem('token');
+		localStorage.removeItem(TOKEN);
 	}
 };
 
@@ -52,7 +54,7 @@ export const api = {
 				body: data
 			}),
 		login: (data: { email: string; password: string }) =>
-			request<{ token: string; user: { id: string; email: string; name: string } }>('/login', {
+			request<{ token: string }>('/login', {
 				method: 'POST',
 				body: data
 			})

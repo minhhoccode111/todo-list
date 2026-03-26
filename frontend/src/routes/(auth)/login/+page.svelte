@@ -1,0 +1,48 @@
+<script lang="ts">
+	import { Button } from '$lib/components/ui/button';
+	import { Input } from '$lib/components/ui/input';
+	import { Label } from '$lib/components/ui/label';
+	import {
+		Card,
+		CardContent,
+		CardDescription,
+		CardHeader,
+		CardTitle
+	} from '$lib/components/ui/card';
+	import { api } from '$lib';
+	import { goto } from '$app/navigation';
+
+	let email = $state('');
+	let password = $state('');
+
+	const handleSubmit = async (e: Event) => {
+		e.preventDefault();
+		const res = await api.auth.login({ email, password });
+		api.token.set(res.token);
+		goto('/');
+	};
+</script>
+
+<Card class="mx-auto w-95">
+	<CardHeader>
+		<CardTitle>Login</CardTitle>
+		<CardDescription>Enter your credentials to sign in.</CardDescription>
+	</CardHeader>
+	<CardContent>
+		<form onsubmit={handleSubmit} class="space-y-4">
+			<div class="space-y-2">
+				<Label for="email">Email</Label>
+				<Input id="email" type="email" bind:value={email} placeholder="you@example.com" />
+			</div>
+
+			<div class="space-y-2">
+				<Label for="password">Password</Label>
+				<Input id="password" type="password" bind:value={password} />
+			</div>
+
+			<Button type="submit" class="w-full">Sign In</Button>
+
+			<p>Need an account? <a href="/register">Sign up</a>.</p>
+		</form>
+	</CardContent>
+</Card>
