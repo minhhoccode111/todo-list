@@ -15,7 +15,7 @@
 	<title>Todo-list</title>
 </svelte:head>
 
-<Toaster />
+<Toaster closeButton richColors />
 <!-- usage: toast('something'), toast.success('something'), toast.error('something') -->
 
 <div id="wrapper" class="bg-gray-800 text-yellow-100">

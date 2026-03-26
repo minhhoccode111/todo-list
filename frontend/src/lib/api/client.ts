@@ -1,12 +1,13 @@
 import { env } from '$env/dynamic/public';
+import type { ResponseAuth, ResponseMessage } from '$lib/types/api';
 
 const TOKEN = 'token';
 
 const getAuthToken = () => (typeof window !== 'undefined' ? localStorage.getItem(TOKEN) : null);
 
-const setAuthToken = (token: string) => {
+const setAuthToken = (token?: string) => {
 	if (typeof window !== 'undefined') {
-		localStorage.setItem(TOKEN, token);
+		localStorage.setItem(TOKEN, token ?? '');
 	}
 };
 
@@ -38,23 +39,24 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
 		body: body ? JSON.stringify(body) : undefined
 	});
 
+	const data = await response.json().catch(() => ({}));
+
 	if (!response.ok) {
-		const error = await response.json().catch(() => ({ message: 'Request failed' }));
-		throw new Error(error.message || `HTTP ${response.status}`);
+		throw data as ResponseMessage;
 	}
 
-	return response.json();
+	return data;
 }
 
 export const api = {
 	auth: {
 		register: (data: { email: string; password: string; name: string }) =>
-			request<{ token: string }>('/register', {
+			request<ResponseAuth>('/register', {
 				method: 'POST',
 				body: data
 			}),
 		login: (data: { email: string; password: string }) =>
-			request<{ token: string }>('/login', {
+			request<ResponseAuth>('/login', {
 				method: 'POST',
 				body: data
 			})

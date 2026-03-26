@@ -3,6 +3,10 @@
 	import { goto } from '$app/navigation';
 
 	$effect(() => {
-		if (!auth.token) goto('/login');
+		if (!auth.token) {
+			goto('/login');
+		}
 	});
 </script>
+
+<p>Welcome to Todo-list</p>

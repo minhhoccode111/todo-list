@@ -10,7 +10,7 @@ type CreateTodo struct {
 	Title       string                `json:"title"       validate:"required,max=255"`
 	Description string                `json:"description" validate:"required,max=10000"`
 	Priority    *entity.PriorityLevel `json:"priority"    validate:"omitempty,oneof=low med high"`
-	DueDate     *time.Time            `json:"due_date"    validate:"omitempty,future"`
+	DueDate     *time.Time            `json:"due_date"`
 }
 
 type UpdateTodo struct {
@@ -18,5 +18,5 @@ type UpdateTodo struct {
 	Description string                `json:"description" validate:"required,max=10000"`
 	Completed   bool                  `json:"completed"`
 	Priority    *entity.PriorityLevel `json:"priority"    validate:"omitempty,oneof=low med high"`
-	DueDate     *time.Time            `json:"due_date"    validate:"omitempty,future"`
+	DueDate     *time.Time            `json:"due_date"`
 }
