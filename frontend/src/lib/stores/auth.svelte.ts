@@ -1,13 +1,15 @@
 import { api } from '$lib';
-import { get } from 'svelte/store';
 
-const createAuthStore = () => {
-	const auth = $state({
-		token: '',
-		isAuth: false
-	});
+export const auth = $state({
+	token: api.token.get()
+});
 
-	return {};
+export const setAuth = (s: string) => {
+	auth.token = s;
+	api.token.set(s);
 };
 
-export const auth = $state(api.token.get());
+export const clearAuth = () => {
+	auth.token = '';
+	api.token.clear();
+};

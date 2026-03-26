@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { api } from '$lib';
-
-	import { auth } from '$lib/stores/auth.svelte';
+	import { clearAuth } from '$lib/stores/auth.svelte';
 
 	$effect(() => {
-		auth = '';
+		clearAuth();
 		goto('/login');
 	});
 </script>

@@ -11,6 +11,7 @@
 	} from '$lib/components/ui/card';
 	import { api } from '$lib';
 	import { goto } from '$app/navigation';
+	import { setAuth } from '$lib/stores/auth.svelte';
 
 	let email = $state('');
 	let password = $state('');
@@ -18,7 +19,7 @@
 	const handleSubmit = async (e: Event) => {
 		e.preventDefault();
 		const res = await api.auth.login({ email, password });
-		api.token.set(res.token);
+		setAuth(res.token);
 		goto('/');
 	};
 </script>
@@ -37,12 +38,12 @@
 
 			<div class="space-y-2">
 				<Label for="password">Password</Label>
-				<Input id="password" type="password" bind:value={password} />
+				<Input id="password" type="password" bind:value={password} placeholder="password" />
 			</div>
 
 			<Button type="submit" class="w-full">Sign In</Button>
 
-			<p>Need an account? <a href="/register">Sign up</a>.</p>
+			<p>Need an account? <a class="text-sky-500" href="/register">Sign up</a>.</p>
 		</form>
 	</CardContent>
 </Card>

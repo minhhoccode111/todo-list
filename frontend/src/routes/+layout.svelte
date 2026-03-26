@@ -4,15 +4,9 @@
 	import { Toaster } from 'svelte-sonner';
 
 	let { children } = $props();
-	import { auth } from '$lib/stores/auth.svelte';
 	import { Button } from '$lib/components/ui/button';
-	import { goto } from '$app/navigation';
 
-	$effect(() => {
-		if (!auth) {
-			goto('/login');
-		}
-	});
+	import { auth } from '$lib/stores/auth.svelte';
 </script>
 
 <svelte:head>
@@ -25,9 +19,9 @@
 <!-- usage: toast('something'), toast.success('something'), toast.error('something') -->
 
 <div id="wrapper" class="bg-gray-800 text-yellow-100">
-	<div class="mx-auto flex min-h-screen max-w-6xl flex-col gap-4 border border-red-500">
-		<header class="flex justify-between gap-4 p-4">
-			<h1>
+	<div class="mx-auto flex min-h-screen max-w-6xl flex-col gap-4">
+		<header class="flex items-center justify-between gap-4 p-4">
+			<h1 class="text-4xl font-bold">
 				<a href="/">Todo-list</a>
 			</h1>
 
@@ -35,7 +29,7 @@
 				<li>
 					<Button href="/">home</Button>
 				</li>
-				{#if !auth}
+				{#if !auth.token}
 					<li>
 						<Button href="/login">login</Button>
 					</li>

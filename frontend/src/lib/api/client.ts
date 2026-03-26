@@ -49,7 +49,7 @@ async function request<T>(endpoint: string, options: RequestOptions = {}): Promi
 export const api = {
 	auth: {
 		register: (data: { email: string; password: string; name: string }) =>
-			request<{ token: string; user: { id: string; email: string; name: string } }>('/register', {
+			request<{ token: string }>('/register', {
 				method: 'POST',
 				body: data
 			}),
