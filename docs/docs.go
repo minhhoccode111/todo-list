@@ -433,6 +433,15 @@ const docTemplate = `{
         },
         "entity.Todo": {
             "type": "object",
+            "required": [
+                "completed",
+                "created_at",
+                "description",
+                "id",
+                "priority",
+                "title",
+                "updated_at"
+            ],
             "properties": {
                 "completed": {
                     "type": "boolean"
@@ -462,6 +471,12 @@ const docTemplate = `{
         },
         "entity.Todos": {
             "type": "object",
+            "required": [
+                "data",
+                "limit",
+                "page",
+                "total"
+            ],
             "properties": {
                 "data": {
                     "type": "array",
@@ -642,6 +657,9 @@ const docTemplate = `{
         },
         "response.Auth": {
             "type": "object",
+            "required": [
+                "token"
+            ],
             "properties": {
                 "token": {
                     "type": "string"
@@ -650,6 +668,9 @@ const docTemplate = `{
         },
         "response.Message": {
             "type": "object",
+            "required": [
+                "message"
+            ],
             "properties": {
                 "message": {
                     "type": "string"

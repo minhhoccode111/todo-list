@@ -1,11 +1,13 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
+	import { ModeWatcher } from 'mode-watcher';
 	import { resolve } from '$app/paths';
 	import { Toaster } from 'svelte-sonner';
 
 	let { children } = $props();
 	import { Button } from '$lib/components/ui/button';
+	import { ToggleTheme } from '$lib/components/ui/toggle-theme';
 
 	import { auth } from '$lib/stores/auth.svelte';
 </script>
@@ -16,43 +18,47 @@
 	<title>Todo-list</title>
 </svelte:head>
 
+<ModeWatcher />
+
 <Toaster closeButton richColors />
 <!-- usage: toast('something'), toast.success('something'), toast.error('something') -->
 
-<div id="wrapper" class="bg-gray-800 text-yellow-100">
-	<div class="mx-auto flex min-h-screen max-w-6xl flex-col gap-4">
-		<header class="flex items-center justify-between gap-4 p-4">
-			<h1 class="text-4xl font-bold">
-				<a href={resolve('/')}>Todo-list</a>
-			</h1>
+<div class="mx-auto flex min-h-screen max-w-6xl flex-col gap-4">
+	<header class="flex items-center justify-between gap-4 p-4">
+		<h1 class="text-4xl font-bold">
+			<a href={resolve('/')}>Todo-list</a>
+		</h1>
 
-			<nav class="flex list-none justify-evenly gap-4">
+		<nav class="flex list-none justify-evenly gap-4">
+			<li>
+				<Button href={resolve('/')}>home</Button>
+			</li>
+			{#if !auth.token}
 				<li>
-					<Button href={resolve('/')}>home</Button>
+					<Button href={resolve('/login')}>login</Button>
 				</li>
-				{#if !auth.token}
-					<li>
-						<Button href={resolve('/login')}>login</Button>
-					</li>
-					<li>
-						<Button href={resolve('/register')}>register</Button>
-					</li>
-				{:else}
-					<li>
-						<Button href={resolve('/logout')}>logout</Button>
-					</li>
-				{/if}
-			</nav>
-		</header>
+				<li>
+					<Button href={resolve('/register')}>register</Button>
+				</li>
+			{:else}
+				<li>
+					<Button href={resolve('/logout')}>logout</Button>
+				</li>
+			{/if}
 
-		<main class="flex-1 p-4">
-			{@render children()}
-		</main>
+			<li>
+				<ToggleTheme />
+			</li>
+		</nav>
+	</header>
 
-		<footer class="p-4">
-			<center>
-				<p>Made by minhhoccode111.</p>
-			</center>
-		</footer>
-	</div>
+	<main class="flex-1 p-4">
+		{@render children()}
+	</main>
+
+	<footer class="p-4">
+		<center>
+			<p>Made by minhhoccode111.</p>
+		</center>
+	</footer>
 </div>

@@ -1,7 +1,9 @@
 package restapi
 
 import (
+	"math/rand/v2"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -42,6 +44,7 @@ func NewRouter(
 		middleware.Recovery(l),
 		middleware.CORS(cfg.CORS),
 		middleware.RateLimit(cfg.RateLimit),
+		middleware.Sleep(time.Duration(rand.IntN(5))*time.Second),
 	)
 
 	// Prometheus metrics

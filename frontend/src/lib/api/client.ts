@@ -19,9 +19,9 @@ const TOKEN = 'token';
 export const getAuthToken = () =>
 	typeof window !== 'undefined' ? localStorage.getItem(TOKEN) : null;
 
-export const setAuthToken = (token?: string) => {
+export const setAuthToken = (token: string) => {
 	if (typeof window !== 'undefined') {
-		localStorage.setItem(TOKEN, token ?? '');
+		localStorage.setItem(TOKEN, token);
 	}
 };
 

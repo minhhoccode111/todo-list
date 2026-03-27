@@ -50,7 +50,9 @@
 		"vite-plugin-devtools-json": "^1.0.0"
 	},
 	"dependencies": {
+		"@lucide/svelte": "^1.7.0",
 		"ky": "^1.14.3",
+		"mode-watcher": "^1.1.0",
 		"svelte-sonner": "^1.1.0"
 	}
 }

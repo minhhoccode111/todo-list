@@ -6,8 +6,8 @@ export const auth = $state<ResponseAuth>({
 	token: getAuthToken() ?? ''
 });
 
-export const setAuth = (s?: string) => {
-	auth.token = s ?? '';
+export const setAuth = (s: string) => {
+	auth.token = s;
 	setAuthToken(s);
 	toast.success('welcome');
 };

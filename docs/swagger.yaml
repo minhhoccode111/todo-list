@@ -28,6 +28,14 @@ definitions:
         type: string
       updated_at:
         type: string
+    required:
+    - completed
+    - created_at
+    - description
+    - id
+    - priority
+    - title
+    - updated_at
     type: object
   entity.Todos:
     properties:
@@ -41,6 +49,11 @@ definitions:
         type: integer
       total:
         type: integer
+    required:
+    - data
+    - limit
+    - page
+    - total
     type: object
   entity.Translation:
     properties:
@@ -156,11 +169,15 @@ definitions:
     properties:
       token:
         type: string
+    required:
+    - token
     type: object
   response.Message:
     properties:
       message:
         type: string
+    required:
+    - message
     type: object
 host: localhost:8080
 info:
