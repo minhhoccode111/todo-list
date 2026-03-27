@@ -1,6 +1,7 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '$lib/assets/favicon.svg';
+	import { resolve } from '$app/paths';
 	import { Toaster } from 'svelte-sonner';
 
 	let { children } = $props();
@@ -22,23 +23,23 @@
 	<div class="mx-auto flex min-h-screen max-w-6xl flex-col gap-4">
 		<header class="flex items-center justify-between gap-4 p-4">
 			<h1 class="text-4xl font-bold">
-				<a href="/">Todo-list</a>
+				<a href={resolve('/')}>Todo-list</a>
 			</h1>
 
 			<nav class="flex list-none justify-evenly gap-4">
 				<li>
-					<Button href="/">home</Button>
+					<Button href={resolve('/')}>home</Button>
 				</li>
 				{#if !auth.token}
 					<li>
-						<Button href="/login">login</Button>
+						<Button href={resolve('/login')}>login</Button>
 					</li>
 					<li>
-						<Button href="/register">register</Button>
+						<Button href={resolve('/register')}>register</Button>
 					</li>
 				{:else}
 					<li>
-						<Button href="/logout">logout</Button>
+						<Button href={resolve('/logout')}>logout</Button>
 					</li>
 				{/if}
 			</nav>

@@ -1,5 +1,18 @@
 import { env } from '$env/dynamic/public';
 import { Api } from '$lib/types/api';
+import ky, { HTTPError } from 'ky';
+import type { ResponseMessage } from '$lib/types/api';
+
+export const getApiError = async (error: unknown): Promise<ResponseMessage> => {
+	if (error instanceof HTTPError) {
+		try {
+			return await error.response.json();
+		} catch {
+			return { message: error.message };
+		}
+	}
+	return { message: 'An unexpected error occurred' };
+};
 
 const TOKEN = 'token';
 
@@ -23,15 +36,19 @@ const api = new Api({
 	baseApiParams: {
 		credentials: 'same-origin'
 	},
-	securityWorker: async () => {
-		const token = getAuthToken();
-		if (token) {
-			return {
-				headers: {
-					Authorization: `Bearer ${token}`
+	customFetch: ky.extend({
+		hooks: {
+			beforeRequest: [
+				(request) => {
+					const token = getAuthToken();
+					if (token) {
+						request.headers.set('Authorization', `Bearer ${token}`);
+					}
 				}
-			};
+			]
 		}
+	}),
+	securityWorker: async () => {
 		return {};
 	}
 });

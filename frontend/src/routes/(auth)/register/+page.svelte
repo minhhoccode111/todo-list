@@ -9,12 +9,12 @@
 		CardHeader,
 		CardTitle
 	} from '$lib/components/ui/card';
-	import { api } from '$lib';
+	import { api, getApiError } from '$lib';
 	import { goto } from '$app/navigation';
 	import { setAuth } from '$lib/stores/auth.svelte';
-	import type { ResponseMessage } from '$lib/types/api';
 	import { toast } from 'svelte-sonner';
 	import { slide } from 'svelte/transition';
+	import { resolve } from '$app/paths';
 
 	let name = $state('');
 	let email = $state('');
@@ -25,9 +25,9 @@
 		try {
 			const res = await api.register.register({ name, email, password });
 			setAuth(res.data.token);
-			goto('/');
+			goto(resolve('/'));
 		} catch (e) {
-			const err = e as ResponseMessage;
+			const err = await getApiError(e);
 			toast.error(err.message || 'Register failed');
 		}
 	};
@@ -58,7 +58,9 @@
 
 				<Button type="submit" class="w-full">Sign Up</Button>
 
-				<p>Already have an account? <a class="text-sky-500" href="/login">Sign in</a>.</p>
+				<p>
+					Already have an account? <a class="text-sky-500" href={resolve('/login')}>Sign in</a>.
+				</p>
 			</form>
 		</CardContent>
 	</Card>

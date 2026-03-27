@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { auth } from '$lib/stores/auth.svelte';
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 
 	$effect(() => {
 		if (!auth.token) {
-			goto('/login');
+			goto(resolve('/login'));
 		}
 	});
 </script>

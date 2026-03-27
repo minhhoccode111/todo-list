@@ -60,6 +60,7 @@
 		children,
 		...restProps
 	}: ButtonProps = $props();
+	/* eslint-disable svelte/no-navigation-without-resolve */
 </script>
 
 {#if href}
