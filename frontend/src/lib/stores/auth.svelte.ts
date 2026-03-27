@@ -3,7 +3,7 @@ import type { ResponseAuth } from '$lib/types/api';
 import { toast } from 'svelte-sonner';
 
 export const auth = $state<ResponseAuth>({
-	token: api.token.get() ?? ""
+	token: api.token.get() ?? ''
 });
 
 export const setAuth = (s?: string) => {
