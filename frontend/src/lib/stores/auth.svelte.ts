@@ -1,19 +1,19 @@
-import { api } from '$lib';
+import { getAuthToken, setAuthToken, clearAuthToken } from '$lib';
 import type { ResponseAuth } from '$lib/types/api';
 import { toast } from 'svelte-sonner';
 
 export const auth = $state<ResponseAuth>({
-	token: api.token.get() ?? ''
+	token: getAuthToken() ?? ''
 });
 
 export const setAuth = (s?: string) => {
-	auth.token = s;
-	api.token.set(s);
+	auth.token = s ?? '';
+	setAuthToken(s);
 	toast.success('welcome');
 };
 
 export const clearAuth = () => {
 	auth.token = '';
-	api.token.clear();
+	clearAuthToken();
 	toast.info('goodbye');
 };

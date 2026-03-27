@@ -139,4 +139,5 @@ bin-deps: ### install tools
 .PHONY: bin-deps
 
 pre-commit: swag-v1 mock format linter-golangci test ### run pre-commit
+	./generate-ts.sh
 .PHONY: pre-commit

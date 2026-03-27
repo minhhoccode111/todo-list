@@ -22,8 +22,8 @@
 	const handleSubmit = async (e: Event) => {
 		e.preventDefault();
 		try {
-			const res = await api.auth.login({ email, password });
-			setAuth(res.token);
+			const res = await api.login.login({ email, password });
+			setAuth(res.data.token);
 			goto('/');
 		} catch (e) {
 			const err = e as ResponseMessage;

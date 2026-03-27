@@ -1,2 +1,2 @@
 // place files you want to import through the `$lib` alias in this folder.
-export { api } from './api/client';
+export { api, getAuthToken, setAuthToken, clearAuthToken } from './api/client';
