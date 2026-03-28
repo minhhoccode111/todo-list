@@ -13,7 +13,6 @@
 	import { goto } from '$app/navigation';
 	import { setAuth } from '$lib/stores/auth.svelte';
 	import { toast } from 'svelte-sonner';
-	import { slide } from 'svelte/transition';
 	import { resolve } from '$app/paths';
 
 	let email = $state('');
@@ -32,8 +31,8 @@
 	};
 </script>
 
-<div in:slide>
-	<Card class="mx-auto w-95">
+<div>
+	<Card class="mx-auto max-w-95">
 		<CardHeader>
 			<CardTitle>Login</CardTitle>
 			<CardDescription>Enter your credentials to sign in.</CardDescription>

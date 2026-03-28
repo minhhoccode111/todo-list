@@ -58,7 +58,13 @@
 
 	<footer class="p-4">
 		<center>
-			<p>Made by minhhoccode111.</p>
+			<p>
+				Made by
+				<a
+					class="text-sky-500 transition-colors hover:text-sky-600"
+					href="https://github.com/minhhoccode111">minhhoccode111</a
+				>.
+			</p>
 		</center>
 	</footer>
 </div>

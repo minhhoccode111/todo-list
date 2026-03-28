@@ -13,7 +13,6 @@
 	import { goto } from '$app/navigation';
 	import { setAuth } from '$lib/stores/auth.svelte';
 	import { toast } from 'svelte-sonner';
-	import { slide } from 'svelte/transition';
 	import { resolve } from '$app/paths';
 
 	let name = $state('');
@@ -33,7 +32,7 @@
 	};
 </script>
 
-<div in:slide>
+<div>
 	<Card class="mx-auto w-95">
 		<CardHeader>
 			<CardTitle>Register</CardTitle>

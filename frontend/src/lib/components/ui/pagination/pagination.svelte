@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
-	import { Select } from '$lib/components/ui/select';
+	import * as Select from '$lib/components/ui/select';
 	import ChevronLeft from '@lucide/svelte/icons/chevron-left';
 	import ChevronRight from '@lucide/svelte/icons/chevron-right';
 	import ChevronsLeft from '@lucide/svelte/icons/chevrons-left';
@@ -30,6 +30,18 @@
 	let totalPages = $derived(Math.ceil(total / limit));
 	let canGoPrev = $derived(page > 1);
 	let canGoNext = $derived(page < totalPages);
+
+	// eslint-disable-next-line svelte/prefer-writable-derived
+	let currentLimit = $state(String(limit));
+
+	function updateLimit(val: string) {
+		currentLimit = val;
+		onlimitchange?.(Number(val));
+	}
+
+	$effect(() => {
+		currentLimit = String(limit);
+	});
 
 	function getPageNumbers(): (number | '...')[] {
 		const pages: (number | '...')[] = [];
@@ -121,16 +133,28 @@
 
 	{#if onlimitchange}
 		<div class="ml-2 flex items-center gap-2">
-			<Select
-				bind:value={limit}
-				onchange={() => onlimitchange(limit)}
-				class="w-16"
-				aria-label="Items per page"
+			<Select.Root
+				type="single"
+				value={currentLimit}
+				onValueChange={(val) => {
+					if (val) {
+						updateLimit(val);
+					}
+				}}
 			>
-				{#each limitOptions as opt (opt)}
-					<option value={opt}>{opt}</option>
-				{/each}
-			</Select>
+				<Select.Trigger class="h-6 w-16 text-xs" aria-label="Items per page">
+					<Select.Value placeholder="10" value={currentLimit} />
+				</Select.Trigger>
+				<Select.Content>
+					<Select.Group>
+						{#each limitOptions as opt (opt)}
+							<Select.Item value={String(opt)} label={String(opt)}>
+								{opt}
+							</Select.Item>
+						{/each}
+					</Select.Group>
+				</Select.Content>
+			</Select.Root>
 			<span class="text-xs text-muted-foreground">/ page</span>
 		</div>
 	{/if}

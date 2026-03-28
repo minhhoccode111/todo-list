@@ -17,14 +17,14 @@
 	let currentPage = $derived(Number(page.url.searchParams.get('page')) || 1);
 	let currentLimit = $derived(Number(page.url.searchParams.get('limit')) || 10);
 
-	async function listTodos() {
+	async function listTodos(page: number, limit: number) {
 		loading = true;
 		error = null;
 
 		try {
 			const response = await api.todos.getTodos({
-				page: currentPage,
-				limit: currentLimit
+				page,
+				limit
 			});
 			todos = response.data.data;
 			total = response.data.total;
@@ -41,9 +41,8 @@
 			goto(resolve('/login'));
 			return;
 		}
-		void currentPage;
-		void currentLimit;
-		listTodos();
+
+		listTodos(currentPage, currentLimit);
 	});
 
 	function handlePageChange(newPage: number) {
