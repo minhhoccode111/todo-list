@@ -1,52 +1,102 @@
 <script lang="ts">
-	import { auth } from '$lib/stores/auth.svelte';
+	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
-	import { resolve } from '$app/paths';
-	import type { EntityTodo, EntityTodos } from '$lib/types/api';
-	import { api, getApiError } from '$lib';
-	import { toast } from 'svelte-sonner';
+	import { api, getApiError } from '$lib/api/client';
+	import type { EntityTodo } from '$lib/types/api';
+	import { Pagination } from '$lib/components/ui/pagination';
 	import { Todo } from '$lib/components/ui/todo';
-
-	let page = $state(1);
-	let limit = $state(10);
-	let total = $state(0);
-	let loading = $state(false);
+	import { toast } from 'svelte-sonner';
+	import { auth } from '$lib/stores/auth.svelte';
+	import { resolve } from '$app/paths';
 
 	let todos = $state<EntityTodo[]>([]);
+	let loading = $state(true);
+	let error = $state<string | null>(null);
+	let total = $state(0);
 
-	const getTodos = async () => {
+	let currentPage = $derived(Number(page.url.searchParams.get('page')) || 1);
+	let currentLimit = $derived(Number(page.url.searchParams.get('limit')) || 10);
+
+	async function listTodos() {
 		loading = true;
+		error = null;
+
 		try {
-			const res = await api.todos.getTodos({ page, limit });
-			const data = (await res.json()) as EntityTodos;
-			total = data.total;
-			todos = data.data;
-		} catch (e) {
-			const err = await getApiError(e);
-			toast.error(err.message || 'Get todos failed');
+			const response = await api.todos.getTodos({
+				page: currentPage,
+				limit: currentLimit
+			});
+			todos = response.data.data;
+			total = response.data.total;
+		} catch (err) {
+			error = (await getApiError(err)).message;
+			toast.error(error);
 		} finally {
 			loading = false;
 		}
-	};
+	}
 
 	$effect(() => {
 		if (!auth.token) {
 			goto(resolve('/login'));
 			return;
 		}
-
-		getTodos();
+		void currentPage;
+		void currentLimit;
+		listTodos();
 	});
+
+	function handlePageChange(newPage: number) {
+		const url = new URL(page.url);
+		url.searchParams.set('page', String(newPage));
+		// eslint-disable-next-line svelte/no-navigation-without-resolve
+		goto(`?${url.searchParams.toString()}`, { keepFocus: true, noScroll: true });
+	}
+
+	function handleLimitChange(newLimit: number) {
+		const url = new URL(page.url);
+		url.searchParams.set('limit', String(newLimit));
+		url.searchParams.set('page', '1');
+		// eslint-disable-next-line svelte/no-navigation-without-resolve
+		goto(`?${url.searchParams.toString()}`, { keepFocus: true, noScroll: true });
+	}
 </script>
 
-<div class="mx-auto max-w-2xl p-8">
-	{#if loading}
-		<p><center>Loading...</center></p>
-	{:else if todos.length == 0}
-		<p><center>No todos here yet.</center></p>
-	{/if}
+<div class="mx-auto flex max-w-2xl flex-col gap-4">
+	<h2 class="text-2xl font-bold">Todos</h2>
 
-	{#each todos as todo (todo.id)}
-		<Todo {todo} />
-	{/each}
+	{#if loading}
+		<p>Loading...</p>
+	{:else if error && todos.length === 0}
+		<p class="text-destructive">{error}</p>
+	{:else}
+		<div class="flex flex-col gap-2">
+			{#each todos as todo (todo.id)}
+				<Todo {todo} />
+			{/each}
+
+			{#if todos.length === 0}
+				<p class="text-muted-foreground">No todos found.</p>
+			{/if}
+		</div>
+
+		{#if total > 0}
+			<div class="mt-4 flex justify-center">
+				<Pagination
+					page={currentPage}
+					limit={currentLimit}
+					{total}
+					onpagechange={handlePageChange}
+					onlimitchange={handleLimitChange}
+				/>
+			</div>
+
+			<p class="text-center text-sm text-muted-foreground">
+				Showing {(currentPage - 1) * currentLimit + 1} to {Math.min(
+					currentPage * currentLimit,
+					total
+				)} of {total} todos
+			</p>
+		{/if}
+	{/if}
 </div>
