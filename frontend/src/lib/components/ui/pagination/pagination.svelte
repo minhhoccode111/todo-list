@@ -136,9 +136,7 @@
 				<Select.Content>
 					<Select.Group>
 						{#each limitOptions as opt (opt)}
-							<Select.Item value={String(opt)} label={String(opt)}>
-								<!-- {opt} -->
-							</Select.Item>
+							<Select.Item value={String(opt)} label={String(opt)} />
 						{/each}
 					</Select.Group>
 				</Select.Content>

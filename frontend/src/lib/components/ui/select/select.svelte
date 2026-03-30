@@ -12,8 +12,9 @@
 	let { value = $bindable(), onValueChange, children, type = 'single' }: Props = $props();
 
 	function handleChange(val: string | string[] | undefined): void {
-		if (onValueChange && typeof val === 'string') {
-			onValueChange(val);
+		if (typeof val === 'string') {
+			value = val;
+			onValueChange?.(val);
 		}
 	}
 </script>

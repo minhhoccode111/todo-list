@@ -8,7 +8,6 @@
 	import { toast } from 'svelte-sonner';
 	import { auth } from '$lib/stores/auth.svelte';
 	import { resolve } from '$app/paths';
-	import { Button } from '$lib/components/ui/button';
 
 	let todos = $state<EntityTodo[]>([]);
 	let loading = $state(true);
@@ -66,7 +65,6 @@
 	<div class="flex items-center justify-between gap-4">
 		<h2 class="text-2xl font-bold">Todos</h2>
 
-		<!-- <Button size="xs">Add new todo</Button> -->
 		<NewTodo />
 	</div>
 
