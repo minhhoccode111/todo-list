@@ -31,18 +31,6 @@
 	let canGoPrev = $derived(page > 1);
 	let canGoNext = $derived(page < totalPages);
 
-	// eslint-disable-next-line svelte/prefer-writable-derived
-	let currentLimit = $state(String(limit));
-
-	function updateLimit(val: string) {
-		currentLimit = val;
-		onlimitchange?.(Number(val));
-	}
-
-	$effect(() => {
-		currentLimit = String(limit);
-	});
-
 	function getPageNumbers(): (number | '...')[] {
 		const pages: (number | '...')[] = [];
 		const maxVisible = 5;
@@ -135,21 +123,21 @@
 		<div class="ml-2 flex items-center gap-2">
 			<Select.Root
 				type="single"
-				value={currentLimit}
+				value={String(limit)}
 				onValueChange={(val) => {
 					if (val) {
-						updateLimit(val);
+						onlimitchange?.(Number(val));
 					}
 				}}
 			>
 				<Select.Trigger class="h-6 w-16 text-xs" aria-label="Items per page">
-					<Select.Value placeholder="10" value={currentLimit} />
+					<Select.Value placeholder="10" value={String(limit)} />
 				</Select.Trigger>
 				<Select.Content>
 					<Select.Group>
 						{#each limitOptions as opt (opt)}
 							<Select.Item value={String(opt)} label={String(opt)}>
-								{opt}
+								<!-- {opt} -->
 							</Select.Item>
 						{/each}
 					</Select.Group>

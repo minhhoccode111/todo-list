@@ -4,7 +4,7 @@
 	import { api, getApiError } from '$lib/api/client';
 	import type { EntityTodo } from '$lib/types/api';
 	import { Pagination } from '$lib/components/ui/pagination';
-	import { Todo } from '$lib/components/ui/todo';
+	import { NewTodo, Todo } from '$lib/components/ui/todo';
 	import { toast } from 'svelte-sonner';
 	import { auth } from '$lib/stores/auth.svelte';
 	import { resolve } from '$app/paths';
@@ -50,7 +50,7 @@
 		const url = new URL(page.url);
 		url.searchParams.set('page', String(newPage));
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
-		goto(`?${url.searchParams.toString()}`, { keepFocus: true, noScroll: true });
+		goto(`?${url.searchParams.toString()}`);
 	}
 
 	function handleLimitChange(newLimit: number) {
@@ -58,7 +58,7 @@
 		url.searchParams.set('limit', String(newLimit));
 		url.searchParams.set('page', '1');
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
-		goto(`?${url.searchParams.toString()}`, { keepFocus: true, noScroll: true });
+		goto(`?${url.searchParams.toString()}`);
 	}
 </script>
 
@@ -66,7 +66,8 @@
 	<div class="flex items-center justify-between gap-4">
 		<h2 class="text-2xl font-bold">Todos</h2>
 
-		<Button size="xs">Add new todo</Button>
+		<!-- <Button size="xs">Add new todo</Button> -->
+		<NewTodo />
 	</div>
 
 	{#if loading}
