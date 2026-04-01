@@ -10,16 +10,21 @@
 	import { EntityPriorityLevel } from '$lib/types/api';
 	import { getLocalTimeZone, today, type CalendarDate } from '@internationalized/date';
 	import CalendarIcon from '@lucide/svelte/icons/calendar';
+	import { api, getApiError } from '$lib/api/client';
+	import { toast } from 'svelte-sonner';
+
+	const { onSuccess }: { onSuccess: () => void } = $props();
 
 	const priorities = Object.values(EntityPriorityLevel);
-	const validPriorities = ['low', 'med', 'high'];
 
 	let title = $state('');
 	let description = $state('');
-	let priority = $state<string>('');
-	let dueDate = $state<CalendarDate | undefined>(undefined);
+	let priority = $state<EntityPriorityLevel>();
+	let dueDate = $state<CalendarDate>();
 
-	let errors = $state<{ title?: string; description?: string; priority?: string }>({});
+	let errors = $state<{ title?: string; description?: string }>({});
+	let loading = $state(false);
+	let open = $state(false);
 
 	function formatDate(value: CalendarDate | undefined): string {
 		if (!value) return '';
@@ -45,10 +50,6 @@
 			errors.description = 'Description must be 10000 characters or less';
 		}
 
-		if (priority && !validPriorities.includes(priority)) {
-			errors.priority = 'Priority must be one of: low, med, high';
-		}
-
 		return Object.keys(errors).length === 0;
 	}
 
@@ -56,17 +57,39 @@
 		e.preventDefault();
 		if (!validate()) return;
 
-		const dueDateStr = dueDate ? dueDate.toDate(getLocalTimeZone()).toISOString() : null;
-		console.log('created todo: ', {
-			title,
-			description,
-			priority: priority || null,
-			dueDate: dueDateStr
-		});
+		loading = true;
+		const dueDateStr = dueDate ? dueDate.toDate(getLocalTimeZone()).toISOString() : undefined;
+
+		try {
+			const res = await api.todos.createTodo({
+				title,
+				description,
+				priority,
+				due_date: dueDateStr
+			});
+
+			console.log(res);
+
+			onSuccess();
+
+			toast.success('Todo created');
+
+			title = '';
+			description = '';
+			priority = undefined;
+			dueDate = undefined;
+
+			open = false;
+		} catch (e) {
+			const err = await getApiError(e);
+			toast.error(err.message || 'Create todo failed');
+		} finally {
+			loading = false;
+		}
 	};
 </script>
 
-<Dialog.Root>
+<Dialog.Root bind:open>
 	<Dialog.Trigger type="button" class={buttonVariants({ variant: 'default' })}>
 		New todo
 	</Dialog.Trigger>
@@ -109,9 +132,6 @@
 								</Select.Group>
 							</Select.Content>
 						</Select.Root>
-						{#if errors.priority}
-							<p class="text-sm text-destructive">{errors.priority}</p>
-						{/if}
 					</div>
 					<div class="grid flex-1 gap-3">
 						<Label for="due-date-1">Due Date (optional)</Label>
@@ -135,7 +155,9 @@
 				<Dialog.Close type="button" class={buttonVariants({ variant: 'outline' })}>
 					Cancel
 				</Dialog.Close>
-				<Button type="submit">Create</Button>
+				<Button type="submit">
+					{loading ? 'Creating...' : 'Create'}
+				</Button>
 			</Dialog.Footer>
 		</form>
 	</Dialog.Content>

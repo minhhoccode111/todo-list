@@ -65,8 +65,9 @@
 	<Card.Footer class="flex items-center justify-between pt-0 text-xs text-muted-foreground">
 		{#if todo.due_date}
 			<span>Due: {formatDate(todo.due_date)}</span>
+			<span>Updated: {formatDate(todo.updated_at)}</span>
 		{:else}
-			<span></span>
+			<span>Updated: {formatDate(todo.updated_at)}</span>
 		{/if}
 		<span>Created: {formatDate(todo.created_at)}</span>
 	</Card.Footer>

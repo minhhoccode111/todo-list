@@ -4,7 +4,7 @@
 @name = minhhoccode111
 @email = minhhoccode111@gmail.com
 @password = P@55w0rd
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiIxIiwiaXNzIjoidG9kby1saXN0Iiwic3ViIjoiMSIsImV4cCI6MTc4MzE2OTgzMCwiaWF0IjoxNzc0NTI5ODMwfQ.ahw81vmGqrj7e7FBFnxvwR6xo-z2zTaHkaghfMSRzCY
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiIxIiwiaXNzIjoidG9kby1saXN0Iiwic3ViIjoiMSIsImV4cCI6MTc4MzY4ODk0NCwiaWF0IjoxNzc1MDQ4OTQ0fQ.Nntdx_P3sjYh8vSlL1NoJSrxF6Dz0oc23FYQvqshsVU
 @token0 = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiIyIiwiaXNzIjoidG9kby1saXN0Iiwic3ViIjoiMiIsImV4cCI6MTc4MjkxMjQwMSwiaWF0IjoxNzc0MjcyNDAxfQ.UspprUCG7p9sB-TQdDuIAMJth3r4ggKH4QMkNIMDLeo
 
 ###
@@ -36,10 +36,10 @@ POST {{api}}/todos
 Authorization: Bearer {{token}}
 
 {
-    "title": "todo-list project",
-    "description": "finish todo-list project with gin-clean-arch and svelte/kit",
+    "title": "taivisao",
+    "description": "finish this project",
     "priority": "high",
-    "due_date": "2026-03-24T18:58:15.083517+07:00"
+    "due_date": "2026-04-24T18:58:15.083517+07:00"
 }
 
 ###

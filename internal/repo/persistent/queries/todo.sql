@@ -4,6 +4,7 @@ SELECT id, user_id, title, description, completed, priority, due_date, created_a
 FROM todos t
 WHERE deleted_at IS NULL
 AND t.user_id = $1
+ORDER BY updated_at DESC
 LIMIT $2
 OFFSET $3;
 

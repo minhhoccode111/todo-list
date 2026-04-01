@@ -65,13 +65,17 @@
 	<div class="flex items-center justify-between gap-4">
 		<h2 class="text-2xl font-bold">Todos</h2>
 
-		<NewTodo />
+		<NewTodo onSuccess={() => listTodos(currentPage, currentLimit)} />
 	</div>
 
 	{#if loading}
-		<p>Loading...</p>
+		<div class="p-4">
+			<p><center>Loading...</center></p>
+		</div>
 	{:else if error && todos.length === 0}
-		<p class="text-destructive">{error}</p>
+		<div class="p-4">
+			<p class="text-destructive"><center>{error}</center></p>
+		</div>
 	{:else}
 		<div class="flex flex-col gap-2">
 			{#each todos as todo (todo.id)}

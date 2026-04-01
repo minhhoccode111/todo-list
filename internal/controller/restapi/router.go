@@ -42,7 +42,7 @@ func NewRouter(
 		middleware.Recovery(l),
 		middleware.CORS(cfg.CORS),
 		middleware.RateLimit(cfg.RateLimit),
-		// middleware.Sleep(time.Duration(rand.IntN(5))*time.Second),
+		middleware.Sleep(),
 	)
 
 	// Prometheus metrics
