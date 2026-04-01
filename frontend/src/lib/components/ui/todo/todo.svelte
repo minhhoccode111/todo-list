@@ -10,17 +10,21 @@
 		todo.priority === 'high' ? 'destructive' : todo.priority === 'med' ? 'default' : 'secondary'
 	);
 
-	const priorityLabel = $derived(
-		todo.priority === 'high' ? 'High' : todo.priority === 'med' ? 'Medium' : 'Low'
-	);
+	const priorityLabel = $derived(todo.priority.charAt(0).toUpperCase() + todo.priority.slice(1));
 
-	function formatDate(dateStr: string): string {
+	const formatDate = (dateStr: string): string => {
 		return new Date(dateStr).toLocaleDateString('en-US', {
 			month: 'short',
 			day: 'numeric',
 			year: 'numeric'
 		});
-	}
+	};
+
+	$effect(() => {
+		if (todo.completed) {
+			$inspect(todo);
+		}
+	});
 </script>
 
 <Card.Root class={cn('transition-all hover:shadow-md', todo.completed && 'opacity-60')}>

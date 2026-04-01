@@ -25,14 +25,13 @@
 
 <div class="mx-auto flex min-h-screen max-w-6xl flex-col gap-4">
 	<header class="flex items-center justify-between gap-4 p-4">
-		<h1 class="text-4xl font-bold">
-			<a href={resolve('/')}>Todo-list</a>
-		</h1>
+		<h1 class="text-4xl font-bold">Todo-list</h1>
 
 		<nav class="flex list-none justify-evenly gap-4">
 			<li>
-				<Button href={resolve('/')}>home</Button>
+				<Button disabled={!auth.token} href={resolve('/')}>home</Button>
 			</li>
+
 			{#if !auth.token}
 				<li>
 					<Button href={resolve('/login')}>login</Button>

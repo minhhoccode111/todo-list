@@ -155,7 +155,7 @@
 				<Dialog.Close type="button" class={buttonVariants({ variant: 'outline' })}>
 					Cancel
 				</Dialog.Close>
-				<Button type="submit">
+				<Button disabled={loading} type="submit">
 					{loading ? 'Creating...' : 'Create'}
 				</Button>
 			</Dialog.Footer>
