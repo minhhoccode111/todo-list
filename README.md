@@ -20,4 +20,4 @@
 - [x] read todos paginate
   - [x] add cache (`~8.00 ms` → `500.00 µs`)
 - [x] bearer auth for swagger
-- [ ] allow subtasks (self reference for `todos` table)
+- [x] add SPA frontend using sveltekit adapter static

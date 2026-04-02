@@ -136,6 +136,7 @@ bin-deps: ### install tools
 	go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate
 	go install github.com/sqlc-dev/sqlc/cmd/sqlc@latest
 	go install github.com/air-verse/air@latest
+	pnpm install -g swagger-typescript-api
 .PHONY: bin-deps
 
 pre-commit: swag-v1 mock format linter-golangci test ### run pre-commit
