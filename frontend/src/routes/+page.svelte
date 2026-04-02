@@ -61,21 +61,61 @@
 	}
 
 	async function handleToggle(todo: EntityTodo) {
-		const oldState = { ...todo };
+		const oldTodo = { ...todo };
 		const optimisticState = !todo.completed;
 
 		const index = todos.findIndex((t) => t.id === todo.id);
-		if (index !== -1) {
-			todos[index] = { ...todos[index], completed: optimisticState };
-		}
+		if (index !== -1) todos[index] = { ...todos[index], completed: optimisticState };
 
 		try {
 			await api.todos.updateTodo(todo.id, { ...todo, completed: optimisticState });
 			toast.success(optimisticState ? 'Todo completed!' : 'Todo marked as pending');
 		} catch (err) {
-			if (index !== -1) todos[index] = oldState;
+			if (index !== -1) todos[index] = oldTodo;
 			const errorMessage = (await getApiError(err)).message;
 			toast.error(errorMessage || 'Failed to mark todo as completed');
+		}
+	}
+
+	async function handleUpdate(updatedTodo: EntityTodo) {
+		const oldTodo = { ...updatedTodo };
+		const index = todos.findIndex((t) => t.id === updatedTodo.id);
+		if (index !== -1) todos[index] = updatedTodo;
+
+		try {
+			await api.todos.updateTodo(updatedTodo.id, {
+				title: updatedTodo.title,
+				description: updatedTodo.description,
+				priority: updatedTodo.priority,
+				due_date: updatedTodo.due_date
+			});
+			toast.success('Todo updated');
+		} catch (err) {
+			if (index !== -1) todos[index] = oldTodo;
+			const errorMessage = (await getApiError(err)).message;
+			toast.error(errorMessage || 'Failed to update todo');
+		}
+	}
+
+	async function handleDelete(todo: EntityTodo) {
+		const index = todos.findIndex((t) => t.id === todo.id);
+		const deletedTodo = todos[index];
+
+		if (index !== -1) {
+			todos.splice(index, 1);
+			total -= 1;
+		}
+
+		try {
+			await api.todos.deleteTodo(todo.id);
+			toast.success('Todo deleted');
+		} catch (err) {
+			if (index !== -1) {
+				todos.splice(index, 0, deletedTodo);
+				total += 1;
+			}
+			const errorMessage = (await getApiError(err)).message;
+			toast.error(errorMessage || 'Failed to delete todo');
 		}
 	}
 </script>
@@ -98,14 +138,7 @@
 	{:else}
 		<div class="flex flex-col gap-2">
 			{#each todos as todo (todo.id)}
-				<Todo
-					{todo}
-					onToggle={(e: MouseEvent) => {
-						e.stopPropagation();
-
-						handleToggle(todo);
-					}}
-				/>
+				<Todo {todo} onToggle={handleToggle} onUpdate={handleUpdate} onDelete={handleDelete} />
 			{/each}
 
 			{#if todos.length === 0}
