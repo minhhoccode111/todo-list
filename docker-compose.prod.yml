@@ -1,0 +1,70 @@
+services:
+  db:
+    image: postgres:18.3-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_DB: ${POSTGRES_DB:-db}
+      PGDATA: /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-user} -d ${POSTGRES_DB:-db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    volumes:
+      - todolist_data:/var/lib/postgresql/data
+    networks:
+      - todolist
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "512M"
+        reservations:
+          cpus: "0.25"
+          memory: "256M"
+
+  app:
+    container_name: todo-list
+    image: ${DOCKERHUB_USERNAME:-minhhoccode111}/todo-list:latest
+    restart: unless-stopped
+    environment:
+      APP_NAME: ${APP_NAME:-todo-list}
+      APP_VERSION: ${APP_VERSION:-1.0.0}
+      CACHE_MAX_COST: ${CACHE_MAX_COST:-10000}
+      CACHE_TTL: ${CACHE_TTL:-5m}
+      CORS_ALLOW_CREDENTIALS: ${CORS_ALLOW_CREDENTIALS:-true}
+      CORS_ALLOW_HEADERS: ${CORS_ALLOW_HEADERS:-Origin,X-Requested-With,Content-Type,Accept,Authorization}
+      CORS_ALLOW_METHODS: ${CORS_ALLOW_METHODS:-GET,POST,HEAD,PUT,DELETE,PATCH}
+      CORS_ALLOW_ORIGINS: ${CORS_ALLOW_ORIGINS:-https://minhhoccode111.github.io}
+      HTTP_PORT: ${HTTP_PORT:-8081}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      METRICS_ENABLED: ${METRICS_ENABLED:-true}
+      PG_POOL_MAX: ${PG_POOL_MAX:-2}
+      PG_URL: postgresql://${POSTGRES_USER:-user}:${POSTGRES_PASSWORD:-password}@${POSTGRES_HOST:-db}:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-db}
+      RATE_LIMIT_BURST: ${RATE_LIMIT_BURST:-20}
+      RATE_LIMIT_RPS: ${RATE_LIMIT_RPS:-10}
+      SWAGGER_ENABLED: ${SWAGGER_ENABLED:-false}
+    ports:
+      - "127.0.0.1:${HTTP_PORT:-8081}:${HTTP_PORT:-8081}"
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - todolist
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1024M"
+        reservations:
+          cpus: "0.5"
+          memory: "512M"
+
+networks:
+  todolist:
+
+volumes:
+  todolist_data:
