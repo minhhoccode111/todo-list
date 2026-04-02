@@ -59,6 +59,25 @@
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		goto(`?${url.searchParams.toString()}`);
 	}
+
+	async function handleToggle(todo: EntityTodo) {
+		const oldState = { ...todo };
+		const optimisticState = !todo.completed;
+
+		const index = todos.findIndex((t) => t.id === todo.id);
+		if (index !== -1) {
+			todos[index] = { ...todos[index], completed: optimisticState };
+		}
+
+		try {
+			await api.todos.updateTodo(todo.id, { ...todo, completed: optimisticState });
+			toast.success(optimisticState ? 'Todo completed!' : 'Todo marked as pending');
+		} catch (err) {
+			if (index !== -1) todos[index] = oldState;
+			const errorMessage = (await getApiError(err)).message;
+			toast.error(errorMessage || 'Failed to mark todo as completed');
+		}
+	}
 </script>
 
 <div class="mx-auto flex max-w-2xl flex-col gap-4">
@@ -79,7 +98,14 @@
 	{:else}
 		<div class="flex flex-col gap-2">
 			{#each todos as todo (todo.id)}
-				<Todo {todo} />
+				<Todo
+					{todo}
+					onToggle={(e: MouseEvent) => {
+						e.stopPropagation();
+
+						handleToggle(todo);
+					}}
+				/>
 			{/each}
 
 			{#if todos.length === 0}

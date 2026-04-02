@@ -4,7 +4,7 @@
 	import { Badge } from '$lib/components/ui/badge';
 	import { cn } from '$lib/utils';
 
-	let { todo }: { todo: EntityTodo } = $props();
+	let { todo, onToggle }: { todo: EntityTodo; onToggle?: (e: MouseEvent) => void } = $props();
 
 	const priorityVariant = $derived(
 		todo.priority === 'high' ? 'destructive' : todo.priority === 'med' ? 'default' : 'secondary'
@@ -19,23 +19,21 @@
 			year: 'numeric'
 		});
 	};
-
-	$effect(() => {
-		if (todo.completed) {
-			$inspect(todo);
-		}
-	});
 </script>
 
-<Card.Root class={cn('transition-all hover:shadow-md', todo.completed && 'opacity-60')}>
+<Card.Root
+	class={cn('transition-all hover:opacity-95 hover:shadow-md', todo.completed && 'opacity-60')}
+>
 	<Card.Header class="flex flex-row items-start justify-between space-y-0 pb-2">
 		<div class="flex items-center gap-3">
-			<div
+			<button
+				type="button"
+				onclick={onToggle}
 				class={cn(
-					'flex size-5 items-center justify-center rounded-full border-2',
+					'flex size-5 cursor-pointer items-center justify-center rounded-full border-2',
 					todo.completed
-						? 'border-primary bg-primary text-primary-foreground'
-						: 'border-muted-foreground'
+						? 'border-primary bg-primary text-primary-foreground hover:border-muted-foreground'
+						: 'border-muted-foreground hover:border-primary'
 				)}
 			>
 				{#if todo.completed}
@@ -52,7 +50,7 @@
 						<polyline points="20 6 9 17 4 12"></polyline>
 					</svg>
 				{/if}
-			</div>
+			</button>
 			<Card.Title
 				class={cn('text-base font-medium', todo.completed && 'text-muted-foreground line-through')}
 			>

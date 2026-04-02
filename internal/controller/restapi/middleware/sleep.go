@@ -11,7 +11,7 @@ import (
 func Sleep() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		//nolint:gosec,mnd // fake latency - no security implications
-		time.Sleep(time.Duration(rand.IntN(5)) * time.Second)
+		time.Sleep(time.Duration(rand.IntN(3)) * time.Second)
 		c.Next()
 	}
 }
