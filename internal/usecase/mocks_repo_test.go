@@ -12,6 +12,7 @@ package usecase_test
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
 
 	entity "github.com/minhhoccode111/todo-list/internal/entity"
 	gomock "go.uber.org/mock/gomock"
@@ -198,6 +199,20 @@ func (m *MockUserRepo) EXPECT() *MockUserRepoMockRecorder {
 	return m.recorder
 }
 
+// CreateRefreshToken mocks base method.
+func (m *MockUserRepo) CreateRefreshToken(arg0 context.Context, arg1 int32, arg2, arg3 string, arg4 time.Time) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateRefreshToken", arg0, arg1, arg2, arg3, arg4)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateRefreshToken indicates an expected call of CreateRefreshToken.
+func (mr *MockUserRepoMockRecorder) CreateRefreshToken(arg0, arg1, arg2, arg3, arg4 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRefreshToken", reflect.TypeOf((*MockUserRepo)(nil).CreateRefreshToken), arg0, arg1, arg2, arg3, arg4)
+}
+
 // CreateUser mocks base method.
 func (m *MockUserRepo) CreateUser(arg0 context.Context, arg1 *entity.User) (*entity.User, error) {
 	m.ctrl.T.Helper()
@@ -211,6 +226,35 @@ func (m *MockUserRepo) CreateUser(arg0 context.Context, arg1 *entity.User) (*ent
 func (mr *MockUserRepoMockRecorder) CreateUser(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockUserRepo)(nil).CreateUser), arg0, arg1)
+}
+
+// DeleteExpiredRefreshTokens mocks base method.
+func (m *MockUserRepo) DeleteExpiredRefreshTokens(arg0 context.Context) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteExpiredRefreshTokens", arg0)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteExpiredRefreshTokens indicates an expected call of DeleteExpiredRefreshTokens.
+func (mr *MockUserRepoMockRecorder) DeleteExpiredRefreshTokens(arg0 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteExpiredRefreshTokens", reflect.TypeOf((*MockUserRepo)(nil).DeleteExpiredRefreshTokens), arg0)
+}
+
+// ReadRefreshTokenByHash mocks base method.
+func (m *MockUserRepo) ReadRefreshTokenByHash(arg0 context.Context, arg1 string) (int32, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReadRefreshTokenByHash", arg0, arg1)
+	ret0, _ := ret[0].(int32)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReadRefreshTokenByHash indicates an expected call of ReadRefreshTokenByHash.
+func (mr *MockUserRepoMockRecorder) ReadRefreshTokenByHash(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadRefreshTokenByHash", reflect.TypeOf((*MockUserRepo)(nil).ReadRefreshTokenByHash), arg0, arg1)
 }
 
 // ReadUserByEmail mocks base method.
@@ -241,6 +285,34 @@ func (m *MockUserRepo) ReadUserByID(arg0 context.Context, arg1 int32) (*entity.U
 func (mr *MockUserRepoMockRecorder) ReadUserByID(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadUserByID", reflect.TypeOf((*MockUserRepo)(nil).ReadUserByID), arg0, arg1)
+}
+
+// RevokeAllUserRefreshTokens mocks base method.
+func (m *MockUserRepo) RevokeAllUserRefreshTokens(arg0 context.Context, arg1 int32) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RevokeAllUserRefreshTokens", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RevokeAllUserRefreshTokens indicates an expected call of RevokeAllUserRefreshTokens.
+func (mr *MockUserRepoMockRecorder) RevokeAllUserRefreshTokens(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeAllUserRefreshTokens", reflect.TypeOf((*MockUserRepo)(nil).RevokeAllUserRefreshTokens), arg0, arg1)
+}
+
+// RevokeRefreshToken mocks base method.
+func (m *MockUserRepo) RevokeRefreshToken(arg0 context.Context, arg1 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "RevokeRefreshToken", arg0, arg1)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// RevokeRefreshToken indicates an expected call of RevokeRefreshToken.
+func (mr *MockUserRepoMockRecorder) RevokeRefreshToken(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RevokeRefreshToken", reflect.TypeOf((*MockUserRepo)(nil).RevokeRefreshToken), arg0, arg1)
 }
 
 // MockUserCache is a mock of UserCache interface.

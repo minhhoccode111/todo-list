@@ -139,6 +139,11 @@ bin-deps: ### install tools
 	pnpm install -g swagger-typescript-api
 .PHONY: bin-deps
 
-pre-commit: swag-v1 mock format linter-golangci test ### run pre-commit
+schema: ### Generate database schema
+	# pg_dump --schema-only --no-owner --no-privileges $(PG_URL) > docs/schema.sql
+	docker exec db pg_dump --schema-only --no-owner --no-privileges -U user db > docs/schema.sql
+.PHONY: schema
+
+pre-commit: swag-v1 mock format linter-golangci test schema ### run pre-commit
 	./generate-ts.sh
 .PHONY: pre-commit

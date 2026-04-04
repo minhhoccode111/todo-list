@@ -19,8 +19,10 @@ type (
 
 	// User -.
 	User interface {
-		Register(context.Context, *entity.User, *config.JWT) (string, error)
-		Login(context.Context, *entity.User, *config.JWT) (string, error)
+		Register(context.Context, *entity.User, *config.JWT) (string, string, error)
+		Login(context.Context, *entity.User, *config.JWT) (string, string, error)
+		RefreshToken(context.Context, string, *config.JWT) (string, string, error)
+		Logout(context.Context, int32, string) error
 	}
 
 	// ITodo -.

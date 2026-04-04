@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -79,4 +80,68 @@ func (ur *UserRepo) ReadUserByID(c context.Context, id int32) (*entity.User, err
 	}
 
 	return newUserFromDTO(&u), nil
+}
+
+func (ur *UserRepo) CreateRefreshToken(
+	c context.Context,
+	userID int32,
+	tokenHash, deviceInfo string,
+	expiresAt time.Time,
+) error {
+	_, err := ur.queries.CreateRefreshToken(c, sqlc.CreateRefreshTokenParams{
+		UserID:     userID,
+		TokenHash:  tokenHash,
+		ExpiresAt:  expiresAt,
+		DeviceInfo: deviceInfo,
+	})
+	if err != nil {
+		return fmt.Errorf("UserRepo - CreateRefreshToken - ur.queries.CreateRefreshToken: %w", err)
+	}
+
+	return nil
+}
+
+func (ur *UserRepo) ReadRefreshTokenByHash(c context.Context, tokenHash string) (int32, error) {
+	token, err := ur.queries.ReadRefreshTokenByHash(c, tokenHash)
+	if err != nil {
+		return 0, fmt.Errorf(
+			"UserRepo - ReadRefreshTokenByHash - ur.queries.ReadRefreshTokenByHash: %w",
+			err,
+		)
+	}
+
+	return token.UserID, nil
+}
+
+func (ur *UserRepo) RevokeRefreshToken(c context.Context, tokenHash string) error {
+	err := ur.queries.RevokeRefreshToken(c, tokenHash)
+	if err != nil {
+		return fmt.Errorf("UserRepo - RevokeRefreshToken - ur.queries.RevokeRefreshToken: %w", err)
+	}
+
+	return nil
+}
+
+func (ur *UserRepo) RevokeAllUserRefreshTokens(c context.Context, userID int32) error {
+	err := ur.queries.RevokeAllUserRefreshTokens(c, userID)
+	if err != nil {
+		return fmt.Errorf(
+			"UserRepo - RevokeAllUserRefreshTokens - ur.queries.RevokeAllUserRefreshTokens: %w",
+			err,
+		)
+	}
+
+	return nil
+}
+
+func (ur *UserRepo) DeleteExpiredRefreshTokens(c context.Context) error {
+	err := ur.queries.DeleteExpiredRefreshTokens(c)
+	if err != nil {
+		return fmt.Errorf(
+			"UserRepo - DeleteExpiredRefreshTokens - ur.queries.DeleteExpiredRefreshTokens: %w",
+			err,
+		)
+	}
+
+	return nil
 }
