@@ -34,6 +34,7 @@ func generateToken(userID string, cfgJWT *config.JWT) (string, error) {
 		cfgJWT.Secret,
 		cfgJWT.Issuer,
 		cfgJWT.Expiration,
+		jwt.TokenTypeAccess,
 	)
 }
 

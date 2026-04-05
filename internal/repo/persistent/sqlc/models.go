@@ -63,6 +63,15 @@ type History struct {
 	Translation string
 }
 
+type RefreshToken struct {
+	ID         int32
+	UserID     int32
+	TokenHash  string
+	ExpiresAt  time.Time
+	DeviceInfo string
+	CreatedAt  time.Time
+}
+
 type Todo struct {
 	ID          int32
 	UserID      int32

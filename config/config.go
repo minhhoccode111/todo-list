@@ -49,9 +49,12 @@ type (
 
 	// JWT -.
 	JWT struct {
-		Issuer     string        `env:"JWT_ISSUER,required"`
-		Secret     string        `env:"JWT_SECRET,required"` //nolint:gosec // intended
-		Expiration time.Duration `env:"JWT_EXPIRATION,required"`
+		Issuer            string        `env:"JWT_ISSUER,required"`
+		Secret            string        `env:"JWT_SECRET,required"` //nolint:gosec // intended
+		Expiration        time.Duration `env:"JWT_EXPIRATION,required"`
+		RefreshIssuer     string        `env:"JWT_REFRESH_ISSUER,required"`
+		RefreshSecret     string        `env:"JWT_REFRESH_SECRET,required"` //nolint:gosec // intended
+		RefreshExpiration time.Duration `env:"JWT_REFRESH_EXPIRATION,required"`
 	}
 
 	// Log -.

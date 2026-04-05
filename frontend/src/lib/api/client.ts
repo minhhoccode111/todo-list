@@ -20,15 +20,11 @@ export const getAuthToken = () =>
 	typeof window !== 'undefined' ? localStorage.getItem(TOKEN) : null;
 
 export const setAuthToken = (token: string) => {
-	if (typeof window !== 'undefined') {
-		localStorage.setItem(TOKEN, token);
-	}
+	if (typeof window !== 'undefined') localStorage.setItem(TOKEN, token);
 };
 
 export const clearAuthToken = () => {
-	if (typeof window !== 'undefined') {
-		localStorage.removeItem(TOKEN);
-	}
+	if (typeof window !== 'undefined') localStorage.removeItem(TOKEN);
 };
 
 const api = new Api({
