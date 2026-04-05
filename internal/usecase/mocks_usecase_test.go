@@ -97,13 +97,12 @@ func (m *MockUser) EXPECT() *MockUserMockRecorder {
 }
 
 // Login mocks base method.
-func (m *MockUser) Login(arg0 context.Context, arg1 *entity.User, arg2 *config.JWT) (string, string, error) {
+func (m *MockUser) Login(arg0 context.Context, arg1 *entity.User, arg2 *config.JWT) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Login", arg0, arg1, arg2)
 	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(string)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Login indicates an expected call of Login.
@@ -112,44 +111,13 @@ func (mr *MockUserMockRecorder) Login(arg0, arg1, arg2 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockUser)(nil).Login), arg0, arg1, arg2)
 }
 
-// Logout mocks base method.
-func (m *MockUser) Logout(arg0 context.Context, arg1 int32, arg2 string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Logout", arg0, arg1, arg2)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// Logout indicates an expected call of Logout.
-func (mr *MockUserMockRecorder) Logout(arg0, arg1, arg2 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Logout", reflect.TypeOf((*MockUser)(nil).Logout), arg0, arg1, arg2)
-}
-
-// RefreshToken mocks base method.
-func (m *MockUser) RefreshToken(arg0 context.Context, arg1 string, arg2 *config.JWT) (string, string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "RefreshToken", arg0, arg1, arg2)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(string)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// RefreshToken indicates an expected call of RefreshToken.
-func (mr *MockUserMockRecorder) RefreshToken(arg0, arg1, arg2 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RefreshToken", reflect.TypeOf((*MockUser)(nil).RefreshToken), arg0, arg1, arg2)
-}
-
 // Register mocks base method.
-func (m *MockUser) Register(arg0 context.Context, arg1 *entity.User, arg2 *config.JWT) (string, string, error) {
+func (m *MockUser) Register(arg0 context.Context, arg1 *entity.User, arg2 *config.JWT) (string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Register", arg0, arg1, arg2)
 	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(string)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Register indicates an expected call of Register.

@@ -6,27 +6,14 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-type TokenType string
-
-const (
-	TokenTypeAccess  TokenType = "access"
-	TokenTypeRefresh TokenType = "refresh"
-)
-
 type ClaimsJWT struct {
-	UserID    string    `json:"user_id"`
-	TokenType TokenType `json:"token_type"`
+	UserID string
 	jwt.RegisteredClaims
 }
 
-func GenerateToken(
-	userID, secret, issuer string,
-	expiration time.Duration,
-	tokenType TokenType,
-) (string, error) {
+func GenerateToken(userID, secret, issuer string, expiration time.Duration) (string, error) {
 	claims := ClaimsJWT{
-		UserID:    userID,
-		TokenType: tokenType,
+		UserID: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    issuer,
 			Subject:   userID,

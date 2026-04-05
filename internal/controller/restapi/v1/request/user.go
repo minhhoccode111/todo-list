@@ -10,11 +10,3 @@ type Login struct {
 	Email    string `json:"email"    validate:"required,max=255"`
 	Password string `json:"password" validate:"required,max=255"` //nolint:gosec // intended
 }
-
-type Refresh struct {
-	RefreshToken string `json:"refresh_token" validate:"required"`
-}
-
-type Logout struct {
-	RefreshToken string `json:"refresh_token" validate:"required"`
-}

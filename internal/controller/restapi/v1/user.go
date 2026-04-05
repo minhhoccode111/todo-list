@@ -3,14 +3,12 @@ package v1
 import (
 	"errors"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/minhhoccode111/todo-list/internal/controller/restapi/v1/request"
 	"github.com/minhhoccode111/todo-list/internal/controller/restapi/v1/response"
 	"github.com/minhhoccode111/todo-list/internal/entity"
-	"github.com/minhhoccode111/todo-list/pkg/jwt"
 	"github.com/minhhoccode111/todo-list/pkg/validatorx"
 )
 
@@ -47,7 +45,7 @@ func (r *V1) register(c *gin.Context) {
 		return
 	}
 
-	accessToken, refreshToken, err := r.u.Register(
+	token, err := r.u.Register(
 		c.Request.Context(),
 		&entity.User{
 			Email:        body.Email,
@@ -55,7 +53,6 @@ func (r *V1) register(c *gin.Context) {
 			PasswordHash: body.Password,
 		},
 		&r.cfg.JWT,
-		&r.cfg.JWTRefresh,
 	)
 	if err != nil {
 		switch {
@@ -69,7 +66,7 @@ func (r *V1) register(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, response.Auth{AccessToken: accessToken, RefreshToken: refreshToken})
+	c.JSON(http.StatusOK, response.Auth{Token: token})
 }
 
 // @Summary     Login
@@ -105,14 +102,13 @@ func (r *V1) login(c *gin.Context) {
 		return
 	}
 
-	accessToken, refreshToken, err := r.u.Login(
+	token, err := r.u.Login(
 		c.Request.Context(),
 		&entity.User{
 			Email:        body.Email,
 			PasswordHash: body.Password,
 		},
 		&r.cfg.JWT,
-		&r.cfg.JWTRefresh,
 	)
 	if err != nil {
 		switch {
@@ -128,135 +124,5 @@ func (r *V1) login(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, response.Auth{AccessToken: accessToken, RefreshToken: refreshToken})
-}
-
-// @Summary     RefreshToken
-// @Description Refresh access token using refresh token
-// @ID          refresh
-// @Tags        Auth
-// @Accept      json
-// @Produce     json
-// @Param       request body request.Refresh true "comment"
-// @Success     200 {object} response.Auth
-// @Failure     400 {object} response.Message
-// @Failure     401 {object} response.Message
-// @Failure     500 {object} response.Message
-// @Router      /refresh [post]
-func (r *V1) refresh(c *gin.Context) {
-	var body request.Refresh
-
-	if err := c.ShouldBindJSON(&body); err != nil {
-		r.l.Error(err, "restapi - v1 - refresh - c.ShouldBindJSON")
-
-		messageResponse(c, http.StatusBadRequest, "invalid request body")
-
-		return
-	}
-
-	if err := r.v.Struct(body); err != nil {
-		r.l.Error(err, "restapi - v1 - refresh - r.v.Struct")
-
-		errs := validatorx.ExtractErrors(err)
-
-		messageResponse(c, http.StatusBadRequest, strings.Join(errs, "; "))
-
-		return
-	}
-
-	accessToken, refreshToken, err := r.u.RefreshToken(
-		c.Request.Context(),
-		body.RefreshToken,
-		&r.cfg.JWT,
-		&r.cfg.JWTRefresh,
-	)
-	if err != nil {
-		switch {
-		case errors.Is(err, entity.ErrUnauthorized):
-			messageResponse(c, http.StatusUnauthorized, "invalid or expired refresh token")
-		default:
-			r.l.Error(err, "restapi - v1 - refresh - r.u.RefreshToken")
-			messageResponse(c, http.StatusInternalServerError, "internal server error")
-		}
-
-		return
-	}
-
-	c.JSON(http.StatusOK, response.Auth{AccessToken: accessToken, RefreshToken: refreshToken})
-}
-
-// @Summary     Logout
-// @Description Logout user and revoke refresh tokens
-// @ID          logout
-// @Tags        Auth
-// @Accept      json
-// @Produce     json
-// @Param       request body request.Logout true "comment"
-// @Success     200 {object} response.Message
-// @Failure     400 {object} response.Message
-// @Failure     401 {object} response.Message
-// @Failure     500 {object} response.Message
-// @Router      /logout [post]
-func (r *V1) logout(c *gin.Context) {
-	var body request.Logout
-
-	if err := c.ShouldBindJSON(&body); err != nil {
-		r.l.Error(err, "restapi - v1 - logout - c.ShouldBindJSON")
-
-		messageResponse(c, http.StatusBadRequest, "invalid request body")
-
-		return
-	}
-
-	if err := r.v.Struct(body); err != nil {
-		r.l.Error(err, "restapi - v1 - logout - r.v.Struct")
-
-		errs := validatorx.ExtractErrors(err)
-
-		messageResponse(c, http.StatusBadRequest, strings.Join(errs, "; "))
-
-		return
-	}
-
-	authHeader := c.GetHeader("Authorization")
-	if authHeader == "" {
-		messageResponse(c, http.StatusUnauthorized, "missing authorization header")
-		return
-	}
-
-	tokenStr := strings.TrimPrefix(authHeader, "Bearer ")
-	claims, err := jwt.ValidateToken(tokenStr, r.cfg.JWT.Secret)
-	if err != nil {
-		messageResponse(c, http.StatusUnauthorized, "invalid access token")
-		return
-	}
-
-	var userID int32
-	if claims.UserID != "" {
-		var err error
-		userIDInt, err := strconvParseInt(claims.UserID)
-		if err != nil {
-			messageResponse(c, http.StatusUnauthorized, "invalid user id in token")
-			return
-		}
-		userID = userIDInt
-	}
-
-	err = r.u.Logout(c.Request.Context(), userID, body.RefreshToken)
-	if err != nil {
-		r.l.Error(err, "restapi - v1 - logout - r.u.Logout")
-		messageResponse(c, http.StatusInternalServerError, "internal server error")
-
-		return
-	}
-
-	messageResponse(c, http.StatusOK, "logged out successfully")
-}
-
-func strconvParseInt(s string) (int32, error) {
-	i, err := strconv.Atoi(s)
-	if err != nil {
-		return 0, err
-	}
-	return int32(i), nil
+	c.JSON(http.StatusOK, response.Auth{Token: token})
 }
