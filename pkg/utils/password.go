@@ -1,4 +1,4 @@
-package password
+package utils //nolint:revive // why not utils?
 
 import "golang.org/x/crypto/bcrypt"
 

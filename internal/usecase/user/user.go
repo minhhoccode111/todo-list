@@ -4,12 +4,13 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/minhhoccode111/todo-list/config"
 	"github.com/minhhoccode111/todo-list/internal/entity"
 	"github.com/minhhoccode111/todo-list/internal/repo"
 	"github.com/minhhoccode111/todo-list/pkg/jwt"
-	"github.com/minhhoccode111/todo-list/pkg/password"
+	"github.com/minhhoccode111/todo-list/pkg/utils"
 )
 
 // UseCase -.
@@ -38,10 +39,14 @@ func generateToken(userID string, cfgJWT *config.JWT) (string, error) {
 	)
 }
 
-func (uc *UseCase) Register(c context.Context, u *entity.User, cfgJWT *config.JWT) (string, error) {
-	hashed, err := password.HashPassword(u.PasswordHash)
+func (uc *UseCase) Register(
+	c context.Context,
+	cfg *config.Config,
+	u *entity.User,
+) (token, refresh string, err error) {
+	hashed, err := utils.HashPassword(u.PasswordHash)
 	if err != nil {
-		return "", fmt.Errorf(
+		return "", "", fmt.Errorf(
 			"UserUseCase - Register - password.HashPassword: %w",
 			err,
 		)
@@ -51,7 +56,7 @@ func (uc *UseCase) Register(c context.Context, u *entity.User, cfgJWT *config.JW
 
 	u, err = uc.repo.CreateUser(c, u)
 	if err != nil {
-		return "", fmt.Errorf(
+		return "", "", fmt.Errorf(
 			"UserUseCase - Register - uc.repo.CreateUser: %w",
 			err,
 		)
@@ -59,17 +64,39 @@ func (uc *UseCase) Register(c context.Context, u *entity.User, cfgJWT *config.JW
 
 	userID := strconv.Itoa(int(u.ID))
 
-	token, err := generateToken(userID, cfgJWT)
+	token, err = generateToken(userID, &cfg.JWT)
 	if err != nil {
-		return "", fmt.Errorf(
+		return "", "", fmt.Errorf(
 			"UserUseCase - Register - generateToken: %w",
+			err,
+		)
+	}
+
+	raw, hashed, err := utils.NewRefreshToken()
+	if err != nil {
+		return "", "", fmt.Errorf(
+			"UserUseCase - Register - utils.NewRefreshToken: %w",
+			err,
+		)
+	}
+
+	err = uc.repo.CreateRefreshToken(
+		c,
+		u.ID,
+		hashed,
+		"",
+		time.Now().Add(cfg.RefreshToken.Expiration),
+	)
+	if err != nil {
+		return "", "", fmt.Errorf(
+			"UserUseCase - Register - uc.repo.CreateRefreshToken: %w",
 			err,
 		)
 	}
 
 	uc.cache.SetUser(c, userID, u)
 
-	return token, nil
+	return token, raw, nil
 }
 
 func (uc *UseCase) Login(c context.Context, u *entity.User, cfgJWT *config.JWT) (string, error) {
@@ -81,7 +108,7 @@ func (uc *UseCase) Login(c context.Context, u *entity.User, cfgJWT *config.JWT) 
 		)
 	}
 
-	if !password.ComparePassword(user.PasswordHash, u.PasswordHash) {
+	if !utils.ComparePassword(user.PasswordHash, u.PasswordHash) {
 		return "", entity.ErrUnauthorized
 	}
 

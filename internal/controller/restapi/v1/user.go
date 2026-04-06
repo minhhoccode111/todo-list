@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/minhhoccode111/todo-list/internal/controller/restapi/v1/request"
@@ -11,6 +12,8 @@ import (
 	"github.com/minhhoccode111/todo-list/internal/entity"
 	"github.com/minhhoccode111/todo-list/pkg/validatorx"
 )
+
+const cookieName = "todo-list-refresh-token"
 
 // @Summary     Register
 // @Description Register a user with name, email and password
@@ -45,14 +48,14 @@ func (r *V1) register(c *gin.Context) {
 		return
 	}
 
-	token, err := r.u.Register(
+	token, refresh, err := r.u.Register(
 		c.Request.Context(),
+		r.cfg,
 		&entity.User{
 			Email:        body.Email,
 			Name:         body.Name,
 			PasswordHash: body.Password,
 		},
-		&r.cfg.JWT,
 	)
 	if err != nil {
 		switch {
@@ -65,6 +68,16 @@ func (r *V1) register(c *gin.Context) {
 
 		return
 	}
+
+	c.SetCookieData(&http.Cookie{
+		Name:     cookieName,
+		Value:    refresh,
+		Path:     "/",
+		Expires:  time.Now().Add(r.cfg.RefreshToken.Expiration),
+		Secure:   r.cfg.RefreshToken.Secure,
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	})
 
 	c.JSON(http.StatusOK, response.Auth{Token: token})
 }

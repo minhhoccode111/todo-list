@@ -19,7 +19,7 @@ type (
 
 	// User -.
 	User interface {
-		Register(context.Context, *entity.User, *config.JWT) (string, error)
+		Register(context.Context, *config.Config, *entity.User) (token, refresh string, err error)
 		Login(context.Context, *entity.User, *config.JWT) (string, error)
 	}
 

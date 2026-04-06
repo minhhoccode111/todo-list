@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -23,17 +24,6 @@ func NewUserRepo(pg *postgres.Postgres) *UserRepo {
 	return &UserRepo{
 		Postgres: pg,
 		queries:  sqlc.New(pg.Pool),
-	}
-}
-
-func newUserFromDTO(u *sqlc.User) *entity.User {
-	return &entity.User{
-		ID:           u.ID,
-		Name:         u.Name,
-		Email:        u.Email,
-		PasswordHash: u.PasswordHash,
-		CreatedAt:    u.CreatedAt,
-		UpdatedAt:    u.UpdatedAt,
 	}
 }
 
@@ -79,4 +69,34 @@ func (ur *UserRepo) ReadUserByID(c context.Context, id int32) (*entity.User, err
 	}
 
 	return newUserFromDTO(&u), nil
+}
+
+func (ur *UserRepo) CreateRefreshToken(
+	c context.Context,
+	userID int32,
+	hashed, deviceInfo string,
+	expiresAt time.Time,
+) error {
+	err := ur.queries.CreateRefreshToken(c, sqlc.CreateRefreshTokenParams{
+		UserID:     userID,
+		TokenHash:  hashed,
+		ExpiresAt:  expiresAt,
+		DeviceInfo: deviceInfo,
+	})
+	if err != nil {
+		return fmt.Errorf("UserRepo - CreateRefreshToken - ur.queries.CreateRefreshToken: %w", err)
+	}
+
+	return nil
+}
+
+func newUserFromDTO(u *sqlc.User) *entity.User {
+	return &entity.User{
+		ID:           u.ID,
+		Name:         u.Name,
+		Email:        u.Email,
+		PasswordHash: u.PasswordHash,
+		CreatedAt:    u.CreatedAt,
+		UpdatedAt:    u.UpdatedAt,
+	}
 }

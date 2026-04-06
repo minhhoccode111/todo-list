@@ -10,16 +10,17 @@ import (
 type (
 	// Config -.
 	Config struct {
-		App       App
-		CORS      CORS
-		Cache     Cache
-		HTTP      HTTP
-		JWT       JWT
-		Log       Log
-		Metrics   Metrics
-		PG        PG
-		RateLimit RateLimit
-		Swagger   Swagger
+		App          App
+		CORS         CORS
+		Cache        Cache
+		HTTP         HTTP
+		JWT          JWT
+		Log          Log
+		Metrics      Metrics
+		PG           PG
+		RateLimit    RateLimit
+		RefreshToken RefreshToken
+		Swagger      Swagger
 	}
 
 	// App -.
@@ -49,12 +50,9 @@ type (
 
 	// JWT -.
 	JWT struct {
-		Issuer            string        `env:"JWT_ISSUER,required"`
-		Secret            string        `env:"JWT_SECRET,required"` //nolint:gosec // intended
-		Expiration        time.Duration `env:"JWT_EXPIRATION,required"`
-		RefreshIssuer     string        `env:"JWT_REFRESH_ISSUER,required"`
-		RefreshSecret     string        `env:"JWT_REFRESH_SECRET,required"` //nolint:gosec // intended
-		RefreshExpiration time.Duration `env:"JWT_REFRESH_EXPIRATION,required"`
+		Issuer     string        `env:"JWT_ISSUER,required"`
+		Secret     string        `env:"JWT_SECRET,required"` //nolint:gosec // intended
+		Expiration time.Duration `env:"JWT_EXPIRATION,required"`
 	}
 
 	// Log -.
@@ -77,6 +75,12 @@ type (
 	RateLimit struct {
 		RequestsPerSecond float64 `env:"RATE_LIMIT_RPS"   envDefault:"10"`
 		Burst             int     `env:"RATE_LIMIT_BURST" envDefault:"20"`
+	}
+
+	// RefreshToken -.
+	RefreshToken struct {
+		Expiration time.Duration `env:"REFRESH_TOKEN_EXPIRATION" envDefault:"168h"`
+		Secure     bool          `env:"REFRESH_TOKEN_SECURE"     envDefault:"true"`
 	}
 
 	// Swagger -.

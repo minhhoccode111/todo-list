@@ -112,12 +112,13 @@ func (mr *MockUserMockRecorder) Login(arg0, arg1, arg2 any) *gomock.Call {
 }
 
 // Register mocks base method.
-func (m *MockUser) Register(arg0 context.Context, arg1 *entity.User, arg2 *config.JWT) (string, error) {
+func (m *MockUser) Register(arg0 context.Context, arg1 *config.Config, arg2 *entity.User) (string, string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Register", arg0, arg1, arg2)
 	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret1, _ := ret[1].(string)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
 // Register indicates an expected call of Register.

@@ -68,112 +68,6 @@ const docTemplate = `{
                 }
             }
         },
-        "/logout": {
-            "post": {
-                "description": "Logout user and revoke refresh tokens",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "Logout",
-                "operationId": "logout",
-                "parameters": [
-                    {
-                        "description": "comment",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.Logout"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.Message"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.Message"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/response.Message"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.Message"
-                        }
-                    }
-                }
-            }
-        },
-        "/refresh": {
-            "post": {
-                "description": "Refresh access token using refresh token",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Auth"
-                ],
-                "summary": "RefreshToken",
-                "operationId": "refresh",
-                "parameters": [
-                    {
-                        "description": "comment",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.Refresh"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/response.Auth"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/response.Message"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/response.Message"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/response.Message"
-                        }
-                    }
-                }
-            }
-        },
         "/register": {
             "post": {
                 "description": "Register a user with name, email and password",
@@ -682,28 +576,6 @@ const docTemplate = `{
                 }
             }
         },
-        "request.Logout": {
-            "type": "object",
-            "required": [
-                "refresh_token"
-            ],
-            "properties": {
-                "refresh_token": {
-                    "type": "string"
-                }
-            }
-        },
-        "request.Refresh": {
-            "type": "object",
-            "required": [
-                "refresh_token"
-            ],
-            "properties": {
-                "refresh_token": {
-                    "type": "string"
-                }
-            }
-        },
         "request.Register": {
             "type": "object",
             "required": [
@@ -786,14 +658,10 @@ const docTemplate = `{
         "response.Auth": {
             "type": "object",
             "required": [
-                "access_token",
-                "refresh_token"
+                "token"
             ],
             "properties": {
-                "access_token": {
-                    "type": "string"
-                },
-                "refresh_token": {
+                "token": {
                     "type": "string"
                 }
             }

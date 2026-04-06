@@ -9,7 +9,7 @@
   to insert `todos`, the database will automatically return error if the
   reference `userID` doesn't exist in `users` table
 - refresh tokens
-  - `/login` and `/register` now also return refresh tokens alongside access tokens
+  - `/login` and `/register` now set http-only cookies with refresh tokens, alongside access tokens
     - refresh tokens don't need to be JWT, because refresh tokens don't need to extract user_id, expired_at in the claims like JWT, everything can be retrieved from the database
     - refresh tokens will be hashed and stored in database on our server to be able to revoke anytime
     - refresh tokens should be sent in http-only cookies

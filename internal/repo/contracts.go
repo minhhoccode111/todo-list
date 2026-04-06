@@ -3,6 +3,7 @@ package repo
 
 import (
 	"context"
+	"time"
 
 	"github.com/minhhoccode111/todo-list/internal/entity"
 )
@@ -38,6 +39,12 @@ type (
 		CreateUser(context.Context, *entity.User) (*entity.User, error)
 		ReadUserByEmail(context.Context, string) (*entity.User, error)
 		ReadUserByID(context.Context, int32) (*entity.User, error)
+		CreateRefreshToken(
+			c context.Context,
+			userID int32,
+			hashed, deviceInfo string,
+			expiresAt time.Time,
+		) error
 	}
 
 	// UserCache -.

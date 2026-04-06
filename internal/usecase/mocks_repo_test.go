@@ -12,6 +12,7 @@ package usecase_test
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
 
 	entity "github.com/minhhoccode111/todo-list/internal/entity"
 	gomock "go.uber.org/mock/gomock"
@@ -196,6 +197,20 @@ func NewMockUserRepo(ctrl *gomock.Controller) *MockUserRepo {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockUserRepo) EXPECT() *MockUserRepoMockRecorder {
 	return m.recorder
+}
+
+// CreateRefreshToken mocks base method.
+func (m *MockUserRepo) CreateRefreshToken(c context.Context, userID int32, hashed, deviceInfo string, expiresAt time.Time) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateRefreshToken", c, userID, hashed, deviceInfo, expiresAt)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// CreateRefreshToken indicates an expected call of CreateRefreshToken.
+func (mr *MockUserRepoMockRecorder) CreateRefreshToken(c, userID, hashed, deviceInfo, expiresAt any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateRefreshToken", reflect.TypeOf((*MockUserRepo)(nil).CreateRefreshToken), c, userID, hashed, deviceInfo, expiresAt)
 }
 
 // CreateUser mocks base method.

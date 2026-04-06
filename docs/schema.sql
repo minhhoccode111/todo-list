@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 3LSku6fEwTRhlGoKquiv6WeTcQw0D3VYko56FgLmZ7n0olN1b4E61rsmtaMV85t
+\restrict 9rcIk8h19uywnFlfCcbEhcthd7Wolbvwk1fBbISxAAOFQ2M7udajQBJr1CJxkrR
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -335,5 +335,5 @@ ALTER TABLE ONLY public.todos
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 3LSku6fEwTRhlGoKquiv6WeTcQw0D3VYko56FgLmZ7n0olN1b4E61rsmtaMV85t
+\unrestrict 9rcIk8h19uywnFlfCcbEhcthd7Wolbvwk1fBbISxAAOFQ2M7udajQBJr1CJxkrR
 
