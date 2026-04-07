@@ -27,18 +27,6 @@ func New(r repo.UserRepo, c repo.UserCache) *UseCase {
 	}
 }
 
-// generateToken is just a local version of jwt.GenerateToken that can take *config.JWT as an argument
-// so that we don't have to pass 3 arguments at a time :)
-func generateToken(userID string, cfgJWT *config.JWT) (string, error) {
-	return jwt.GenerateToken(
-		userID,
-		cfgJWT.Secret,
-		cfgJWT.Issuer,
-		cfgJWT.Expiration,
-		jwt.TokenTypeAccess,
-	)
-}
-
 func (uc *UseCase) Register(
 	c context.Context,
 	cfg *config.Config,
@@ -62,9 +50,7 @@ func (uc *UseCase) Register(
 		)
 	}
 
-	userID := strconv.Itoa(int(u.ID))
-
-	token, err = generateToken(userID, &cfg.JWT)
+	token, err = generateToken(u.ID, &cfg.JWT)
 	if err != nil {
 		return "", "", fmt.Errorf(
 			"UserUseCase - Register - generateToken: %w",
@@ -94,7 +80,7 @@ func (uc *UseCase) Register(
 		)
 	}
 
-	uc.cache.SetUser(c, userID, u)
+	uc.cache.SetUser(c, strconv.Itoa(int(u.ID)), u)
 
 	return token, raw, nil
 }
@@ -116,9 +102,7 @@ func (uc *UseCase) Login(
 		return "", "", entity.ErrUnauthorized
 	}
 
-	userID := strconv.Itoa(int(user.ID))
-
-	token, err = generateToken(userID, &cfg.JWT)
+	token, err = generateToken(user.ID, &cfg.JWT)
 	if err != nil {
 		return "", "", fmt.Errorf(
 			"UserUseCase - Login - generateToken: %w",
@@ -126,7 +110,7 @@ func (uc *UseCase) Login(
 		)
 	}
 
-	raw, hashed, err := utils.NewRefreshToken()
+	refresh, hashed, err := utils.NewRefreshToken()
 	if err != nil {
 		return "", "", fmt.Errorf(
 			"UserUseCase - Login - utils.NewRefreshToken: %w",
@@ -148,7 +132,67 @@ func (uc *UseCase) Login(
 		)
 	}
 
-	uc.cache.SetUser(c, userID, user)
+	uc.cache.SetUser(c, strconv.Itoa(int(user.ID)), user)
 
-	return token, raw, nil
+	return token, refresh, nil
+}
+
+func (uc *UseCase) Refresh(
+	c context.Context,
+	cfg *config.Config,
+	refresh string,
+) (token, newRefresh string, err error) {
+	hashed := utils.HashRefreshToken(refresh)
+
+	userID, err := uc.repo.ReadRefreshToken(c, hashed)
+	if err != nil {
+		return "", "", fmt.Errorf(
+			"UserUseCase - Refresh - uc.repo.ReadRefreshToken: %w",
+			err,
+		)
+	}
+
+	token, err = generateToken(userID, &cfg.JWT)
+	if err != nil {
+		return "", "", fmt.Errorf(
+			"UserUseCase - Refresh - generateToken: %w",
+			err,
+		)
+	}
+
+	newRefresh, newRefreshhashed, err := utils.NewRefreshToken()
+	if err != nil {
+		return "", "", fmt.Errorf(
+			"UserUseCase - Refresh - utils.NewRefreshToken: %w",
+			err,
+		)
+	}
+
+	err = uc.repo.CreateRefreshToken(
+		c,
+		userID,
+		newRefreshhashed,
+		"",
+		time.Now().Add(cfg.RefreshToken.Expiration),
+	)
+	if err != nil {
+		return "", "", fmt.Errorf(
+			"UserUseCase - Refresh - uc.repo.CreateRefreshToken: %w",
+			err,
+		)
+	}
+
+	return token, newRefresh, nil
+}
+
+// generateToken is just a local version of jwt.GenerateToken that can take *config.JWT as an argument
+// so that we don't have to pass 3 arguments at a time :)
+func generateToken(userID int32, cfgJWT *config.JWT) (string, error) {
+	return jwt.GenerateToken(
+		strconv.Itoa(int(userID)),
+		cfgJWT.Secret,
+		cfgJWT.Issuer,
+		cfgJWT.Expiration,
+		jwt.TokenTypeAccess,
+	)
 }

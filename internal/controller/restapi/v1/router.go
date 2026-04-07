@@ -40,6 +40,7 @@ func NewV1Routes(
 	{
 		userGroup.POST("/register", r.register)
 		userGroup.POST("/login", r.login)
+		userGroup.POST("/refresh", r.refresh)
 	}
 
 	todoGroup := apiV1Group.Group("/")

@@ -45,6 +45,7 @@ type (
 			hashed, deviceInfo string,
 			expiresAt time.Time,
 		) error
+		ReadRefreshToken(context.Context, string) (int32, error)
 	}
 
 	// UserCache -.

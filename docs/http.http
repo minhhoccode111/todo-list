@@ -28,6 +28,10 @@ POST {{api}}/login
 }
 
 ###
+POST {{api}}/refresh
+Cookie: todo-list-refresh-token=7n5DjI1fuXY7nG52N2yBup4kwWIzGU0bAjpw-JNF9nQ
+
+###
 GET {{api}}/todos?page=1&limit=10
 Authorization: Bearer {{token}}
 

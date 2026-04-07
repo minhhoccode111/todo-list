@@ -97,18 +97,35 @@ func (m *MockUser) EXPECT() *MockUserMockRecorder {
 }
 
 // Login mocks base method.
-func (m *MockUser) Login(arg0 context.Context, arg1 *entity.User, arg2 *config.JWT) (string, error) {
+func (m *MockUser) Login(arg0 context.Context, arg1 *config.Config, arg2 *entity.User) (string, string, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Login", arg0, arg1, arg2)
 	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	ret1, _ := ret[1].(string)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
 }
 
 // Login indicates an expected call of Login.
 func (mr *MockUserMockRecorder) Login(arg0, arg1, arg2 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockUser)(nil).Login), arg0, arg1, arg2)
+}
+
+// Refresh mocks base method.
+func (m *MockUser) Refresh(arg0 context.Context, arg1 *config.Config, arg2 string) (string, string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Refresh", arg0, arg1, arg2)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(string)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// Refresh indicates an expected call of Refresh.
+func (mr *MockUserMockRecorder) Refresh(arg0, arg1, arg2 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Refresh", reflect.TypeOf((*MockUser)(nil).Refresh), arg0, arg1, arg2)
 }
 
 // Register mocks base method.

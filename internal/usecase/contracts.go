@@ -21,6 +21,7 @@ type (
 	User interface {
 		Register(context.Context, *config.Config, *entity.User) (token, refresh string, err error)
 		Login(context.Context, *config.Config, *entity.User) (token, refresh string, err error)
+		Refresh(context.Context, *config.Config, string) (token, refresh string, err error)
 	}
 
 	// ITodo -.

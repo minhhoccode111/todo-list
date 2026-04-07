@@ -90,6 +90,19 @@ func (ur *UserRepo) CreateRefreshToken(
 	return nil
 }
 
+func (ur *UserRepo) ReadRefreshToken(c context.Context, refresh string) (int32, error) {
+	userID, err := ur.queries.ReadRefreshToken(c, refresh)
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return 0, entity.ErrNoRows
+		}
+
+		return 0, fmt.Errorf("UserRepo - ReadRefreshToken - ur.queries.ReadRefreshToken: %w", err)
+	}
+
+	return userID, nil
+}
+
 func newUserFromDTO(u *sqlc.User) *entity.User {
 	return &entity.User{
 		ID:           u.ID,

@@ -228,6 +228,21 @@ func (mr *MockUserRepoMockRecorder) CreateUser(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockUserRepo)(nil).CreateUser), arg0, arg1)
 }
 
+// ReadRefreshToken mocks base method.
+func (m *MockUserRepo) ReadRefreshToken(arg0 context.Context, arg1 string) (int32, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ReadRefreshToken", arg0, arg1)
+	ret0, _ := ret[0].(int32)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ReadRefreshToken indicates an expected call of ReadRefreshToken.
+func (mr *MockUserRepoMockRecorder) ReadRefreshToken(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadRefreshToken", reflect.TypeOf((*MockUserRepo)(nil).ReadRefreshToken), arg0, arg1)
+}
+
 // ReadUserByEmail mocks base method.
 func (m *MockUserRepo) ReadUserByEmail(arg0 context.Context, arg1 string) (*entity.User, error) {
 	m.ctrl.T.Helper()

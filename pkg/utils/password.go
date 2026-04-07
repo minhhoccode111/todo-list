@@ -1,4 +1,4 @@
-package utils //nolint:revive // why not utils?
+package utils //nolint:revive,nolintlint // why not utils?
 
 import "golang.org/x/crypto/bcrypt"
 

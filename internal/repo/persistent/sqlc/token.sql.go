@@ -73,9 +73,9 @@ func (q *Queries) DeleteRefreshTokenById(ctx context.Context, arg DeleteRefreshT
 }
 
 const readRefreshToken = `-- name: ReadRefreshToken :one
-select user_id
-from refresh_tokens
-where token_hash = $1 and expires_at < now()
+delete from refresh_tokens
+where token_hash = $1 and expires_at > now()
+returning user_id
 `
 
 func (q *Queries) ReadRefreshToken(ctx context.Context, tokenHash string) (int32, error) {

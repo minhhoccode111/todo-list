@@ -1,4 +1,4 @@
-package utils
+package utils //nolint:revive,nolintlint // why not utils?
 
 import (
 	"crypto/rand"
@@ -6,6 +6,13 @@ import (
 	"encoding/base64"
 	"encoding/hex"
 )
+
+func HashRefreshToken(raw string) (hashed string) {
+	hash := sha256.Sum256([]byte(raw))
+	hashed = hex.EncodeToString(hash[:])
+
+	return hashed
+}
 
 func NewRefreshToken() (raw, hashed string, err error) {
 	const n = 32 // 256-bit
@@ -16,8 +23,7 @@ func NewRefreshToken() (raw, hashed string, err error) {
 	}
 
 	raw = base64.RawURLEncoding.EncodeToString(b)
-	hash := sha256.Sum256([]byte(raw))
-	hashed = hex.EncodeToString(hash[:])
+	hashed = HashRefreshToken(raw)
 
 	return raw, hashed, nil
 }
