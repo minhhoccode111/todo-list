@@ -57,18 +57,18 @@ func (q *Queries) DeleteRefreshTokenByHash(ctx context.Context, arg DeleteRefres
 	return err
 }
 
-const deleteRefreshTokenById = `-- name: DeleteRefreshTokenById :exec
+const deleteRefreshTokenByID = `-- name: DeleteRefreshTokenByID :exec
 delete from refresh_tokens
 where user_id = $1 and id = $2
 `
 
-type DeleteRefreshTokenByIdParams struct {
+type DeleteRefreshTokenByIDParams struct {
 	UserID int32
 	ID     int32
 }
 
-func (q *Queries) DeleteRefreshTokenById(ctx context.Context, arg DeleteRefreshTokenByIdParams) error {
-	_, err := q.db.Exec(ctx, deleteRefreshTokenById, arg.UserID, arg.ID)
+func (q *Queries) DeleteRefreshTokenByID(ctx context.Context, arg DeleteRefreshTokenByIDParams) error {
+	_, err := q.db.Exec(ctx, deleteRefreshTokenByID, arg.UserID, arg.ID)
 	return err
 }
 

@@ -43,6 +43,13 @@ func NewV1Routes(
 		userGroup.POST("/refresh", r.refresh)
 	}
 
+	userAuthGroup := apiV1Group.Group("/")
+	userAuthGroup.Use(middleware.Auth(cfg.JWT.Secret))
+	{
+		userGroup.POST("/logout", r.logout)
+		userGroup.POST("/logout/all", r.logoutAll)
+	}
+
 	todoGroup := apiV1Group.Group("/")
 	// RouterGroup-level middlewares
 	todoGroup.Use(middleware.Auth(cfg.JWT.Secret))

@@ -185,6 +185,16 @@ func (uc *UseCase) Refresh(
 	return token, newRefresh, nil
 }
 
+func (uc *UseCase) Logout(
+	c context.Context,
+	cfg *config.Config,
+	userID, refreshTokenID int32,
+	refresh string,
+) error {
+	// TODO: delete refresh token by hashed and id in parallel
+	return nil
+}
+
 // generateToken is just a local version of jwt.GenerateToken that can take *config.JWT as an argument
 // so that we don't have to pass 3 arguments at a time :)
 func generateToken(userID int32, cfgJWT *config.JWT) (string, error) {

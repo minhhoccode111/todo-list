@@ -46,6 +46,8 @@ type (
 			expiresAt time.Time,
 		) error
 		ReadRefreshToken(context.Context, string) (int32, error)
+		DeleteRefreshTokenByID(c context.Context, userID int32, id int32) error
+		DeleteRefreshTokenByHash(context.Context, int32, string) error
 	}
 
 	// UserCache -.

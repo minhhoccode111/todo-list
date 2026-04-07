@@ -7,7 +7,7 @@ delete from refresh_tokens
 where token_hash = $1 and expires_at > now()
 returning user_id;
 
--- name: DeleteRefreshTokenById :exec
+-- name: DeleteRefreshTokenByID :exec
 delete from refresh_tokens
 where user_id = $1 and id = $2;
 

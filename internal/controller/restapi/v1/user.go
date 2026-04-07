@@ -3,10 +3,12 @@ package v1
 import (
 	"errors"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/minhhoccode111/todo-list/internal/controller/restapi/middleware"
 	"github.com/minhhoccode111/todo-list/internal/controller/restapi/v1/request"
 	"github.com/minhhoccode111/todo-list/internal/controller/restapi/v1/response"
 	"github.com/minhhoccode111/todo-list/internal/entity"
@@ -150,7 +152,122 @@ func (r *V1) login(c *gin.Context) {
 	c.JSON(http.StatusOK, response.Auth{Token: token})
 }
 
+// @Summary     Refresh
+// @Description Refresh access token using refresh token from cookie
+// @ID          refresh
+// @Tags        Auth
+// @Produce     json
+// @Success     200 {object} response.Auth
+// @Failure     401 {object} response.Message
+// @Failure     500 {object} response.Message
+// @Router      /refresh [post]
 func (r *V1) refresh(c *gin.Context) {
+	refresh, err := c.Cookie(cookieName)
+	if err != nil {
+		if errors.Is(err, http.ErrNoCookie) {
+			messageResponse(c, http.StatusUnauthorized, "Unauthorized")
+
+			return
+		}
+
+		messageResponse(c, http.StatusInternalServerError, "internal server error")
+
+		return
+	}
+
+	token, newRefresh, err := r.u.Refresh(
+		c.Request.Context(),
+		r.cfg,
+		refresh,
+	)
+	if err != nil {
+		switch {
+		case errors.Is(err, entity.ErrNoRows):
+			messageResponse(c, http.StatusUnauthorized, "Unauthorized")
+		default:
+			r.l.Error(err, "restapi - v1 - refresh - r.u.Refresh")
+			messageResponse(c, http.StatusInternalServerError, "internal server error")
+		}
+
+		return
+	}
+
+	c.SetCookieData(&http.Cookie{
+		Name:     cookieName,
+		Value:    newRefresh,
+		Path:     "/",
+		Expires:  time.Now().Add(r.cfg.RefreshToken.Expiration),
+		Secure:   r.cfg.RefreshToken.Secure,
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	})
+
+	c.JSON(http.StatusOK, response.Auth{Token: token})
+}
+
+func (r *V1) logout(c *gin.Context) {
+	userIDRaw, ok := c.Get(middleware.CtxUserIDKey)
+	if !ok {
+		messageResponse(c, http.StatusUnauthorized, "Unauthorized")
+
+		return
+	}
+
+	userID, ok := userIDRaw.(int32)
+	if !ok {
+		messageResponse(c, http.StatusUnauthorized, "Unauthorized")
+
+		return
+	}
+
+	refreshToken, err := c.Cookie(cookieName)
+	if err != nil {
+		if errors.Is(err, http.ErrNoCookie) {
+			messageResponse(c, http.StatusUnauthorized, "Unauthorized")
+
+			return
+		}
+
+		messageResponse(c, http.StatusInternalServerError, "internal server error")
+
+		return
+	}
+
+	refreshTokenIDStr := c.Query("id")
+	refreshTokenID, err := strconv.ParseInt(refreshTokenIDStr, 10, 32)
+
+	err = r.u.Logout(
+		c.Request.Context(),
+		r.cfg,
+		userID, int32(refreshTokenID),
+		refreshToken,
+	)
+	if err != nil {
+		switch {
+		case errors.Is(err, entity.ErrNoRows):
+			messageResponse(c, http.StatusUnauthorized, "Unauthorized")
+		default:
+			r.l.Error(err, "restapi - v1 - logout - r.u.Logout")
+			messageResponse(c, http.StatusInternalServerError, "internal server error")
+		}
+
+		return
+	}
+
+	c.SetCookieData(&http.Cookie{
+		Name:     cookieName,
+		Value:    "",
+		Path:     "/",
+		Expires:  time.Unix(0, 0),
+		Secure:   r.cfg.RefreshToken.Secure,
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	})
+
+	c.Status(http.StatusNoContent)
+}
+
+func (r *V1) logoutAll(c *gin.Context) {
 	refresh, err := c.Cookie(cookieName)
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {

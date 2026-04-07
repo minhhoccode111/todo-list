@@ -22,6 +22,12 @@ type (
 		Register(context.Context, *config.Config, *entity.User) (token, refresh string, err error)
 		Login(context.Context, *config.Config, *entity.User) (token, refresh string, err error)
 		Refresh(context.Context, *config.Config, string) (token, refresh string, err error)
+		Logout(
+			c context.Context,
+			cfg *config.Config,
+			userID, refreshTokenID int32,
+			refresh string,
+		) error
 	}
 
 	// ITodo -.

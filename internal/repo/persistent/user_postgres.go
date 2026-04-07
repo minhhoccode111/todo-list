@@ -103,6 +103,44 @@ func (ur *UserRepo) ReadRefreshToken(c context.Context, refresh string) (int32, 
 	return userID, nil
 }
 
+func (ur *UserRepo) DeleteRefreshTokenByID(c context.Context, userID, id int32) error {
+	err := ur.queries.DeleteRefreshTokenByID(c, sqlc.DeleteRefreshTokenByIDParams{
+		UserID: userID,
+		ID:     id,
+	})
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return entity.ErrNoRows
+		}
+
+		return fmt.Errorf(
+			"UserRepo - DeleteRefreshTokenByID - ur.queries.DeleteRefreshTokenByID: %w",
+			err,
+		)
+	}
+
+	return nil
+}
+
+func (ur *UserRepo) DeleteRefreshTokenByHash(c context.Context, userID int32, hashed string) error {
+	err := ur.queries.DeleteRefreshTokenByHash(c, sqlc.DeleteRefreshTokenByHashParams{
+		UserID:    userID,
+		TokenHash: hashed,
+	})
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return entity.ErrNoRows
+		}
+
+		return fmt.Errorf(
+			"UserRepo - DeleteRefreshTokenByHash - ur.queries.DeleteRefreshTokenByHash: %w",
+			err,
+		)
+	}
+
+	return nil
+}
+
 func newUserFromDTO(u *sqlc.User) *entity.User {
 	return &entity.User{
 		ID:           u.ID,

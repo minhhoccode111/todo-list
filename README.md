@@ -13,7 +13,7 @@
     - refresh tokens don't need to be JWT, because refresh tokens don't need to extract user_id, expired_at in the claims like JWT, everything can be retrieved from the database
     - refresh tokens will be hashed and stored in database on our server to be able to revoke anytime
     - refresh tokens should be sent in http-only cookies
-    - setup frontend to automatically try `/refresh` with `afterResponse` hooks when `401` happens
+    - setup frontend to automatically try `/refresh` with `afterResponse` hook (`ky`) when `401` happens
   - `/refresh`: takes refresh token then return new access token and refresh token and invalidate the used one
   - `/logout`: logout current session via http-only cookies
   - `/logout/all`: logout all device sessions
