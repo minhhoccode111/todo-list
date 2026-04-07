@@ -115,13 +115,13 @@ func (r *V1) login(c *gin.Context) {
 		return
 	}
 
-	token, err := r.u.Login(
+	token, refresh, err := r.u.Login(
 		c.Request.Context(),
+		r.cfg,
 		&entity.User{
 			Email:        body.Email,
 			PasswordHash: body.Password,
 		},
-		&r.cfg.JWT,
 	)
 	if err != nil {
 		switch {
@@ -136,6 +136,16 @@ func (r *V1) login(c *gin.Context) {
 
 		return
 	}
+
+	c.SetCookieData(&http.Cookie{
+		Name:     cookieName,
+		Value:    refresh,
+		Path:     "/",
+		Expires:  time.Now().Add(r.cfg.RefreshToken.Expiration),
+		Secure:   r.cfg.RefreshToken.Secure,
+		HttpOnly: true,
+		SameSite: http.SameSiteLaxMode,
+	})
 
 	c.JSON(http.StatusOK, response.Auth{Token: token})
 }

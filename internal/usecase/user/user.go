@@ -99,30 +99,56 @@ func (uc *UseCase) Register(
 	return token, raw, nil
 }
 
-func (uc *UseCase) Login(c context.Context, u *entity.User, cfgJWT *config.JWT) (string, error) {
+func (uc *UseCase) Login(
+	c context.Context,
+	cfg *config.Config,
+	u *entity.User,
+) (token, refresh string, err error) {
 	user, err := uc.repo.ReadUserByEmail(c, u.Email)
 	if err != nil {
-		return "", fmt.Errorf(
+		return "", "", fmt.Errorf(
 			"UserUseCase - Login - uc.repo.ReadUserByEmail: %w",
 			err,
 		)
 	}
 
 	if !utils.ComparePassword(user.PasswordHash, u.PasswordHash) {
-		return "", entity.ErrUnauthorized
+		return "", "", entity.ErrUnauthorized
 	}
 
 	userID := strconv.Itoa(int(user.ID))
 
-	token, err := generateToken(userID, cfgJWT)
+	token, err = generateToken(userID, &cfg.JWT)
 	if err != nil {
-		return "", fmt.Errorf(
+		return "", "", fmt.Errorf(
 			"UserUseCase - Login - generateToken: %w",
+			err,
+		)
+	}
+
+	raw, hashed, err := utils.NewRefreshToken()
+	if err != nil {
+		return "", "", fmt.Errorf(
+			"UserUseCase - Login - utils.NewRefreshToken: %w",
+			err,
+		)
+	}
+
+	err = uc.repo.CreateRefreshToken(
+		c,
+		user.ID,
+		hashed,
+		"",
+		time.Now().Add(cfg.RefreshToken.Expiration),
+	)
+	if err != nil {
+		return "", "", fmt.Errorf(
+			"UserUseCase - Login - uc.repo.CreateRefreshToken: %w",
 			err,
 		)
 	}
 
 	uc.cache.SetUser(c, userID, user)
 
-	return token, nil
+	return token, raw, nil
 }

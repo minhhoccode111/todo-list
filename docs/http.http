@@ -15,7 +15,7 @@ POST {{api}}/register
 
 {
     "name": "{{name}}",
-    "email": "4-{{email}}",
+    "email": "5-{{email}}",
     "password": "{{password}}"
 }
 
