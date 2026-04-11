@@ -228,6 +228,34 @@ func (mr *MockUserRepoMockRecorder) CreateUser(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockUserRepo)(nil).CreateUser), arg0, arg1)
 }
 
+// DeleteRefreshTokenByHash mocks base method.
+func (m *MockUserRepo) DeleteRefreshTokenByHash(arg0 context.Context, arg1 int32, arg2 string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteRefreshTokenByHash", arg0, arg1, arg2)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteRefreshTokenByHash indicates an expected call of DeleteRefreshTokenByHash.
+func (mr *MockUserRepoMockRecorder) DeleteRefreshTokenByHash(arg0, arg1, arg2 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteRefreshTokenByHash", reflect.TypeOf((*MockUserRepo)(nil).DeleteRefreshTokenByHash), arg0, arg1, arg2)
+}
+
+// DeleteRefreshTokenByID mocks base method.
+func (m *MockUserRepo) DeleteRefreshTokenByID(c context.Context, userID, id int32) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteRefreshTokenByID", c, userID, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteRefreshTokenByID indicates an expected call of DeleteRefreshTokenByID.
+func (mr *MockUserRepoMockRecorder) DeleteRefreshTokenByID(c, userID, id any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteRefreshTokenByID", reflect.TypeOf((*MockUserRepo)(nil).DeleteRefreshTokenByID), c, userID, id)
+}
+
 // ReadRefreshToken mocks base method.
 func (m *MockUserRepo) ReadRefreshToken(arg0 context.Context, arg1 string) (int32, error) {
 	m.ctrl.T.Helper()

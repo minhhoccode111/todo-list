@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"sync"
 	"time"
 
 	"github.com/minhhoccode111/todo-list/config"
@@ -191,7 +192,32 @@ func (uc *UseCase) Logout(
 	userID, refreshTokenID int32,
 	refresh string,
 ) error {
-	// TODO: delete refresh token by hashed and id in parallel
+	hashed := utils.HashRefreshToken(refresh)
+
+	var wg sync.WaitGroup
+	errCh := make(chan error, 2)
+
+	wg.Go(func() {
+		err := uc.repo.DeleteRefreshTokenByHash(c, userID, hashed)
+		if err != nil {
+			errCh <- fmt.Errorf("UserUseCase - Logout - uc.repo.DeleteRefreshTokenByHash: %w", err)
+		}
+	})
+
+	wg.Go(func() {
+		err := uc.repo.DeleteRefreshTokenByID(c, userID, refreshTokenID)
+		if err != nil {
+			errCh <- fmt.Errorf("UserUseCase - Logout - uc.repo.DeleteRefreshTokenByID: %w", err)
+		}
+	})
+
+	wg.Wait()
+	close(errCh)
+
+	for e := range errCh {
+		return e
+	}
+
 	return nil
 }
 

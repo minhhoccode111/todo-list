@@ -236,6 +236,7 @@ func (r *V1) logout(c *gin.Context) {
 	refreshTokenIDStr := c.Query("id")
 	refreshTokenID, err := strconv.ParseInt(refreshTokenIDStr, 10, 32)
 
+	// TODO: change to LogoutByID and LogoutByHash
 	err = r.u.Logout(
 		c.Request.Context(),
 		r.cfg,
