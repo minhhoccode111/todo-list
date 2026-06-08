@@ -1,7 +1,7 @@
 import { env } from '$env/dynamic/public';
 import { Api } from '$lib/types/api';
 import ky, { HTTPError } from 'ky';
-import type { ResponseMessage } from '$lib/types/api';
+import type { ResponseMessage, ResponseAuth } from '$lib/types/api';
 
 export const getApiError = async (error: unknown): Promise<ResponseMessage> => {
 	if (error instanceof HTTPError) {
@@ -27,23 +27,66 @@ export const clearAuthToken = () => {
 	if (typeof window !== 'undefined') localStorage.removeItem(TOKEN);
 };
 
+const baseUrl = env.PUBLIC_API_URL;
+let isRefreshing = false;
+
+const apiKy = ky.extend({
+	hooks: {
+		beforeRequest: [
+			(request) => {
+				const token = getAuthToken();
+				if (token) {
+					request.headers.set('Authorization', `Bearer ${token}`);
+				}
+			}
+		],
+		afterResponse: [
+			async (request, _options, response) => {
+				if (response.status !== 401) return response;
+				if (isRefreshing) return response;
+				if (request.url.endsWith('/refresh')) return response;
+
+				isRefreshing = true;
+				try {
+					const refreshRes = await fetch(`${baseUrl}/refresh`, {
+						method: 'POST',
+						credentials: 'same-origin'
+					});
+
+					if (!refreshRes.ok) {
+						clearAuthToken();
+						if (typeof window !== 'undefined') {
+							window.location.href = '/login';
+						}
+						return response;
+					}
+
+					const data = (await refreshRes.json()) as ResponseAuth;
+					setAuthToken(data.token);
+
+					const retryReq = request.clone();
+					retryReq.headers.set('Authorization', `Bearer ${data.token}`);
+					return ky(retryReq);
+				} catch {
+					clearAuthToken();
+					if (typeof window !== 'undefined') {
+						window.location.href = '/login';
+					}
+					return response;
+				} finally {
+					isRefreshing = false;
+				}
+			}
+		]
+	}
+});
+
 const api = new Api({
-	baseUrl: env.PUBLIC_API_URL,
+	baseUrl,
 	baseApiParams: {
 		credentials: 'same-origin'
 	},
-	customFetch: ky.extend({
-		hooks: {
-			beforeRequest: [
-				(request) => {
-					const token = getAuthToken();
-					if (token) {
-						request.headers.set('Authorization', `Bearer ${token}`);
-					}
-				}
-			]
-		}
-	}),
+	customFetch: apiKy,
 	securityWorker: async () => {
 		return {};
 	}

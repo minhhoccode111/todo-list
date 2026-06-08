@@ -41,6 +41,9 @@
 				</li>
 			{:else}
 				<li>
+					<Button href={resolve('/sessions')}>sessions</Button>
+				</li>
+				<li>
 					<Button href={resolve('/logout')}>logout</Button>
 				</li>
 			{/if}

@@ -22,12 +22,10 @@ type (
 		Register(context.Context, *config.Config, *entity.User) (token, refresh string, err error)
 		Login(context.Context, *config.Config, *entity.User) (token, refresh string, err error)
 		Refresh(context.Context, *config.Config, string) (token, refresh string, err error)
-		Logout(
-			c context.Context,
-			cfg *config.Config,
-			userID, refreshTokenID int32,
-			refresh string,
-		) error
+		SelfLogout(c context.Context, userID int32, refresh string) error
+		DeleteSession(c context.Context, userID, sessionID int32) error
+		LogoutAll(c context.Context, userID int32) error
+		ListSessions(c context.Context, userID int32, refresh string) ([]entity.Session, error)
 	}
 
 	// ITodo -.

@@ -96,6 +96,35 @@ func (m *MockUser) EXPECT() *MockUserMockRecorder {
 	return m.recorder
 }
 
+// DeleteSession mocks base method.
+func (m *MockUser) DeleteSession(c context.Context, userID, sessionID int32) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteSession", c, userID, sessionID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteSession indicates an expected call of DeleteSession.
+func (mr *MockUserMockRecorder) DeleteSession(c, userID, sessionID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteSession", reflect.TypeOf((*MockUser)(nil).DeleteSession), c, userID, sessionID)
+}
+
+// ListSessions mocks base method.
+func (m *MockUser) ListSessions(c context.Context, userID int32, refresh string) ([]entity.Session, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListSessions", c, userID, refresh)
+	ret0, _ := ret[0].([]entity.Session)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListSessions indicates an expected call of ListSessions.
+func (mr *MockUserMockRecorder) ListSessions(c, userID, refresh any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListSessions", reflect.TypeOf((*MockUser)(nil).ListSessions), c, userID, refresh)
+}
+
 // Login mocks base method.
 func (m *MockUser) Login(arg0 context.Context, arg1 *config.Config, arg2 *entity.User) (string, string, error) {
 	m.ctrl.T.Helper()
@@ -112,18 +141,18 @@ func (mr *MockUserMockRecorder) Login(arg0, arg1, arg2 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Login", reflect.TypeOf((*MockUser)(nil).Login), arg0, arg1, arg2)
 }
 
-// Logout mocks base method.
-func (m *MockUser) Logout(c context.Context, cfg *config.Config, userID, refreshTokenID int32, refresh string) error {
+// LogoutAll mocks base method.
+func (m *MockUser) LogoutAll(c context.Context, userID int32) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Logout", c, cfg, userID, refreshTokenID, refresh)
+	ret := m.ctrl.Call(m, "LogoutAll", c, userID)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
-// Logout indicates an expected call of Logout.
-func (mr *MockUserMockRecorder) Logout(c, cfg, userID, refreshTokenID, refresh any) *gomock.Call {
+// LogoutAll indicates an expected call of LogoutAll.
+func (mr *MockUserMockRecorder) LogoutAll(c, userID any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Logout", reflect.TypeOf((*MockUser)(nil).Logout), c, cfg, userID, refreshTokenID, refresh)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "LogoutAll", reflect.TypeOf((*MockUser)(nil).LogoutAll), c, userID)
 }
 
 // Refresh mocks base method.
@@ -156,6 +185,20 @@ func (m *MockUser) Register(arg0 context.Context, arg1 *config.Config, arg2 *ent
 func (mr *MockUserMockRecorder) Register(arg0, arg1, arg2 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Register", reflect.TypeOf((*MockUser)(nil).Register), arg0, arg1, arg2)
+}
+
+// SelfLogout mocks base method.
+func (m *MockUser) SelfLogout(c context.Context, userID int32, refresh string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SelfLogout", c, userID, refresh)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SelfLogout indicates an expected call of SelfLogout.
+func (mr *MockUserMockRecorder) SelfLogout(c, userID, refresh any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SelfLogout", reflect.TypeOf((*MockUser)(nil).SelfLogout), c, userID, refresh)
 }
 
 // MockTodo is a mock of Todo interface.

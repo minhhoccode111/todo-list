@@ -228,6 +228,20 @@ func (mr *MockUserRepoMockRecorder) CreateUser(arg0, arg1 any) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateUser", reflect.TypeOf((*MockUserRepo)(nil).CreateUser), arg0, arg1)
 }
 
+// DeleteAllRefreshTokens mocks base method.
+func (m *MockUserRepo) DeleteAllRefreshTokens(c context.Context, userID int32) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DeleteAllRefreshTokens", c, userID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// DeleteAllRefreshTokens indicates an expected call of DeleteAllRefreshTokens.
+func (mr *MockUserRepoMockRecorder) DeleteAllRefreshTokens(c, userID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAllRefreshTokens", reflect.TypeOf((*MockUserRepo)(nil).DeleteAllRefreshTokens), c, userID)
+}
+
 // DeleteRefreshTokenByHash mocks base method.
 func (m *MockUserRepo) DeleteRefreshTokenByHash(arg0 context.Context, arg1 int32, arg2 string) error {
 	m.ctrl.T.Helper()
@@ -254,6 +268,21 @@ func (m *MockUserRepo) DeleteRefreshTokenByID(c context.Context, userID, id int3
 func (mr *MockUserRepoMockRecorder) DeleteRefreshTokenByID(c, userID, id any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteRefreshTokenByID", reflect.TypeOf((*MockUserRepo)(nil).DeleteRefreshTokenByID), c, userID, id)
+}
+
+// ListRefreshTokens mocks base method.
+func (m *MockUserRepo) ListRefreshTokens(c context.Context, userID int32) ([]entity.Session, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListRefreshTokens", c, userID)
+	ret0, _ := ret[0].([]entity.Session)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListRefreshTokens indicates an expected call of ListRefreshTokens.
+func (mr *MockUserRepoMockRecorder) ListRefreshTokens(c, userID any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListRefreshTokens", reflect.TypeOf((*MockUserRepo)(nil).ListRefreshTokens), c, userID)
 }
 
 // ReadRefreshToken mocks base method.

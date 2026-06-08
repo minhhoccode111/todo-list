@@ -141,6 +141,41 @@ func (ur *UserRepo) DeleteRefreshTokenByHash(c context.Context, userID int32, ha
 	return nil
 }
 
+func (ur *UserRepo) DeleteAllRefreshTokens(c context.Context, userID int32) error {
+	err := ur.queries.DeleteAllRefreshTokens(c, userID)
+	if err != nil {
+		return fmt.Errorf(
+			"UserRepo - DeleteAllRefreshTokens - ur.queries.DeleteAllRefreshTokens: %w",
+			err,
+		)
+	}
+
+	return nil
+}
+
+func (ur *UserRepo) ListRefreshTokens(c context.Context, userID int32) ([]entity.Session, error) {
+	rows, err := ur.queries.ListRefreshTokens(c, userID)
+	if err != nil {
+		return nil, fmt.Errorf(
+			"UserRepo - ListRefreshTokens - ur.queries.ListRefreshTokens: %w",
+			err,
+		)
+	}
+
+	sessions := make([]entity.Session, len(rows))
+	for i, r := range rows {
+		sessions[i] = entity.Session{
+			ID:         r.ID,
+			TokenHash:  r.TokenHash,
+			DeviceInfo: r.DeviceInfo,
+			CreatedAt:  r.CreatedAt,
+			ExpiresAt:  r.ExpiresAt,
+		}
+	}
+
+	return sessions, nil
+}
+
 func newUserFromDTO(u *sqlc.User) *entity.User {
 	return &entity.User{
 		ID:           u.ID,

@@ -15,6 +15,11 @@ where user_id = $1 and id = $2;
 delete from refresh_tokens
 where user_id = $1 and token_hash = $2;
 
+-- name: ListRefreshTokens :many
+select id, device_info, created_at, expires_at, token_hash
+from refresh_tokens
+where user_id = $1;
+
 -- name: DeleteAllRefreshTokens :exec
 delete from refresh_tokens
 where user_id = $1;

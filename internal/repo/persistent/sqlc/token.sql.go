@@ -32,6 +32,37 @@ func (q *Queries) CreateRefreshToken(ctx context.Context, arg CreateRefreshToken
 	return err
 }
 
+const listRefreshTokens = `-- name: ListRefreshTokens :many
+select id, device_info, created_at, expires_at, token_hash
+from refresh_tokens
+where user_id = $1
+`
+
+type ListRefreshTokensRow struct {
+	ID         int32
+	DeviceInfo string
+	CreatedAt  time.Time
+	ExpiresAt  time.Time
+	TokenHash  string
+}
+
+func (q *Queries) ListRefreshTokens(ctx context.Context, userID int32) ([]ListRefreshTokensRow, error) {
+	rows, err := q.db.Query(ctx, listRefreshTokens, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []ListRefreshTokensRow
+	for rows.Next() {
+		var i ListRefreshTokensRow
+		if err := rows.Scan(&i.ID, &i.DeviceInfo, &i.CreatedAt, &i.ExpiresAt, &i.TokenHash); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	return items, nil
+}
+
 const deleteAllRefreshTokens = `-- name: DeleteAllRefreshTokens :exec
 delete from refresh_tokens
 where user_id = $1

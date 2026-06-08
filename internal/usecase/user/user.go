@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"strconv"
-	"sync"
 	"time"
 
 	"github.com/minhhoccode111/todo-list/config"
@@ -186,37 +185,73 @@ func (uc *UseCase) Refresh(
 	return token, newRefresh, nil
 }
 
-func (uc *UseCase) Logout(
+func (uc *UseCase) SelfLogout(
 	c context.Context,
-	cfg *config.Config,
-	userID, refreshTokenID int32,
+	userID int32,
 	refresh string,
 ) error {
 	hashed := utils.HashRefreshToken(refresh)
 
-	var wg sync.WaitGroup
-	errCh := make(chan error, 2)
-
-	wg.Go(func() {
-		err := uc.repo.DeleteRefreshTokenByHash(c, userID, hashed)
-		if err != nil {
-			errCh <- fmt.Errorf("UserUseCase - Logout - uc.repo.DeleteRefreshTokenByHash: %w", err)
-		}
-	})
-
-	wg.Go(func() {
-		err := uc.repo.DeleteRefreshTokenByID(c, userID, refreshTokenID)
-		if err != nil {
-			errCh <- fmt.Errorf("UserUseCase - Logout - uc.repo.DeleteRefreshTokenByID: %w", err)
-		}
-	})
-
-	wg.Wait()
-	close(errCh)
-
-	for e := range errCh {
-		return e
+	err := uc.repo.DeleteRefreshTokenByHash(c, userID, hashed)
+	if err != nil {
+		return fmt.Errorf("UserUseCase - SelfLogout - uc.repo.DeleteRefreshTokenByHash: %w", err)
 	}
+
+	return nil
+}
+
+func (uc *UseCase) DeleteSession(
+	c context.Context,
+	userID, sessionID int32,
+) error {
+	err := uc.repo.DeleteRefreshTokenByID(c, userID, sessionID)
+	if err != nil {
+		return fmt.Errorf("UserUseCase - DeleteSession - uc.repo.DeleteRefreshTokenByID: %w", err)
+	}
+
+	return nil
+}
+
+func (uc *UseCase) ListSessions(
+	c context.Context,
+	userID int32,
+	refresh string,
+) ([]entity.Session, error) {
+	sessions, err := uc.repo.ListRefreshTokens(c, userID)
+	if err != nil {
+		return nil, fmt.Errorf("UserUseCase - ListSessions - uc.repo.ListRefreshTokens: %w", err)
+	}
+
+	if len(sessions) == 0 {
+		return sessions, nil
+	}
+
+	currentHash := utils.HashRefreshToken(refresh)
+
+	for i := range sessions {
+		if sessions[i].TokenHash == currentHash {
+			sessions[i].IsCurrent = true
+
+			break
+		}
+	}
+
+	return sessions, nil
+}
+
+func (uc *UseCase) LogoutAll(
+	c context.Context,
+	userID int32,
+) error {
+	err := uc.repo.DeleteAllRefreshTokens(c, userID)
+	if err != nil {
+		return fmt.Errorf(
+			"UserUseCase - LogoutAll - uc.repo.DeleteAllRefreshTokens: %w",
+			err,
+		)
+	}
+
+	uc.cache.InvalidateUser(c, strconv.Itoa(int(userID)))
 
 	return nil
 }

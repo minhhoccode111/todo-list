@@ -101,6 +101,14 @@ export interface ResponseMessage {
   message: string;
 }
 
+export interface ResponseSession {
+  created_at: string;
+  device: string;
+  expires_at: string;
+  id: number;
+  is_current: boolean;
+}
+
 export type QueryParamsType = Record<string | number, any>;
 export type ResponseFormat = keyof Omit<Body, "body" | "bodyUsed">;
 
@@ -386,6 +394,58 @@ export class Api<
         ...params,
       }),
   };
+  logout = {
+    /**
+     * @description Logout current session
+     *
+     * @tags Auth
+     * @name Logout
+     * @summary Logout
+     * @request POST:/logout
+     * @secure
+     */
+    logout: (params: RequestParams = {}) =>
+      this.request<void, ResponseMessage>({
+        path: `/logout`,
+        method: "POST",
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Logout from all devices by deleting all refresh tokens for the user
+     *
+     * @tags Auth
+     * @name LogoutAll
+     * @summary Logout All
+     * @request POST:/logout/all
+     * @secure
+     */
+    logoutAll: (params: RequestParams = {}) =>
+      this.request<void, ResponseMessage>({
+        path: `/logout/all`,
+        method: "POST",
+        secure: true,
+        ...params,
+      }),
+  };
+  refresh = {
+    /**
+     * @description Refresh access token using refresh token from cookie
+     *
+     * @tags Auth
+     * @name Refresh
+     * @summary Refresh
+     * @request POST:/refresh
+     */
+    refresh: (params: RequestParams = {}) =>
+      this.request<ResponseAuth, ResponseMessage>({
+        path: `/refresh`,
+        method: "POST",
+        format: "json",
+        ...params,
+      }),
+  };
   register = {
     /**
      * @description Register a user with name, email and password
@@ -402,6 +462,42 @@ export class Api<
         body: request,
         type: ContentType.Json,
         format: "json",
+        ...params,
+      }),
+  };
+  sessions = {
+    /**
+     * @description List all active sessions for the current user
+     *
+     * @tags Auth
+     * @name ListSessions
+     * @summary List Sessions
+     * @request GET:/sessions
+     * @secure
+     */
+    listSessions: (params: RequestParams = {}) =>
+      this.request<ResponseSession[], ResponseMessage>({
+        path: `/sessions`,
+        method: "GET",
+        secure: true,
+        format: "json",
+        ...params,
+      }),
+
+    /**
+     * @description Logout a specific session by ID (remote logout)
+     *
+     * @tags Auth
+     * @name DeleteSession
+     * @summary Delete Session
+     * @request DELETE:/sessions/{id}
+     * @secure
+     */
+    deleteSession: (id: number, params: RequestParams = {}) =>
+      this.request<void, ResponseMessage>({
+        path: `/sessions/${id}`,
+        method: "DELETE",
+        secure: true,
         ...params,
       }),
   };

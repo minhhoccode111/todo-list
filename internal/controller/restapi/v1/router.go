@@ -46,8 +46,10 @@ func NewV1Routes(
 	userAuthGroup := apiV1Group.Group("/")
 	userAuthGroup.Use(middleware.Auth(cfg.JWT.Secret))
 	{
-		userGroup.POST("/logout", r.logout)
-		userGroup.POST("/logout/all", r.logoutAll)
+		userAuthGroup.POST("/logout", r.logout)
+		userAuthGroup.POST("/logout/all", r.logoutAll)
+		userAuthGroup.GET("/sessions", r.listSessions)
+		userAuthGroup.DELETE("/sessions/:id", r.deleteSession)
 	}
 
 	todoGroup := apiV1Group.Group("/")

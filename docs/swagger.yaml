@@ -179,6 +179,25 @@ definitions:
     required:
     - message
     type: object
+  response.Session:
+    properties:
+      created_at:
+        type: string
+      device:
+        type: string
+      expires_at:
+        type: string
+      id:
+        type: integer
+      is_current:
+        type: boolean
+    required:
+    - created_at
+    - device
+    - expires_at
+    - id
+    - is_current
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -219,6 +238,47 @@ paths:
           schema:
             $ref: '#/definitions/response.Message'
       summary: Login
+      tags:
+      - Auth
+  /logout:
+    post:
+      description: Logout current session
+      operationId: logout
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Message'
+      security:
+      - BearerAuth: []
+      summary: Logout
+      tags:
+      - Auth
+  /logout/all:
+    post:
+      description: Logout from all devices by deleting all refresh tokens for the
+        user
+      operationId: logoutAll
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Message'
+      security:
+      - BearerAuth: []
+      summary: Logout All
       tags:
       - Auth
   /refresh:
@@ -276,6 +336,64 @@ paths:
           schema:
             $ref: '#/definitions/response.Message'
       summary: Register
+      tags:
+      - Auth
+  /sessions:
+    get:
+      description: List all active sessions for the current user
+      operationId: listSessions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/response.Session'
+            type: array
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Message'
+      security:
+      - BearerAuth: []
+      summary: List Sessions
+      tags:
+      - Auth
+  /sessions/{id}:
+    delete:
+      description: Logout a specific session by ID (remote logout)
+      operationId: deleteSession
+      parameters:
+      - description: Session ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/response.Message'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/response.Message'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.Message'
+      security:
+      - BearerAuth: []
+      summary: Delete Session
       tags:
       - Auth
   /todos:
