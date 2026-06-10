@@ -84,10 +84,6 @@ func (tr *TodoRepo) CreateTodo(
 	return newTodoFromDTO(&sqlcTodo), nil
 }
 
-func (tr *TodoRepo) ReadTodoByID(_ context.Context, _ int32) (*entity.Todo, error) {
-	return nil, nil
-}
-
 func (tr *TodoRepo) ReadTodos(
 	c context.Context,
 	userID, limit, offset int32,

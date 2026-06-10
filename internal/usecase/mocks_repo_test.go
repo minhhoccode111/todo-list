@@ -448,21 +448,6 @@ func (mr *MockTodoRepoMockRecorder) DeleteTodo(arg0, arg1, arg2 any) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteTodo", reflect.TypeOf((*MockTodoRepo)(nil).DeleteTodo), arg0, arg1, arg2)
 }
 
-// ReadTodoByID mocks base method.
-func (m *MockTodoRepo) ReadTodoByID(arg0 context.Context, arg1 int32) (*entity.Todo, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ReadTodoByID", arg0, arg1)
-	ret0, _ := ret[0].(*entity.Todo)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// ReadTodoByID indicates an expected call of ReadTodoByID.
-func (mr *MockTodoRepoMockRecorder) ReadTodoByID(arg0, arg1 any) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ReadTodoByID", reflect.TypeOf((*MockTodoRepo)(nil).ReadTodoByID), arg0, arg1)
-}
-
 // ReadTodos mocks base method.
 func (m *MockTodoRepo) ReadTodos(arg0 context.Context, arg1, arg2, arg3 int32) ([]entity.Todo, int32, error) {
 	m.ctrl.T.Helper()
