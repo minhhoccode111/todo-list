@@ -7,12 +7,10 @@
 	let {
 		class: className,
 		role = 'status',
-		// we add name, color, and stroke for compatibility with different icon libraries props
 		name,
 		color,
 		stroke,
-		'aria-label': ariaLabel = 'Loading',
-		...restProps
+		'aria-label': ariaLabel = 'Loading'
 	}: SVGAttributes<SVGSVGElement> = $props();
 </script>
 
@@ -25,5 +23,4 @@
 	stroke={stroke === null ? undefined : stroke}
 	aria-label={ariaLabel}
 	class={cn('size-4 animate-spin', className)}
-	{...restProps}
 />

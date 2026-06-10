@@ -75,9 +75,9 @@
 					<Spinner />
 				</div>
 			{:else if error}
-				<p class="text-destructive text-center">{error}</p>
+				<p class="text-center text-destructive">{error}</p>
 			{:else if sessions.length === 0}
-				<p class="text-muted-foreground text-center">No active sessions</p>
+				<p class="text-center text-muted-foreground">No active sessions</p>
 			{:else}
 				{#each sessions as session (session.id)}
 					<div class="flex items-start justify-between gap-4 rounded-lg border p-4">
@@ -88,10 +88,10 @@
 									<Badge variant="default">Current session</Badge>
 								{/if}
 							</div>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Created: {formatDate(session.created_at)}
 							</p>
-							<p class="text-muted-foreground text-sm">
+							<p class="text-sm text-muted-foreground">
 								Expires: {formatDate(session.expires_at)}
 							</p>
 						</div>
@@ -108,12 +108,7 @@
 
 				<Separator />
 
-				<Button
-					variant="destructive"
-					class="w-full"
-					disabled={loggingOutAll}
-					onclick={logoutAll}
-				>
+				<Button variant="destructive" class="w-full" disabled={loggingOutAll} onclick={logoutAll}>
 					{loggingOutAll ? 'Logging out all...' : 'Logout All'}
 				</Button>
 			{/if}
