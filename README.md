@@ -18,6 +18,28 @@
   - `/logout`: logout current session via http-only cookies
   - `/logout/all`: logout all device sessions
   - `/logout/:id`: logout a device by its session id
+  - delivering the refresh-token cookie when frontend and API are on different
+    hosts. If the cookie never reaches the server, the `/sessions` handler hashes an
+    empty cookie and matches nothing (so `is_current` is always `false`), `/refresh`
+    401s (so a reload logs you out), and `/logout/all` 401s behind the dead refresh
+    (so the session list never changes). Things to get right:
+    - **origin vs site** are different. _Origin_ = scheme + host + **port**; _site_ =
+      scheme + registrable domain (eTLD+1), **port does not count**.
+      - `localhost:3000` → `localhost:8080` is cross-**origin** but same-**site**.
+      - `minhhoccode111.github.io` → a separate API host is cross-**site** (every
+        `*.github.io` is its own site via the Public Suffix List).
+    - the browser only attaches cookies to a cross-origin request when the frontend
+      uses `credentials: 'include'` (`'same-origin'` omits them) **and** the server
+      replies with `Access-Control-Allow-Credentials: true` and the reflected
+      `Origin` (a wildcard `*` is rejected for credentialed requests).
+    - `SameSite` controls cross-**site** sending: `Lax` is fine for same-site (dev),
+      but cross-site `fetch`/XHR needs `SameSite=None`. The catch: **browsers reject a
+      `SameSite=None` cookie that isn't also `Secure`**, so `None` + `Secure=false`
+      (our dev default) means the cookie is silently dropped — which is exactly the bug
+      we hit. (And forcing `Secure` on just to keep `None` is the wrong dev fix: outside
+      the `localhost` exception, `Secure` cookies aren't accepted over plain HTTP.) So we
+      tie the two together: `Secure` on ⇒ `None` (HTTPS prod, cross-site), `Secure` off
+      ⇒ `Lax` (HTTP dev, same-site).
 - rate limit per IP
 - unit tests
 - sveltekit feels great

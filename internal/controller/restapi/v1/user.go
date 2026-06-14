@@ -17,6 +17,21 @@ import (
 
 const cookieName = "todo-list-refresh-token"
 
+// refreshCookieSameSite picks the SameSite policy for the refresh-token cookie.
+//
+// Cross-site delivery (prod: a github.io frontend talking to a separate API host
+// over HTTPS) requires SameSite=None, which browsers only accept when the cookie
+// is also Secure. In local dev over plain HTTP (Secure=false) we fall back to Lax,
+// which is valid without Secure and is still sent because localhost:3000 ->
+// localhost:8080 is same-site (the port is not part of the "site").
+func refreshCookieSameSite(secure bool) http.SameSite {
+	if secure {
+		return http.SameSiteNoneMode
+	}
+
+	return http.SameSiteLaxMode
+}
+
 // @Summary     Register
 // @Description Register a user with name, email and password
 // @ID          register
@@ -78,7 +93,7 @@ func (r *V1) register(c *gin.Context) {
 		Expires:  time.Now().Add(r.cfg.RefreshToken.Expiration),
 		Secure:   r.cfg.RefreshToken.Secure,
 		HttpOnly: true,
-		SameSite: http.SameSiteLaxMode,
+		SameSite: refreshCookieSameSite(r.cfg.RefreshToken.Secure),
 	})
 
 	c.JSON(http.StatusOK, response.Auth{Token: token})
@@ -146,7 +161,7 @@ func (r *V1) login(c *gin.Context) {
 		Expires:  time.Now().Add(r.cfg.RefreshToken.Expiration),
 		Secure:   r.cfg.RefreshToken.Secure,
 		HttpOnly: true,
-		SameSite: http.SameSiteLaxMode,
+		SameSite: refreshCookieSameSite(r.cfg.RefreshToken.Secure),
 	})
 
 	c.JSON(http.StatusOK, response.Auth{Token: token})
@@ -195,7 +210,7 @@ func (r *V1) refresh(c *gin.Context) {
 	c.SetCookieData(&http.Cookie{
 		Name: cookieName, Value: newRefresh, Path: "/",
 		Expires: time.Now().Add(r.cfg.RefreshToken.Expiration), Secure: r.cfg.RefreshToken.Secure,
-		HttpOnly: true, SameSite: http.SameSiteLaxMode,
+		HttpOnly: true, SameSite: refreshCookieSameSite(r.cfg.RefreshToken.Secure),
 	})
 
 	c.JSON(http.StatusOK, response.Auth{Token: token})
@@ -250,7 +265,7 @@ func (r *V1) logout(c *gin.Context) {
 	c.SetCookieData(&http.Cookie{
 		Name: cookieName, Value: "", Path: "/",
 		Expires: time.Unix(0, 0), Secure: r.cfg.RefreshToken.Secure,
-		HttpOnly: true, SameSite: http.SameSiteLaxMode,
+		HttpOnly: true, SameSite: refreshCookieSameSite(r.cfg.RefreshToken.Secure),
 	})
 
 	c.Status(http.StatusNoContent)
@@ -296,7 +311,7 @@ func (r *V1) logoutAll(c *gin.Context) {
 		Expires:  time.Unix(0, 0),
 		Secure:   r.cfg.RefreshToken.Secure,
 		HttpOnly: true,
-		SameSite: http.SameSiteLaxMode,
+		SameSite: refreshCookieSameSite(r.cfg.RefreshToken.Secure),
 	})
 
 	c.Status(http.StatusNoContent)

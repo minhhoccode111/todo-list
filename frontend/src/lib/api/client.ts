@@ -50,7 +50,7 @@ const apiKy = ky.extend({
 				try {
 					const refreshRes = await fetch(`${baseUrl}/refresh`, {
 						method: 'POST',
-						credentials: 'same-origin'
+						credentials: 'include'
 					});
 
 					if (!refreshRes.ok) {
@@ -84,7 +84,7 @@ const apiKy = ky.extend({
 const api = new Api({
 	baseUrl,
 	baseApiParams: {
-		credentials: 'same-origin'
+		credentials: 'include'
 	},
 	customFetch: apiKy,
 	securityWorker: async () => {
