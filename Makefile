@@ -140,8 +140,7 @@ bin-deps: ### install tools
 .PHONY: bin-deps
 
 schema: ### Generate database schema
-	# pg_dump --schema-only --no-owner --no-privileges $(PG_URL) > docs/schema.sql
-	docker exec db pg_dump --schema-only --no-owner --no-privileges -U user db > docs/schema.sql
+	@pg_isready -d "$(PG_URL)" -q && atlas schema inspect -u "$(PG_URL)?sslmode=disable" --format '{{ sql . }}' > docs/schema.sql || echo "schema: database not reachable, skipping"
 .PHONY: schema
 
 pre-commit: swag-v1 mock format linter-golangci test schema ### run pre-commit

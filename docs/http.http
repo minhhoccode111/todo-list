@@ -32,6 +32,25 @@ POST {{api}}/refresh
 Cookie: todo-list-refresh-token=7n5DjI1fuXY7nG52N2yBup4kwWIzGU0bAjpw-JNF9nQ
 
 ###
+POST {{api}}/logout
+Authorization: Bearer {{token}}
+Cookie: todo-list-refresh-token=7n5DjI1fuXY7nG52N2yBup4kwWIzGU0bAjpw-JNF9nQ
+
+###
+POST {{api}}/logout/all
+Authorization: Bearer {{token}}
+
+###
+GET {{api}}/sessions
+Authorization: Bearer {{token}}
+Cookie: todo-list-refresh-token=7n5DjI1fuXY7nG52N2yBup4kwWIzGU0bAjpw-JNF9nQ
+
+###
+@session_id = 1
+DELETE {{api}}/sessions/{{session_id}}
+Authorization: Bearer {{token}}
+
+###
 GET {{api}}/todos?page=1&limit=10
 Authorization: Bearer {{token}}
 

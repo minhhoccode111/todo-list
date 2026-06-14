@@ -30,7 +30,6 @@ import (
 func NewRouter(
 	handler *gin.Engine,
 	cfg *config.Config,
-	tr usecase.Translation,
 	u usecase.User,
 	to usecase.Todo,
 	l logger.Interface,
@@ -67,7 +66,6 @@ func NewRouter(
 			l,
 			v,
 			cfg,
-			tr,
 			u,
 			to,
 		)

@@ -1,8 +1,8 @@
-![Go Clean Template](docs/img/logo.svg)
+![Logo](docs/img/logo.svg)
 
-# Go Clean template
+# Todo List API
 
-Clean Architecture template for Golang services
+A REST API for a todo list, built with Go and Clean Architecture.
 
 [![Release](https://img.shields.io/github/v/release/minhhoccode111/todo-list.svg)](https://github.com/minhhoccode111/todo-list/releases/)
 [![License](https://img.shields.io/badge/License-MIT-success)](https://github.com/minhhoccode111/todo-list/blob/master/LICENSE)
@@ -22,313 +22,176 @@ Clean Architecture template for Golang services
 
 ## Overview
 
-This is a fork of [go-clean-template](https://github.com/evrone/go-clean-template) but:
+This service exposes a JSON REST API for managing todos behind user
+authentication. It started as a fork of
+[go-clean-template](https://github.com/evrone/go-clean-template) but was
+adapted into a single REST application:
 
-- Replace Fiber with Gin
-- Replace Squirrel with Sqlc
-- Add validatorx wrapper in `pkg`
-- Add Otter cache in `pkg`
-- Add `remove_rpc.sh` script to remove RPC services
+- Gin instead of Fiber
+- sqlc instead of Squirrel
+- A `validatorx` wrapper in `pkg`
+- An [Otter](https://github.com/maypok86/otter) in-memory cache in `pkg`
+- RPC transports (gRPC, NATS, RabbitMQ) removed — REST only
 
-The purpose of the template is to show:
+The goal is to keep business logic independent, clean, and extensible by
+following Clean Architecture (Robert C. Martin / "Uncle Bob"). A SvelteKit
+single-page app under `frontend/` consumes the API; see the top-level
+[README](README.md) for the product-facing notes and screenshots.
 
-- how to organize a project and prevent it from turning into spaghetti code
-- where to store business logic so that it remains independent, clean, and extensible
-- how not to lose control when a microservice grows
+## Features
 
-Using the principles of Robert Martin (aka Uncle Bob).
+- **Auth** — register, login, refresh, and logout flows using short-lived JWT
+  access tokens plus hashed refresh tokens stored in the database and delivered
+  in http-only cookies (so they can be revoked).
+- **Sessions** — list active device sessions, log out a single session by id,
+  or log out everywhere.
+- **Todos** — create, read (paginated, cached), update, and delete todos scoped
+  to the authenticated user.
+- **Cross-cutting** — request logging, panic recovery, CORS, per-IP rate
+  limiting, Prometheus metrics, and Swagger documentation with bearer auth.
 
-[Go-clean-template](https://minhhoccode111.com/todo-list?utm_source=github&utm_campaign=todo-list) is created &
-supported by [minhhoccode111](https://minhhoccode111.com/?utm_source=github&utm_campaign=todo-list).
+## Tech stack
 
-This template implements three types of servers:
-
-- AMQP RPC (based on RabbitMQ as [transport](https://github.com/rabbitmq/amqp091-go)
-  and [Request-Reply pattern](https://www.enterpriseintegrationpatterns.com/patterns/messaging/RequestReply.html))
-- MQ RPC (based on NATS as [transport](https://github.com/nats-io/nats.go)
-  and [Request-Reply pattern](https://www.enterpriseintegrationpatterns.com/patterns/messaging/RequestReply.html))
-- gRPC ([gRPC](https://grpc.io/) framework based on protobuf)
-- REST API ([Gin](https://github.com/gin-gonic/gin) framework)
-
-## Content
-
-- [Quick start](#quick-start)
-- [Project structure](#project-structure)
-- [Dependency Injection](#dependency-injection)
-- [Clean Architecture](#clean-architecture)
-
-## Clean Up (Gin REST API only)
-
-If you only need a simple REST API and want to remove gRPC, NATS, and RabbitMQ from the project, you can run the provided cleanup script:
-
-```sh
-./remove_rpc.sh
-```
-
-This will automatically strip out all RPC-related code, dependencies, docker configurations, and tests, leaving you with a clean Gin REST API template.
+- [Gin](https://github.com/gin-gonic/gin) — HTTP framework
+- [sqlc](https://sqlc.dev/) — type-safe Go from SQL, with
+  [pgx](https://github.com/jackc/pgx) for PostgreSQL
+- [golang-migrate](https://github.com/golang-migrate/migrate) — schema migrations
+- [swag](https://github.com/swaggo/swag) — Swagger/OpenAPI generation
+- [validator](https://github.com/go-playground/validator) — request validation
+- [zerolog](https://github.com/rs/zerolog) — structured logging
+- [Otter](https://github.com/maypok86/otter) — in-memory cache
+- [testify](https://github.com/stretchr/testify) + [go.uber.org/mock](https://go.uber.org/mock) — tests and mocks
 
 ## Quick start
 
-### Local development
+Requires Go, Docker (for PostgreSQL), and the tools installed by `make bin-deps`
+(`migrate`, `sqlc`, `swag`, `air`, `swagger-typescript-api`).
 
 ```sh
-# Postgres, RabbitMQ, NATS
-make compose-up
-# Run app with migrations
+# Start PostgreSQL via docker compose
+make db-up
+
+# Generate code, run migrations, and start the API (http://127.0.0.1:8080)
 make run
-# Or air
+
+# Or run with live reload
 air
-# Or debugger (F5 to use with .vscode/launch.json)
 ```
 
-### Integration tests (can be run in CI)
+Configuration is read from `.env` (falling back to `.env.example`). Once
+running:
 
-```sh
-# DB, app + migrations, integration tests
-make compose-up-integration-test
-```
+- Health check: http://127.0.0.1:8080/healthz
+- Swagger UI: http://127.0.0.1:8080/swagger/index.html
+- Metrics (if enabled): http://127.0.0.1:8080/metrics
 
-### Full docker stack with reverse proxy
+To run the full stack (API + reverse proxy) in Docker, use `make compose-up-all`.
 
-```sh
-make compose-up-all
-```
+## API
 
-Check services:
+All endpoints are served under `/api/v1`. Routes marked 🔒 require a
+`Bearer <access token>` header.
 
-- AMQP RPC:
-  - URL: `amqp://guest:guest@127.0.0.1:5672/`
-  - Client Exchange: `rpc_client`
-  - Server Exchange: `rpc_server`
-- NATS RPC:
-  - URL: `nats://guest:guest@127.0.0.1:4222/`
-  - Server Exchange: `rpc_server`
-- REST API:
-  - http://app.lvh.me/healthz | http://127.0.0.1:8080/healthz
-  - http://app.lvh.me/metrics | http://127.0.0.1:8080/metrics
-  - http://app.lvh.me/swagger | http://127.0.0.1:8080/swagger
-- gRPC:
-  - URL: `tcp://grpc.lvh.me:8081` | `tcp://127.0.0.1:8081`
-  - [v1/translation.history.proto](docs/proto/v1/translation.history.proto)
-- PostgreSQL:
-  - `postgres://user:myAwEsOm3pa55@w0rd@127.0.0.1:5432/db`
-- RabbitMQ:
-  - http://rabbitmq.lvh.me | http://127.0.0.1:15672
-  - Credentials: `guest` / `guest`
-- NATS monitoring:
-  - http://nats.lvh.me | http://127.0.0.1:8222/
-  - Credentials: `guest` / `guest`
+| Method | Path                 | Description                          |
+| ------ | -------------------- | ------------------------------------ |
+| POST   | `/register`          | Create an account                    |
+| POST   | `/login`             | Log in, receive access + refresh     |
+| POST   | `/refresh`           | Exchange a refresh token             |
+| POST   | `/logout`         🔒 | Log out the current session          |
+| POST   | `/logout/all`     🔒 | Log out all sessions                 |
+| GET    | `/sessions`       🔒 | List active sessions                 |
+| DELETE | `/sessions/:id`   🔒 | Revoke a session by id               |
+| GET    | `/todos`          🔒 | List todos (paginated)               |
+| POST   | `/todos`          🔒 | Create a todo                        |
+| PUT    | `/todos/:id`      🔒 | Update a todo                        |
+| DELETE | `/todos/:id`      🔒 | Delete a todo                        |
+
+The Swagger spec (`docs/swagger.yaml`) is the source of truth and is
+auto-generated from handler annotations; see [Make commands](#make-commands).
 
 ## Project structure
 
 ### `cmd/app/main.go`
 
-Configuration and logger initialization. Then the main function "continues" in
-`internal/app/app.go`.
+Loads configuration and the logger, then hands off to `internal/app`.
 
 ### `config`
 
-The twelve-factor app stores config in environment variables (often shortened to `env vars` or `env`). Env vars are easy
-to change between deploys without changing any code; unlike config files, there is little chance of them being checked
-into the code repo accidentally; and unlike custom config files, or other config mechanisms such as Java System
-Properties, they are a language- and OS-agnostic standard.
-
-Config: [config.go](config/config.go)
-
-Example: [.env.example](.env.example)
-
-[docker-compose.yml](docker-compose.yml) uses `env` variables to configure services.
+Twelve-factor configuration from environment variables. See
+[config.go](config/config.go) and [.env.example](.env.example).
 
 ### `docs`
 
-Swagger documentation. Auto-generated by [swag](https://github.com/swaggo/swag) library.
-You don't need to correct anything by yourself.
-
-#### `docs/proto`
-
-Protobuf files. They are used to generate Go code for gRPC services.
-The proto files are also used to generate documentation for gRPC services.
-You don't need to correct anything by yourself.
-
-### `integration-test`
-
-Integration tests.
-They are launched as a separate container, next to the application container.
+Auto-generated Swagger documentation (`docs.go`, `swagger.json`, `swagger.yaml`)
+plus the database schema dump (`schema.sql`) and images. Generated files should
+not be edited by hand.
 
 ### `internal/app`
 
-There is always one _Run_ function in the `app.go` file, which "continues" the _main_ function.
-
-This is where all the main objects are created.
-Dependency injection occurs through the "New ..." constructors (see Dependency Injection).
-This technique allows us to layer the application using the [Dependency Injection](#dependency-injection) principle.
-This makes the business logic independent from other layers.
-
-Next, we start the server and wait for signals in _select_ for graceful completion.
-If `app.go` starts to grow, you can split it into multiple files.
-
-For a large number of injections, [wire](https://github.com/google/wire) can be used.
-
-The `migrate.go` file is used for database auto migrations.
-It is included if an argument with the _migrate_ tag is specified.
-For example:
+Holds the single `Run` function that "continues" `main`. This is where every
+object is created and wired together via `New...` constructors (see
+[Dependency Injection](#dependency-injection)), the HTTP server is started, and
+graceful shutdown is handled. With the `migrate` build tag, migrations run
+automatically on start:
 
 ```sh
 go run -tags migrate ./cmd/app
 ```
 
-### `internal/controller`
+### `internal/controller/restapi`
 
-Server handler layer (MVC controllers). The template shows 3 servers:
-
-- AMQP RPC (based on RabbitMQ as transport)
-- gRPC ([gRPC](https://grpc.io/) framework based on protobuf)
-- REST API ([Gin](https://github.com/gin-gonic/gin) framework)
-
-Server routers are written in the same style:
-
-- Handlers are grouped by area of application (by a common basis)
-- For each group, its own router structure is created, the methods of which process paths
-- The structure of the business logic is injected into the router structure, which will be called by the handlers
-
-#### `internal/controller/amqp_rpc`
-
-Simple RPC versioning.
-For v2, we will need to add the `amqp_rpc/v2` folder with the same content.
-And in the file `internal/controller/amqp_rpc/router.go` add the line:
-
-```go
-routes := make(map[string]server.CallHandler)
-
-{
-    v1.NewTranslationRoutes(routes, t, l)
-}
-
-{
-    v2.NewTranslationRoutes(routes, t, l)
-}
-```
-
-#### `internal/controller/grpc`
-
-Simple gRPC versioning.
-For v2, we will need to add the `grpc/v2` folder with the same content.
-Also add the `v2` folder to the proto files in `docs/proto`.
-And in the file `internal/controller/grpc/router.go` add the line:
-
-```go
-{
-    v1.NewTranslationRoutes(app, t, l)
-}
-
-{
-    v2.NewTranslationRoutes(app, t, l)
-}
-
-reflection.Register(app)
-```
-
-#### `internal/controller/nats_rpc`
-
-Simple RPC versioning.
-For v2, we will need to add the `nats_rpc/v2` folder with the same content.
-And in the file `internal/controller/nats_rpc/router.go` add the line:
-
-```go
-routes := make(map[string]server.CallHandler)
-
-{
-    v1.NewTranslationRoutes(routes, t, l)
-}
-
-{
-    v2.NewTranslationRoutes(routes, t, l)
-}
-```
-
-#### `internal/controller/restapi`
-
-Simple REST versioning.
-For v2, we will need to add the `restapi/v2` folder with the same content.
-And in the file `internal/controller/restapi/router.go` add the line:
-
-```go
-apiV1Group := app.Group("/v1")
-{
-	v1.NewTranslationRoutes(apiV1Group, t, l)
-}
-apiV2Group := app.Group("/v2")
-{
-	v2.NewTranslationRoutes(apiV2Group, t, l)
-}
-```
-
-Instead of [Gin](https://github.com/gin-gonic/gin), you can use any other http framework.
-
-In `router.go` and above the handler methods, there are comments for generating swagger documentation
-using [swag](https://github.com/swaggo/swag).
+The HTTP delivery layer (Gin). `router.go` wires global middleware, metrics,
+Swagger, and the health check; `middleware/` holds cross-cutting middleware
+(auth, logging, recovery, CORS, rate limiting); `v1/` holds the versioned
+handlers grouped by area (`user`, `todo`) with their request/response types.
+Swagger annotations live above the handler methods. Adding a `v2/` package
+alongside `v1/` is all it takes to version the API.
 
 ### `internal/entity`
 
-Entities of business logic (models) can be used in any layer.
-There can also be methods, for example, for validation.
+Core business models, usable in any layer and independent of storage or
+transport. They may carry methods such as validation.
 
 ### `internal/usecase`
 
-Business logic.
+Business logic, grouped by area (`todo`, `user`) — one structure per group.
+Repositories and caches are injected as interfaces (`contracts.go`), so the use
+cases stay independent of concrete implementations.
 
-- Methods are grouped by area of application (on a common basis)
-- Each group has its own structure
-- One file - one structure
+### `internal/repo/persistent`
 
-Repositories, webapi, rpc, and other business logic structures are injected into business logic structures
-(see [Dependency Injection](#dependency-injection)).
+The repository: an abstract data store the business logic talks to. SQL lives in
+`queries/`, sqlc generates the type-safe code in `sqlc/`, and the repository
+maps generated database models to business entities.
 
-#### `internal/repo/persistent`
+### `internal/repo/cache`
 
-A repository is an abstract storage (database) that business logic works with.
+An abstract cache the business logic talks to. It uses the adapter pattern to
+sit in front of a concrete cache implementation (Otter, from `pkg/cache`).
 
-#### `internal/repo/cache`
+### `pkg`
 
-It is an abstract cache storage that business logic works with.
-It uses an adapter pattern to interact with concrete cache implementations (like Otter in `pkg/cache`).
+Reusable, project-agnostic packages: `cache` (Otter wrapper), `httpserver`,
+`jwt`, `logger` (zerolog), `postgres` (pgx pool), `validatorx`, and small
+`util`/`utils` helpers.
 
-#### `internal/repo/webapi`
+### `migrations`
 
-It is an abstract web API that business logic works with.
-For example, it could be another microservice that business logic accesses via the REST API.
-The package name changes depending on the purpose.
+golang-migrate SQL migration pairs (`*.up.sql` / `*.down.sql`).
 
-### `pkg/rabbitmq`
+### `frontend`
 
-RabbitMQ RPC pattern:
-
-- There is no routing inside RabbitMQ
-- Exchange fanout is used, to which 1 exclusive queue is bound, this is the most productive config
-- Reconnect on the loss of connection
-
-### `pkg/cache`
-
-Memory cache based on [Otter](https://github.com/maypok86/otter):
-
-- High-performance, thread-safe in-memory cache
-- Support for TTL expiration and max cost limits
-- Built-in `GetOrLoad` with singleflight semantics to prevent cache stampedes
+SvelteKit single-page app (static adapter) that consumes the API. Its TypeScript
+client (`src/lib/types/api.ts`) is generated from `docs/swagger.yaml`.
 
 ## Dependency Injection
 
-In order to remove the dependence of business logic on external packages, dependency injection is used.
-
-For example, through the New constructor, we inject the dependency into the structure of the business logic.
-This makes the business logic independent (and portable).
-We can override the implementation of the interface without making changes to the `usecase` package.
+To keep business logic free of external dependencies, dependencies are injected
+through `New` constructors as interfaces. The implementation behind an interface
+can be swapped without touching the `usecase` package:
 
 ```go
 package usecase
-
-import (
-// Nothing!
-)
 
 type Repository interface {
 	Get()
@@ -339,9 +202,7 @@ type UseCase struct {
 }
 
 func New(r Repository) *UseCase {
-	return &UseCase{
-		repo: r,
-	}
+	return &UseCase{repo: r}
 }
 
 func (uc *UseCase) Do() {
@@ -349,52 +210,36 @@ func (uc *UseCase) Do() {
 }
 ```
 
-It will also allow us to do auto-generation of mocks (for example with [mockery](https://github.com/vektra/mockery)) and
-easily write unit tests.
+This also lets us auto-generate mocks (`make mock`, via
+[go.uber.org/mock](https://go.uber.org/mock)) and write straightforward unit
+tests.
 
-> We are not tied to specific implementations in order to always be able to change one component to another.
-> If the new component implements the interface, nothing needs to be changed in the business logic.
+> We aren't tied to specific implementations, so any component can be replaced
+> with another. If the new component implements the interface, the business
+> logic doesn't change.
 
 ## Clean Architecture
 
-### Key idea
-
-Programmers realize the optimal architecture for an application after most of the code has been written.
-
-> A good architecture allows decisions to be delayed to as late as possible.
-
 ### The main principle
 
-Dependency Inversion (the same one from SOLID) is the principle of dependency injection.
-The direction of dependencies goes from the outer layer to the inner layer.
-Due to this, business logic and entities remain independent from other parts of the system.
+Dependency Inversion (from SOLID): dependencies point from the outer layer
+inward, so business logic and entities stay independent of the rest of the
+system. The application is split into two layers:
 
-So, the application is divided into 2 layers, internal and external:
-
-1. **Business logic** (Go standard library).
-2. **Tools** (databases, servers, message brokers, any other packages and frameworks).
+1. **Business logic** — entities and use cases (standard library only).
+2. **Tools** — databases, HTTP servers, caches, and other frameworks.
 
 ![Clean Architecture](docs/img/layers-1.png)
 
-**The inner layer** with business logic should be clean. It should:
+**The inner layer** must stay clean: no imports from the outer layer, and all
+calls outward happen through interfaces. Business logic knows nothing about
+PostgreSQL specifically — only about an _abstract_ repository.
 
-- Not have package imports from the outer layer.
-- Use only the capabilities of the standard library.
-- Make calls to the outer layer through the interface (!).
+**The outer layer** components are unaware of each other. They communicate only
+through the inner layer, always via interfaces, exchanging data in the shape the
+business logic expects (`internal/entity`).
 
-The business logic doesn't know anything about Postgres or a specific web API.
-Business logic has an interface for working with an _abstract_ database or _abstract_ web API.
-
-**The outer layer** has other limitations:
-
-- All components of this layer are unaware of each other's existence. How to call another from one tool? Not directly,
-  only through the inner layer of business logic.
-- All calls to the inner layer are made through the interface (!).
-- Data is transferred in a format that is convenient for business logic (`internal/entity`).
-
-For example, you need to access the database from HTTP (controller).
-Both HTTP and database are in the outer layer, which means they know nothing about each other.
-The communication between them is carried out through `usecase` (business logic):
+For example, an HTTP handler reaching the database goes through a use case:
 
 ```
     HTTP > usecase
@@ -403,82 +248,46 @@ The communication between them is carried out through `usecase` (business logic)
     HTTP < usecase
 ```
 
-The symbols > and < show the intersection of layer boundaries through Interfaces.
-The same is shown in the picture:
+The `>` and `<` symbols mark layer boundaries crossed through interfaces.
 
-![Example](docs/img/example-http-db.png)
+![Layers](docs/img/layers-2.png)
 
-Or more complex business logic:
+### Terminology
 
-```
-    HTTP > usecase
-           usecase > repository
-           usecase < repository
-           usecase > webapi
-           usecase < webapi
-           usecase > RPC
-           usecase < RPC
-           usecase > repository
-           usecase < repository
-    HTTP < usecase
-```
-
-### Layers
-
-![Example](docs/img/layers-2.png)
-
-### Clean Architecture Terminology
-
-- **Entities** (`internal/entity`) are the core business objects. They are used throughout the entire application (Use Cases, Controllers, etc.) and are agnostic of storage or transport.
-- **Database Models** (`internal/repo/persistent/sqlc`) are generated code that represents the database schema. They are private to the repository layer.
-- **Mapping:** The repository layer is responsible for converting ("mapping") database models to business entities. This ensures that a change in the database schema does not force a change in the business logic.
-
-- **Use Cases** is business logic located in `internal/usecase`.
-
-The layer with which business logic directly interacts is usually called the _infrastructure_ layer.
-These can be repositories `internal/usecase/repo`, external webapi `internal/usecase/webapi`, any pkg, and other
-microservices.
-In the template, the _infrastructure_ packages are located inside `internal/usecase`.
-
-You can choose how to call the entry points as you wish. The options are:
-
-- controller (in our case)
-- delivery
-- transport
-- gateways
-- entrypoints
-- primary
-- input
-
-### Additional layers
-
-The classic version
-of [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html) was designed for
-building large monolithic applications and has 4 layers.
-
-In the original version, the outer layer is divided into two more, which also have an inversion of dependencies
-to each other (directed inward) and communicate through interfaces.
-
-The inner layer is also divided into two (with separation of interfaces), in the case of complex logic.
-
----
-
-Complex tools can be divided into additional layers.
-However, you should add layers only if really necessary.
+- **Entities** (`internal/entity`) — core business objects, agnostic of storage
+  or transport, used throughout the app.
+- **Database models** (`internal/repo/persistent/sqlc`) — generated code mirroring
+  the schema, private to the repository layer.
+- **Mapping** — the repository converts database models to business entities, so
+  a schema change doesn't ripple into the business logic.
+- **Use cases** (`internal/usecase`) — the application's business logic.
+- **Controllers** (`internal/controller`) — the entry points (also called
+  delivery, transport, or gateways elsewhere).
 
 ### Alternative approaches
 
-In addition to Clean architecture, _Onion architecture_ and _Hexagonal_ (_Ports and adapters_) are similar to it.
-Both are based on the principle of Dependency Inversion.
-_Ports and adapters_ are very close to _Clean Architecture_, the differences are mainly in terminology.
+Onion architecture and Hexagonal (Ports and Adapters) are close relatives, all
+built on Dependency Inversion; the differences are mostly terminology.
 
-## Similar projects
+## Make commands
 
-- [https://github.com/evrone/go-clean-template](https://github.com/evrone/go-clean-template)
-- [https://github.com/bxcodec/go-clean-arch](https://github.com/bxcodec/go-clean-arch)
-- [https://github.com/zhashkevych/courses-backend](https://github.com/zhashkevych/courses-backend)
+Run `make help` for the full list. Common targets:
+
+| Command            | Description                                       |
+| ------------------ | ------------------------------------------------- |
+| `make run`         | Generate code, migrate, and run the API           |
+| `make build`       | Build the binary into `./main`                     |
+| `make test`        | Run unit tests with race detector and coverage    |
+| `make sqlc`        | Generate Go from SQL                              |
+| `make swag-v1`     | Regenerate Swagger docs                           |
+| `make mock`        | Regenerate test mocks                             |
+| `make migrate-up`  | Apply migrations (`migrate-create name=...` etc.) |
+| `make db-up`       | Start PostgreSQL via docker compose              |
+| `make format`      | Format the codebase                              |
 
 ## Useful links
 
+- [Project requirements](https://roadmap.sh/projects/todo-list-api)
 - [The Clean Architecture article](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
-- [Twelve factors](https://12factor.net/)
+- [The Twelve-Factor App](https://12factor.net/)
+- Upstream template: [evrone/go-clean-template](https://github.com/evrone/go-clean-template)

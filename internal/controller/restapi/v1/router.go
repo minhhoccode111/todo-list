@@ -15,7 +15,6 @@ func NewV1Routes(
 	l logger.Interface,
 	v *validator.Validate,
 	cfg *config.Config,
-	tr usecase.Translation,
 	u usecase.User,
 	to usecase.Todo,
 ) {
@@ -23,17 +22,8 @@ func NewV1Routes(
 		l:   l,
 		v:   v,
 		cfg: cfg,
-		tr:  tr,
 		u:   u,
 		to:  to,
-	}
-
-	translationGroup := apiV1Group.Group("/translation")
-	{
-		// Route-level middlewares, example
-		// translationGroup.GET("/example-admin", middleware.Auth(true), middleware.AdminOnly(), r.exampleAdmin)
-		translationGroup.GET("/history", r.history)
-		translationGroup.POST("/do-translate", r.doTranslate)
 	}
 
 	userGroup := apiV1Group.Group("/")

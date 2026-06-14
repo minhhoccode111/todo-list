@@ -11,12 +11,6 @@ import (
 //go:generate mockgen -source=contracts.go -destination=./mocks_usecase_test.go -package=usecase_test
 
 type (
-	// Translation -.
-	Translation interface {
-		Translate(context.Context, entity.Translation) (entity.Translation, error)
-		ReadHistory(context.Context) (entity.TranslationHistory, error)
-	}
-
 	// User -.
 	User interface {
 		Register(context.Context, *config.Config, *entity.User) (token, refresh string, err error)

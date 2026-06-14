@@ -12,9 +12,7 @@ import (
 	"github.com/minhhoccode111/todo-list/internal/entity"
 	repocache "github.com/minhhoccode111/todo-list/internal/repo/cache"
 	"github.com/minhhoccode111/todo-list/internal/repo/persistent"
-	"github.com/minhhoccode111/todo-list/internal/repo/webapi"
 	"github.com/minhhoccode111/todo-list/internal/usecase/todo"
-	"github.com/minhhoccode111/todo-list/internal/usecase/translation"
 	"github.com/minhhoccode111/todo-list/internal/usecase/user"
 	"github.com/minhhoccode111/todo-list/pkg/cache"
 	"github.com/minhhoccode111/todo-list/pkg/httpserver"
@@ -36,14 +34,6 @@ func Run(cfg *config.Config) { //nolint: gocyclo,cyclop,funlen,gocritic,nolintli
 	defer pg.Close()
 
 	// Cache
-	translationCache, err := cache.New[string, []entity.Translation](
-		cache.MaxCost(cfg.Cache.MaxCost),
-		cache.TTL(cfg.Cache.TTL),
-	)
-	if err != nil {
-		l.Fatal(fmt.Errorf("app - Run - cache.New: %w", err))
-	}
-
 	userCache, err := cache.New[string, *entity.User](
 		cache.MaxCost(cfg.Cache.MaxCost),
 		cache.TTL(cfg.Cache.TTL),
@@ -61,11 +51,6 @@ func Run(cfg *config.Config) { //nolint: gocyclo,cyclop,funlen,gocritic,nolintli
 	}
 
 	// Use-Case
-	translationUseCase := translation.New(
-		persistent.NewTranslationRepo(pg),
-		webapi.New(),
-		repocache.NewTranslationCache(translationCache),
-	)
 	userUseCase := user.New(
 		persistent.NewUserRepo(pg),
 		repocache.NewUserCache(userCache),
@@ -77,7 +62,7 @@ func Run(cfg *config.Config) { //nolint: gocyclo,cyclop,funlen,gocritic,nolintli
 
 	// HTTP Server
 	httpServer := httpserver.New(l, httpserver.Port(cfg.HTTP.Port))
-	restapi.NewRouter(httpServer.Engine, cfg, translationUseCase, userUseCase, todoUseCase, l, v)
+	restapi.NewRouter(httpServer.Engine, cfg, userUseCase, todoUseCase, l, v)
 
 	// Start servers
 	httpServer.Start()
